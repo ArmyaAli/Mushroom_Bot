@@ -25,7 +25,7 @@ export interface Command {
     description: string
     requiredPermissions: string[]
     execute(client: Client, message: Message, args?: string[]): any
-  }
+}
 
 
 export default config;
