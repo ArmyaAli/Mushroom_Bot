@@ -1,4 +1,4 @@
-import Discord, { GuildChannel, TextChannel } from "discord.js";
+import Discord, { BitFieldResolvable, GuildChannel, PermissionString, TextChannel } from "discord.js";
 import path from "path";
 import config, { Command, readCommandsRecursive } from "./botconfig";
 
@@ -32,7 +32,11 @@ client.on("message", async (message) => {
     return;
   }
 
-  commands.get(command)!.execute(client, message, args);
+  if (message.member.hasPermission(commands.get(command).requiredPermissions as BitFieldResolvable<PermissionString>)) {
+    commands.get(command).execute(client, message, args);
+  } else
+    message.channel.send("You do not have the required permissions to execute that command!")
+  
 });
 
 // sends a welcome message if a user joins
