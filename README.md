@@ -15,7 +15,7 @@ Node.js, Typescript, Discord.js, discord-music-player.js by SushiBtW
 
 ## Features
 Currently working featureset
- - Cool commands
+  - Cool commands
       - !ud *query* -> Search urbandictionary.com 
       - !random -> grabs a random image off of flickr
       - !random *search_token* -> grabs a random image off of flickr related to the search_token
