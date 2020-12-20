@@ -19,13 +19,13 @@ client.once("ready", async () => {
 });
 
 client.on("ready", () => {
-  console.log(`Logged in as ${client.user!.tag}!`);
+  console.log(`Logged in as ${client.user.tag}!`);
 });
 
 client.on("message", async (message) => {
   if (!message.content.startsWith(config.prefix) || message.author.bot) return;
   const args = message.content.slice(config.prefix.length).trim().split(/ +/);
-  const command = args.shift()!.toLowerCase();
+  const command = args.shift().toLowerCase();
 
   if (!commands.get(command)) {
     message.channel.send("That is an invalid command");
