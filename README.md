@@ -31,6 +31,6 @@ Currently working featureset
       - !clear nuke -> clears the entire text channel
 
 ## Installation
-To use the bot you can clone it and run an rpm install... You'll also need your very own discord application setup on discords backend developer portal. Please see discordjs documentation, it is very thorough!
+To use the bot you can clone it and run an npm install... You'll also need your very own discord application setup on discords backend developer portal. Please see discordjs documentation, it is very thorough!
 
 MIT © [Ali Umar]()
