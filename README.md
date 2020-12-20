@@ -6,7 +6,7 @@ Hi! This is a discord bot that's my very own. I wrote it for myself to use and m
 This project exists because I wanted to learn more about the typescript/javascript ecosystem. What better way to learn than by doing a project?
 
 ## Screenshots
-![Alt text](https://imgur.com/a/9Der8Iw "Urban dictionary search..! :)")
+![Alt text](https://i.imgur.com/MQtnZQy.png "Urban dictionary search..! :)")
 ## Tech/framework used
 Node.js, Typescript, Discord.js, discord-music-player.js by SushiBtW
 
