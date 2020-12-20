@@ -8,6 +8,7 @@ module.exports = {
     const path = require("path");
     const fetch = require("node-fetch");
     const searchQuery = args.join(" ");
+    
     let params = new URLSearchParams({
       api_key: process.env.FLICKR_TOKEN,
       method: searchQuery === "" ? "flickr.photos.getRecent" : "flickr.photos.search",
@@ -27,7 +28,6 @@ module.exports = {
       const nextjson = await nextresponse.json();
       const photos = nextjson.photos.photo;
       const chosen = photos[Math.floor(Math.random() * 100)];
-      console.log(chosen)
       // https://live.staticflickr.com/{server-id}/{id}_{secret}_{size-suffix}.jpg
       const lastThree = `${chosen.id}_${chosen.secret}_m.jpg`;
       const url = photoLink + path
