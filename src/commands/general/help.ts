@@ -22,6 +22,7 @@ const helpTemplate = `
 const command: Command = {
   name: "help",
   description: "Sends the user a list of helpful commands that I can perform!",
+  requiredPermissions: [],
   execute(client: Client, message: Message, args: string[])  {
     message.channel.send('Here are a list of commands I can currently use!');
     message.channel.send(helpTemplate);

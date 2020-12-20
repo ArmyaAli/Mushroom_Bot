@@ -6,6 +6,7 @@ const command: Command = {
   name: "ud",
   description:
     "Searches urban dictionary for the user specified query and grabs the first 5 results sorted by upvote count",
+  requiredPermissions: [],
   async execute(client: Client, message: Message, args: string[]) {
     const fetch = require("node-fetch");
     const searchQuery: string = args.join(" ");

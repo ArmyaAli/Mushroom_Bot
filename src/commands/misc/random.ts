@@ -1,9 +1,11 @@
 import { Client, Message, MessageEmbed } from "discord.js";
 import { URLSearchParams } from "url"
+import { Command } from "../../botconfig";
 
-module.exports = {
+const command: Command = {
   name: "random",
   description: "pulls a random image off of Flickr",
+  requiredPermissions: [],
   async execute(client: Client, message: Message, args: string[])  {
     const path = require("path");
     const fetch = require("node-fetch");
@@ -42,3 +44,5 @@ module.exports = {
     }
   },
 };
+
+export = command;

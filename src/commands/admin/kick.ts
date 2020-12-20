@@ -1,6 +1,7 @@
 import { Client, Message } from 'discord.js';
+import { Command } from '../../botconfig';
 
-module.exports = {
+const command: Command = {
   name: "kick",
   description: "lets an *admin* kick a mentioned user",
   requiredPermissions: ['KICK_MEMBERS'],
@@ -25,3 +26,5 @@ module.exports = {
     }
   }
 }
+
+export = command;
