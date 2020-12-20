@@ -23,6 +23,7 @@ const config = {
 export interface Command {
     name: string
     description: string
+    requiredPermissions: string[]
     execute(client: Client, message: Message, args?: string[]): any
   }
 
