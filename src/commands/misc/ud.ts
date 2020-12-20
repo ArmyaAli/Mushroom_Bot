@@ -21,7 +21,6 @@ const command: Command = {
       const results = json.list
         .slice(0, 5)
         .sort((a: any, b: any) => b.thumbs_up - a.thumbs_up);
-      console.log(results);
       for (let i = 0; i < results.length; ++i) {
         const msgFormat = `Definition
                             ${results[i].definition} 
