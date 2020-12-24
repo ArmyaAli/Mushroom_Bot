@@ -34,7 +34,7 @@ client.on("message", async (message : Message) => {
   }
 
   if(message.member) {
-    if (message.member.hasPermission(commands.get(command)!.requiredPermissions as BitFieldResolvable<PermissionString>)) {
+    if (message.member.hasPermission(commands.get(command)!.requiredPermissions)) {
       commands.get(command)!.execute(client, message, args);
     } else
       message.channel.send("You do not have the required permissions to execute that command!")
