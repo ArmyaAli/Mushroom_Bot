@@ -1,8 +1,9 @@
-import Discord, { BitFieldResolvable, GuildChannel, PermissionString, TextChannel } from "discord.js";
+import Discord, { BitFieldResolvable, Message, PermissionString, TextChannel } from "discord.js";
 import path from "path";
-import config, { Command, readCommandsRecursive } from "./botconfig";
+import config, { readCommandsRecursive } from "./botconfig";
+import {Command} from "./command";
 
-const client = new Discord.Client();
+const client: Discord.Client = new Discord.Client();
 
 const commands: Discord.Collection<string, Command> = new Discord.Collection();
 
@@ -19,23 +20,26 @@ client.once("ready", async () => {
 });
 
 client.on("ready", () => {
-  console.log(`Logged in as ${client.user.tag}!`);
+  console.log(`Logged in as ${client.user!.tag}!`);
 });
 
-client.on("message", async (message) => {
+client.on("message", async (message : Message) => {
   if (!message.content.startsWith(config.prefix) || message.author.bot) return;
   const args = message.content.slice(config.prefix.length).trim().split(/ +/);
-  const command = args.shift().toLowerCase();
+  const command: string = args.shift()!.toLowerCase();
 
   if (!commands.get(command)) {
     message.channel.send("That is an invalid command");
     return;
   }
 
-  if (message.member.hasPermission(commands.get(command).requiredPermissions as BitFieldResolvable<PermissionString>)) {
-    commands.get(command).execute(client, message, args);
-  } else
-    message.channel.send("You do not have the required permissions to execute that command!")
+  if(message.member) {
+    if (message.member.hasPermission(commands.get(command)!.requiredPermissions as BitFieldResolvable<PermissionString>)) {
+      commands.get(command)!.execute(client, message, args);
+    } else
+      message.channel.send("You do not have the required permissions to execute that command!")
+  }
+
   
 });
 
