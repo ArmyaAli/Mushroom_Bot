@@ -1,5 +1,5 @@
 import { Client, Message, TextChannel } from 'discord.js';
-import { Command } from '../../botconfig';
+import { Command } from '../../command';
 
 const command: Command = {
   name: "clear",

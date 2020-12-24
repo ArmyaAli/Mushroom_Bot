@@ -1,5 +1,5 @@
 import { Client, Message } from "discord.js";
-import { Command } from "../../botconfig";
+import { Command } from "../../command";
 
 const helpTemplate = `
   - Cool commands

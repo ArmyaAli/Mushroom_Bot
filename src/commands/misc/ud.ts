@@ -1,5 +1,5 @@
 import { Client, Message, MessageEmbed } from "discord.js";
-import { Command } from "../../botconfig";
+import { Command } from "../../command";
 
 // This will complain if you don't provide the right types for each property
 const command: Command = {

@@ -1,6 +1,6 @@
 import { Client, Message, MessageEmbed } from "discord.js";
 import { URLSearchParams } from "url"
-import { Command } from "../../botconfig";
+import { Command } from "../../command";
 
 const command: Command = {
   name: "random",
