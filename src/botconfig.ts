@@ -20,12 +20,4 @@ const config = {
     token: process.env.BOT_TOKEN
 }
 
-export interface Command {
-    name: string
-    description: string
-    requiredPermissions: string[]
-    execute(client: Client, message: Message, args?: string[]): any
-}
-
-
 export default config;
