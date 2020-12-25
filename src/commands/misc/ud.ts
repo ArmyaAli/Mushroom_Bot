@@ -1,6 +1,6 @@
 import { Client, Message, MessageEmbed } from "discord.js";
 import { Command } from "../../command";
-
+import fetch from 'node-fetch';
 // This will complain if you don't provide the right types for each property
 const command: Command = {
   name: "ud",
@@ -8,7 +8,6 @@ const command: Command = {
     "Searches urban dictionary for the user specified query and grabs the first 5 results sorted by upvote count",
   requiredPermissions: [],
   async execute(client: Client, message: Message, args: string[]) {
-    const fetch = require("node-fetch");
     const searchQuery: string = args.join(" ");
     const api = `http://api.urbandictionary.com/v0/define?term=${searchQuery}`;
     try {
