@@ -1,6 +1,6 @@
 import puppeteer from "puppeteer";
 
-export const grabResultsFromPage = async (query: string): Promise<Map<string | null, string | null> | undefined> => {
+export const grabResultsFromPage = async (query: string): Promise<(string | null)[][] | undefined> => {
   const SEARCH_URL = "https://www.youtube.com/results?search_query=";
 
   try {
@@ -17,9 +17,10 @@ export const grabResultsFromPage = async (query: string): Promise<Map<string | n
       })
       return data
     });
-    videoLinks.forEach(link => results.set(link[0], 'https://youtube.com'+ link[1]));
+    if(!videoLinks)
+      throw 'Could not find any results'
     await browser.close();
-    return results;
+    return videoLinks;
   } catch (err) {
     console.log(`Error: ${err}`);
   }
