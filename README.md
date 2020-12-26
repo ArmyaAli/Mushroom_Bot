@@ -8,7 +8,7 @@ This project exists because I wanted to learn more about the typescript/javascri
 ## Screenshots
 ![Alt text](https://i.imgur.com/MQtnZQy.png "Urban dictionary search..! :)")
 ## Tech/framework used
-Node.js, Typescript, Discord.js, discord-music-player.js by SushiBtW
+Node.js, Typescript, Discord.js, ****discord-music-player.js by SushiBtW (moving away from this and using my own implementation)
 
 <b>Built with</b>
 - [DiscordJS](https://discord.js.org/#/docs/main/stable/general/welcome)
