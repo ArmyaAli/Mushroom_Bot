@@ -14,13 +14,13 @@ const command: Command = {
         if(args.join() === "nuke") {
           const oldPosition = (message.channel as TextChannel).position;
           const newChannel = await (message.channel as TextChannel).clone();
-          newChannel.setPosition(oldPosition);
+          await newChannel.setPosition(oldPosition);
           await message.channel.delete();
         } else {
           if(parseInt(args.join()) > 0)
             await (message.channel as TextChannel).bulkDelete(parseInt(args.join())+1)
           else
-            message.channel.send("How do I delete exactly ZERO messages...");
+            await message.channel.send("How do I delete exactly ZERO messages...");
         }
       }
     } catch (error) {
