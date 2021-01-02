@@ -5,7 +5,7 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 
-export function readCommandsRecursive(commandContext: string, commandFiles: string[]) {  
+export const readCommandsRecursive = (commandContext: string, commandFiles: string[]) => {  
   fileSystem.readdirSync(commandContext).forEach((file) => {
     const Absolute = path.join(commandContext, file);
     if (fileSystem.statSync(Absolute).isDirectory())
