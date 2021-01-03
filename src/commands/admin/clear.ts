@@ -7,8 +7,8 @@ const command: Command = {
   requiredPermissions: ['MANAGE_CHANNELS'],
   async execute(client: Client, message: Message, args: string[]) {
     try {
-      if (args.length > 1 || args.length == 0) {
-        message.channel.send("This command takes ONE arguement and ONLY one arguement");
+      if (args.length > 1 || args.length === 0) {
+        await message.channel.send("This command takes ONE arguement and ONLY one arguement");
         return;
       }  else {
         if(args.join() === "nuke") {
