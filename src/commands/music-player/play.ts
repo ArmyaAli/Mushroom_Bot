@@ -1,14 +1,11 @@
 import {
   Client,
   Message,
-  MessageEmbed,
-  StreamDispatcher,
   VoiceChannel,
   VoiceConnection,
 } from "discord.js";
 import { Command } from "../../command";
 import {
-  getURLFromQuery,
   getURLQueueFromQueries,
   YT_SEARCH_VIDEO,
 } from "../../util/youtube-scraper";
@@ -17,7 +14,6 @@ import {
   grabAllSongsFromPlaylist,
   SPOTIFY_PLAYLIST_SONG,
 } from "../../util/spotify-API-service";
-import internal from "stream";
 
 const batchQueue = async (
   queries: SPOTIFY_PLAYLIST_SONG[],
@@ -29,15 +25,17 @@ const batchQueue = async (
     const item = queries.shift();
     if (item) {
       batch.push(item);
-      console.log(batch);
     }
   }
   try {
+    // batch of 5
+    console.log(batch);
     await getURLQueueFromQueries(batch, queue);
   } catch (err) {
     console.log("Error batching");
   }
 };
+
 
 const command: Command = {
   name: "play",
@@ -57,35 +55,40 @@ const command: Command = {
       const connection: VoiceConnection = await userChannel.join();
 
       if (query.startsWith("https://open.spotify.com/playlist/")) {
+        await message.channel.send(
+          "Attempting to grab the playlist..."
+        );
         const playListid = query.split("/").pop();
         const playlist = await grabAllSongsFromPlaylist(playListid);
-        if(playlist) {
+        if (playlist) {
           await batchQueue(playlist, musicQueue); // batch the first five
-          const stream = ytdl(musicQueue.shift()!.url, { filter: 'audioonly' }); // set the stream
-          let dispatcher = connection.play(stream); // play 
+          await message.channel.send(
+            "Successfully retrieved the playlist... Attempting to create the music queue..."
+          );
 
-          // as soon as the music starts we start our batching by 5s
-          dispatcher.on("start", async () => {
-            while(playlist.length > 0) {
-              await batchQueue(playlist, musicQueue);
-            }
-          })
-          // on a songg finish we should requeue the next song.. (TODO) dispatcther.on returns a handle to itself
-          const play = async () => {
+          const play = async (): Promise<void> => {
             if(musicQueue.length === 0) {
               userChannel.leave();
-              return;
-            }
-            console.log('I have finished playing a song.!');
-            let song = musicQueue.shift()!.url;
-            while(!ytdl.validateURL(song)) {
-              song = musicQueue.shift()!.url;
-            }
-            const next = ytdl(song, { filter: 'audioonly' });
-            connection.play(next);
+              return
+            };
+            const song = musicQueue.shift();
+            const stream = ytdl(song!.url, { filter: 'audioonly', dlChunkSize: 0 }); // set the stream
+            const dispatcher = connection.play(stream);
+            await message.channel.send(
+              `Now playing ${song!.title}`
+            );
+            // this will be scheduled as a microtask
+            dispatcher.on("start", async () => {
+              while(playlist.length !== 0)
+                await batchQueue(playlist, musicQueue); // batch the first five
+            })
+            dispatcher.on("finish", play);
           }
-          dispatcher.on('finish', play);
-          dispatcher.on('error', (err) => {message.channel.send(`error: ${err}`);});
+          await play();
+
+          
+        } else {
+          await message.channel.send('Playlist could not be found...');
         }
       }
     } catch (error) {
