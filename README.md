@@ -20,11 +20,15 @@ Currently working featureset
       - !random -> grabs a random image off of flickr
       - !random *search_token* -> grabs a random image off of flickr related to the search_token
   - Music Player (IN PROGRESS -> MIGRATING AWAY FROM USING discord-music-player library used in my previous bot and writing my own youtube scraper with a spotify playlist scraper...)
-      - !play *songname* -> Plays a song! (PARTIALLY IMPLEMENTED)
+      - !play *songname* -> Plays a song! This also supports queuing up a spotify playlist! (WORKING)
       - !queue -> returns all the songs in the queue listed out for you! (NOT WORKING)
       - !resume/pause -> plays/resumes the currently playing song (NOT WORKING)
       - !skip -> skips the current song in the queue (NOT WOKRING)
-      - !stop -> Stops playing the song and exits the voice channel (NOT WORKING)
+      - !stop -> Stops playing the song and exits the voice channel (WORKING)
+        - THINGS I WANT TO ADD 
+            - !loop - will loop a single song
+            - !play - add soundcloud support and youtube playlist support
+            - !skip *songs to skip ahead*
   - Admin
       - !kick @member -> kicks the server member if the author has the correct permissions
       - !clear N -> deletes N number of messages up to a 100
