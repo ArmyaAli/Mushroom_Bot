@@ -1,6 +1,6 @@
 import { Client, Message, VoiceChannel, VoiceConnection } from "discord.js";
 import { Command } from "../../command";
-import {MusicStateManager} from "../../util/StateManagement";
+import { MusicStateManager } from "../../util/StateManagement";
 
 const command: Command = {
   name: "stop",
