@@ -1,5 +1,6 @@
 import { Client, Message, VoiceChannel, VoiceConnection } from "discord.js";
 import { Command } from "../../command";
+import { MusicStateManager } from "../../util/StateManagement"
 import {
   getURLQueueFromQueries,
   getURLFromQuery,
@@ -12,7 +13,6 @@ import {
   SPOTIFY_PLAYLIST_SONG,
 } from "../../util/spotify-API-service";
 
-const musicQueue: YT_SEARCH_VIDEO[] = [];
 let isPlaying = false;
 
 const batchQueue = async (
@@ -29,7 +29,7 @@ const batchQueue = async (
   try {
     // batch of 5
     console.log(batch);
-    await getURLQueueFromQueries(batch, musicQueue);
+    await getURLQueueFromQueries(batch, MusicStateManager.musicQueue);
   } catch (err) {
     console.log("Error batching");
   }
@@ -42,11 +42,11 @@ const spotifyPlay = async (
   playlist: SPOTIFY_PLAYLIST_SONG[],
   playlistSize: number
 ): Promise<void> => {
-  if (!musicQueue.length) {
+  if (!MusicStateManager.musicQueue) {
     channel.leave();
     return;
   }
-  const song = musicQueue.shift();
+  const song = MusicStateManager.musicQueue.shift();
   const stream = ytdl(song!.url, { filter: "audioonly", dlChunkSize: 0 }); // set the stream
   const dispatcher = connection.play(stream);
   isPlaying = true;
@@ -64,7 +64,7 @@ const spotifyPlay = async (
 
   dispatcher.on("finish", async () => {
     try {
-      if (musicQueue.length === 0) {
+      if (MusicStateManager.musicQueue.length === 0) {
         isPlaying = false;
         await channel.leave();
         return;
@@ -94,12 +94,12 @@ const play = async (
   await message.channel.send(`Now playing ${song.title}`);
   dispatcher.on("finish", async () => {
     try {
-      if (musicQueue.length === 0) {
+      if (MusicStateManager.musicQueue.length === 0) {
         isPlaying = false;
         await channel.leave();
         return;
       }
-      const next = musicQueue.shift();
+      const next = MusicStateManager.musicQueue.shift();
       if (next)
         await play(message, connection, channel, next);
     } catch (err) {
@@ -162,7 +162,7 @@ const command: Command = {
             await play(message, connection, userChannel, song);
           } else {
             await message.channel.send(`Song ${song.title} added to the music queue!`);
-            musicQueue.push(song)
+            MusicStateManager.musicQueue.push(song)
           }
         }
       }
