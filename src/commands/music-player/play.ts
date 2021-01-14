@@ -55,8 +55,12 @@ const play = async (
 
   if (playlist) {
     MusicStateManager.dispatcher.on("start", async () => {
-      while (playlist.length != 0) {
+      while (playlist.length != 0 && !MusicStateManager.clearedQ) {
         await batchQueue(playlist);
+      }
+      if(MusicStateManager.clearedQ) {
+        MusicStateManager.clearedQ = false;
+        return;
       }
       await message.channel.send("Music Queue constructed, you may now queue up another playlist if you wish.");
       MusicStateManager.batching = false;
