@@ -18,4 +18,5 @@ class _MusicStateManager extends EventEmitter {
         this.clearedQ = false;
     }
 };
+
 export const MusicStateManager = new _MusicStateManager();
