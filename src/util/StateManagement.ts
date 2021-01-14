@@ -8,12 +8,14 @@ class _MusicStateManager extends EventEmitter {
     playingMusic: boolean;
     batching: boolean;
     dispatcher: StreamDispatcher | null;
+    clearedQ: boolean;
     constructor() {
         super();
         this.musicQueue = [];
         this.playingMusic = false;
         this.dispatcher = null;
         this.batching = false;
+        this.clearedQ = false;
     }
 };
 export const MusicStateManager = new _MusicStateManager();
