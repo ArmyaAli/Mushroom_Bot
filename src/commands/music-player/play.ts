@@ -143,15 +143,6 @@ const command: Command = {
         } else {
           await message.channel.send("Playlist could not be found...");
         }
-      } else if (query.startsWith("https://www.youtube.com/playlist/")) {
-        // TO DO
-        // // check if its a youtube playlist
-        // const playlist = await ytpl(query, { pages: Infinity });
-        // console.log(playlist.items);
-        // // while (playlist.continuation != null) {
-        // //   const next = await ytpl.continueReq(playlist.continuation);
-        // //   console.log(next.items);
-        // // }
       } else {
         // if its a search query
         const song = await getURLFromQuery(query);
