@@ -9,14 +9,14 @@ const command: Command = {
   async execute(client: Client, message: Message, args: string[]) {
     const query = args.join(" ");
     if (!message.member!.voice!.channel) {
-      await message.channel.send(
-        "You must be in a voice channel to use this command!"
-      );
+      await message.channel.send("You must be in a voice channel to use this command!");
       return;
     }
-    
-    if(MusicStateManager.dispatcher)
-        MusicStateManager.dispatcher.pause()
+
+    if (MusicStateManager.dispatcher) {
+      MusicStateManager.dispatcher.pause();
+      await message.channel.send("Mushroomie! Paused playing music~!");
+    }
 
     try {
     } catch (error) {
