@@ -1,6 +1,6 @@
 import { Client, Message, VoiceChannel, VoiceConnection } from "discord.js";
-import { EventEmitter } from 'events';
 import { Command } from "../../command";
+import {MusicStateManager} from "../../util/StateManagement";
 
 const command: Command = {
   name: "stop",
@@ -8,9 +8,19 @@ const command: Command = {
   requiredPermissions: [],
   async execute(client: Client, message: Message, args: string[]) {
     const query = args.join(" ");
+    MusicStateManager.musicQueue = [];
+    MusicStateManager.playingMusic = false;
+    if (!message.member!.voice!.channel) {
+      await message.channel.send(
+        "You must be in a voice channel to use this command!"
+      );
+      return;
+    }
+
+    const userChannel: VoiceChannel = message.member!.voice.channel;
+    await userChannel.leave();
+
     try {
-      const em = new EventEmitter();
-      em.emit('STOP', 'stop event has been emitted');
     } catch (error) {
       console.log(error);
     }
