@@ -1,6 +1,6 @@
 import { Client, Message, VoiceChannel, VoiceConnection } from "discord.js";
 import { Command } from "../../command";
-import { MusicStateManager } from "../../util/StateManagement";
+import MusicStateManager from "../../util/StateManagement";
 
 const command: Command = {
   name: "stop",
@@ -11,9 +11,7 @@ const command: Command = {
     MusicStateManager.musicQueue = [];
     MusicStateManager.playingMusic = false;
     if (!message.member!.voice!.channel) {
-      await message.channel.send(
-        "You must be in a voice channel to use this command!"
-      );
+      await message.channel.send("You must be in a voice channel to use this command!");
       return;
     }
 
