@@ -16,7 +16,8 @@ const command: Command = {
             await message.channel.send("Cleared the Music Queue!");
             MusicStateManager.dispatcher = null;
             MusicStateManager.musicQueue = [];
-            MusicStateManager.emit("clear");
+            MusicStateManager.clearedQ = true;
+            MusicStateManager.batching = false; // setting the clearedQ flag to true will stop the batching process
         } else
             await message.channel.send("Music Queue is already empty!");
 
