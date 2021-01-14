@@ -12,6 +12,7 @@ import {
   grabAllSongsFromPlaylist,
   SPOTIFY_PLAYLIST_SONG,
 } from "../../util/spotify-API-service";
+import { update } from "../../util/messageHandler";
 
 const batchQueue = async (
   queries: SPOTIFY_PLAYLIST_SONG[],
@@ -28,69 +29,26 @@ const batchQueue = async (
     // batch of 5
     console.log(batch);
     await getURLQueueFromQueries(batch, MusicStateManager.musicQueue);
-  } catch (err) {
+
+  } catch (error) {
     console.log("Error batching");
   }
 };
 
-const spotifyPlay = async (
-  message: Message,
-  connection: VoiceConnection,
-  channel: VoiceChannel,
-  playlist: SPOTIFY_PLAYLIST_SONG[],
-  playlistSize: number
-): Promise<void> => {
-  if (!MusicStateManager.musicQueue) {
-    channel.leave();
-    return;
-  }
-  const song = MusicStateManager.musicQueue.shift();
-  const stream = ytdl(song!.url, { filter: "audioonly", dlChunkSize: 0 }); // set the stream
-  const dispatcher = MusicStateManager.dispatcher = connection.play(stream);
-  MusicStateManager.playingMusic = true;
-  await message.channel.send(`Now playing ${song!.title}`);
-  // this will be scheduled as a microtask
-  dispatcher.on("start", async () => {
-    while (playlist.length !== 0) {
-      await batchQueue(playlist);
-      if (playlist.length === 0)
-        await message.channel.send(
-          `Music Queue constructed with ${playlistSize} songs added!`
-        );
-    }
-  });
-
-  dispatcher.on("finish", async () => {
-    try {
-      if (MusicStateManager.musicQueue.length === 0) {
-        MusicStateManager.playingMusic = false;
-        await channel.leave();
-        return;
-      }
-      await spotifyPlay(
-        message,
-        connection,
-        channel,
-        playlist,
-        playlistSize
-      )
-    } catch (err) {
-      console.log(`Error occured ${err}`);
-    }
-  });
-};
 
 const play = async (
   message: Message,
   connection: VoiceConnection,
   channel: VoiceChannel,
-  song: YT_SEARCH_VIDEO
+  song: YT_SEARCH_VIDEO,
+  playlist?: SPOTIFY_PLAYLIST_SONG[]
 ): Promise<void> => {
   const stream = ytdl(song.url, { filter: "audioonly", dlChunkSize: 0 }); // set the stream
-  const dispatcher = MusicStateManager.dispatcher = connection.play(stream);
+  MusicStateManager.dispatcher = connection.play(stream);
   MusicStateManager.playingMusic = true;
-  await message.channel.send(`Now playing ${song.title}`);
-  dispatcher.on("finish", async () => {
+  await message.channel.send(`Now playing ${song.title}`); 
+
+  const onSongFinish = async () => {
     try {
       if (MusicStateManager.musicQueue.length === 0) {
         MusicStateManager.playingMusic = false;
@@ -98,17 +56,36 @@ const play = async (
         return;
       }
       const next = MusicStateManager.musicQueue.shift();
+      MusicStateManager.removeAllListeners("skip");
       if (next)
         await play(message, connection, channel, next);
     } catch (err) {
       console.log(`Error occured ${err}`);
     }
+  }
+
+  MusicStateManager.on("skip", async (data) => {
+    console.log("skip event emitted")
+    const stream = ytdl(data.url, { filter: "audioonly", dlChunkSize: 0 }); // set the stream
+    MusicStateManager.dispatcher = connection.play(stream);
+    await message.channel.send(`Now playing ${data.title}`);
+    MusicStateManager.dispatcher.on("finish", onSongFinish);
   });
+
+  if (playlist) {
+    MusicStateManager.dispatcher.on("start", async () => {
+      while (playlist.length != 0 && MusicStateManager.playingMusic) {
+        await batchQueue(playlist);
+      }
+    });
+  }
+
+  MusicStateManager.dispatcher.on("finish", onSongFinish);
 }
 
 const command: Command = {
   name: "play",
-  description: "Searches youtube for a specified song! ",
+  description: "Searches youtube for a specified song and plays it. Plays spotify playlists as well.",
   requiredPermissions: [],
   async execute(client: Client, message: Message, args: string[]) {
     const query = args.join(" ");
@@ -126,20 +103,20 @@ const command: Command = {
         await message.channel.send("Attempting to grab the playlist...");
         const playListid = query.split("/").pop();
         const playlist = await grabAllSongsFromPlaylist(playListid);
-        const playlistSize = playlist!.length;
+
         if (playlist) {
           await batchQueue(playlist); // batch the first five
-          await message.channel.send(
-            "Successfully retrieved the playlist... Attempting to create the music queue..."
-          );
+          update(client, message, "Successfully retrieved the playlist... Attempting to create the music queue...");
+          const song = MusicStateManager.musicQueue.shift();
 
-          await spotifyPlay(
-            message,
-            connection,
-            userChannel,
-            playlist,
-            playlistSize
-          );
+          if (song) {
+            if (!MusicStateManager.playingMusic) {
+              await play(message, connection, userChannel, song, playlist);
+            } else {
+              await message.channel.send(`Playlist added to the music queue!`);
+              MusicStateManager.musicQueue.push(song)
+            }
+          }
         } else {
           await message.channel.send("Playlist could not be found...");
         }
