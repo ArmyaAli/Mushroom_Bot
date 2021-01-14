@@ -7,6 +7,7 @@ export const batchQueue = async (
   ): Promise<void> => {
     const batch: Array<SPOTIFY_PLAYLIST_SONG> = [];
     if (!queries) return;
+    MusicStateManager.batching = true;
     for (let i = 0; i < 5; ++i) {
       const item = queries.shift();
       if (item) {

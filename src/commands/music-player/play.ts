@@ -15,9 +15,8 @@ import {
 import { update } from "../../util/messageHandler";
 import { batchQueue } from "./player-util/batch";
 
-
-
 const play = async (
+  client: Client,
   message: Message,
   connection: VoiceConnection,
   channel: VoiceChannel,
@@ -40,7 +39,7 @@ const play = async (
       const next = MusicStateManager.musicQueue.shift();
       MusicStateManager.removeAllListeners("skip");
       if (next)
-        await play(message, connection, channel, next);
+        await play(client, message, connection, channel, next);
     } catch (err) {
       console.log(`Error occured ${err}`);
     }
@@ -59,6 +58,8 @@ const play = async (
       while (playlist.length != 0) {
         await batchQueue(playlist);
       }
+      await message.channel.send("Music Queue constructed, you may now queue up another playlist if you wish.");
+      MusicStateManager.batching = false;
     });
   }
 
@@ -87,18 +88,25 @@ const command: Command = {
         const playlist = await grabAllSongsFromPlaylist(playListid);
 
         if (playlist) {
-          await batchQueue(playlist); // batch the first five
-          update(client, message, "Successfully retrieved the playlist... Attempting to create the music queue...");
-          const song = MusicStateManager.musicQueue.shift();
-
-          if (song) {
-            if (!MusicStateManager.playingMusic) {
-              await play(message, connection, userChannel, song, playlist);
-            } else {
-              await message.channel.send(`Playlist added to the music queue!`);
-              MusicStateManager.musicQueue.push(song)
+          if(MusicStateManager.batching) {
+            await message.channel.send(
+              "Still constructing Music Queue from a previous playlist! Please Queue this up after completion."
+            );
+          } else {
+            await batchQueue(playlist); // batch the first five
+            update(client, message, "Successfully retrieved the playlist... Attempting to create the music queue...");
+            const song = MusicStateManager.musicQueue.shift();
+  
+            if (song) {
+              if (!MusicStateManager.playingMusic) {
+                await play(client, message, connection, userChannel, song, playlist);
+              } else {
+                await message.channel.send(`Playlist added to the music queue!`);
+                MusicStateManager.musicQueue.push(song)
+              }
             }
           }
+
         } else {
           await message.channel.send("Playlist could not be found...");
         }
@@ -107,7 +115,7 @@ const command: Command = {
         const song = await getURLFromQuery(query);
         if (song) {
           if (!MusicStateManager.playingMusic) {
-            await play(message, connection, userChannel, song);
+            await play(client, message, connection, userChannel, song);
           } else {
             await message.channel.send(`Song ${song.title} added to the music queue!`);
             MusicStateManager.musicQueue.push(song)
