@@ -46,7 +46,7 @@ const spotifyPlay = async (
   }
   const song = MusicStateManager.musicQueue.shift();
   const stream = ytdl(song!.url, { filter: "audioonly", dlChunkSize: 0 }); // set the stream
-  const dispatcher = connection.play(stream);
+  const dispatcher = MusicStateManager.dispatcher = connection.play(stream);
   MusicStateManager.playingMusic = true;
   await message.channel.send(`Now playing ${song!.title}`);
   // this will be scheduled as a microtask
@@ -87,7 +87,7 @@ const play = async (
   song: YT_SEARCH_VIDEO
 ): Promise<void> => {
   const stream = ytdl(song.url, { filter: "audioonly", dlChunkSize: 0 }); // set the stream
-  const dispatcher = connection.play(stream);
+  const dispatcher = MusicStateManager.dispatcher = connection.play(stream);
   MusicStateManager.playingMusic = true;
   await message.channel.send(`Now playing ${song.title}`);
   dispatcher.on("finish", async () => {
