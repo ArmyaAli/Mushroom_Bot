@@ -5,35 +5,16 @@ import {
   getURLQueueFromQueries,
   getURLFromQuery,
   YT_SEARCH_VIDEO,
-} from "../../util/youtube-scraper";
+} from "./player-util/youtube-scraper";
 import ytdl from "ytdl-core";
 import ytpl from 'ytpl';
 import {
   grabAllSongsFromPlaylist,
   SPOTIFY_PLAYLIST_SONG,
-} from "../../util/spotify-API-service";
+} from "./player-util/spotify-API-service";
 import { update } from "../../util/messageHandler";
+import { batchQueue } from "./player-util/batch";
 
-const batchQueue = async (
-  queries: SPOTIFY_PLAYLIST_SONG[],
-): Promise<void> => {
-  const batch: Array<SPOTIFY_PLAYLIST_SONG> = [];
-  if (!queries) return;
-  for (let i = 0; i < 5; ++i) {
-    const item = queries.shift();
-    if (item) {
-      batch.push(item);
-    }
-  }
-  try {
-    // batch of 5
-    console.log(batch);
-    await getURLQueueFromQueries(batch, MusicStateManager.musicQueue);
-
-  } catch (error) {
-    console.log("Error batching");
-  }
-};
 
 
 const play = async (
@@ -46,6 +27,7 @@ const play = async (
   const stream = ytdl(song.url, { filter: "audioonly", dlChunkSize: 0 }); // set the stream
   MusicStateManager.dispatcher = connection.play(stream);
   MusicStateManager.playingMusic = true;
+  
   await message.channel.send(`Now playing ${song.title}`); 
 
   const onSongFinish = async () => {
@@ -74,7 +56,7 @@ const play = async (
 
   if (playlist) {
     MusicStateManager.dispatcher.on("start", async () => {
-      while (playlist.length != 0 && MusicStateManager.playingMusic) {
+      while (playlist.length != 0) {
         await batchQueue(playlist);
       }
     });
