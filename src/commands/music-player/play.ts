@@ -13,8 +13,6 @@ import {
   SPOTIFY_PLAYLIST_SONG,
 } from "../../util/spotify-API-service";
 
-let isPlaying = false;
-
 const batchQueue = async (
   queries: SPOTIFY_PLAYLIST_SONG[],
 ): Promise<void> => {
@@ -49,7 +47,7 @@ const spotifyPlay = async (
   const song = MusicStateManager.musicQueue.shift();
   const stream = ytdl(song!.url, { filter: "audioonly", dlChunkSize: 0 }); // set the stream
   const dispatcher = connection.play(stream);
-  isPlaying = true;
+  MusicStateManager.playingMusic = true;
   await message.channel.send(`Now playing ${song!.title}`);
   // this will be scheduled as a microtask
   dispatcher.on("start", async () => {
@@ -65,7 +63,7 @@ const spotifyPlay = async (
   dispatcher.on("finish", async () => {
     try {
       if (MusicStateManager.musicQueue.length === 0) {
-        isPlaying = false;
+        MusicStateManager.playingMusic = false;
         await channel.leave();
         return;
       }
@@ -90,12 +88,12 @@ const play = async (
 ): Promise<void> => {
   const stream = ytdl(song.url, { filter: "audioonly", dlChunkSize: 0 }); // set the stream
   const dispatcher = connection.play(stream);
-  isPlaying = true;
+  MusicStateManager.playingMusic = true;
   await message.channel.send(`Now playing ${song.title}`);
   dispatcher.on("finish", async () => {
     try {
       if (MusicStateManager.musicQueue.length === 0) {
-        isPlaying = false;
+        MusicStateManager.playingMusic = false;
         await channel.leave();
         return;
       }
@@ -158,7 +156,7 @@ const command: Command = {
         // if its a search query
         const song = await getURLFromQuery(query);
         if (song) {
-          if (!isPlaying) {
+          if (!MusicStateManager.playingMusic) {
             await play(message, connection, userChannel, song);
           } else {
             await message.channel.send(`Song ${song.title} added to the music queue!`);
