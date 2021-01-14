@@ -4,9 +4,7 @@ import config, { readCommandsRecursive } from "./botconfig";
 import {Command} from "./command";
 
 const client: Discord.Client = new Discord.Client();
-
 const commands: Discord.Collection<string, Command> = new Discord.Collection();
-
 const commandContext = path.join(__dirname, "commands");
 let commandFiles: string[] = [];
 
