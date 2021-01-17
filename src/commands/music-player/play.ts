@@ -23,17 +23,24 @@ const play = async (
   song: YT_SEARCH_VIDEO,
   playlist?: SPOTIFY_PLAYLIST_SONG[]
 ): Promise<void> => {
+  const LEAVE_TIMEOUT = 30000;
   const stream = ytdl(song.url, { filter: "audioonly", dlChunkSize: 0 }); // set the stream
   MusicStateManager.dispatcher = connection.play(stream);
   MusicStateManager.playingMusic = true;
-  
-  await message.channel.send(`Now playing ${song.title}`); 
+  MusicStateManager.currentSong = song;
+  update(client, message, `Now playing ${song.title}`)
 
   const onSongFinish = async () => {
     try {
       if (MusicStateManager.musicQueue.length === 0) {
         MusicStateManager.playingMusic = false;
-        await channel.leave();
+        
+        setTimeout(async () => {
+          if(!MusicStateManager.playingMusic) {
+            update(client, message, "Nothing is playing... Leaving the voice channel!")
+            await channel.leave();
+          }
+        }, LEAVE_TIMEOUT);
         return;
       }
       const next = MusicStateManager.musicQueue.shift();
