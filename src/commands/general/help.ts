@@ -13,6 +13,8 @@ const helpTemplate = `
   - !skip -> skips the current song in the queue 
   - !stop -> Stops playing the song and exits the voice channel 
   - !clearq -> clears the music queue however keeps the current song playing
+  - !next -> gets the next song in the queue
+  - !song -> gets the current playing song 
 - Admin
   - !kick @member -> kicks the server member if the author has the correct permissions
   - !clear N -> deletes N number of messages up to a 100
