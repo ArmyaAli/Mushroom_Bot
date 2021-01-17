@@ -19,7 +19,7 @@ const command: Command = {
                 return;
             }
 
-            await message.channel.send(`Current song is: ${MusicStateManager.musicQueue[0].title} @ link: ${MusicStateManager.musicQueue[0].url}`);
+            await message.channel.send(`Next song is: ${MusicStateManager.musicQueue[0].title} @ link: ${MusicStateManager.musicQueue[0].url}`);
 
         } catch (error) {
             console.log(error);
