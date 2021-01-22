@@ -32,11 +32,15 @@ const play = async (
 
   const onSongFinish = async () => {
     try {
+      if (channel.members.size === 0) {
+        await message.channel.send("Exiting the empty voice channel");
+        return;
+      }
       if (MusicStateManager.musicQueue.length === 0) {
         MusicStateManager.playingMusic = false;
-        
+
         setTimeout(async () => {
-          if(!MusicStateManager.playingMusic) {
+          if (!MusicStateManager.playingMusic) {
             update(client, message, "Nothing is playing... Leaving the voice channel!")
             await channel.leave();
           }
@@ -65,7 +69,7 @@ const play = async (
       while (playlist.length != 0 && !MusicStateManager.clearedQ) {
         await batchQueue(playlist);
       }
-      if(MusicStateManager.clearedQ) {
+      if (MusicStateManager.clearedQ) {
         MusicStateManager.clearedQ = false;
         return;
       }
@@ -99,7 +103,7 @@ const command: Command = {
         const playlist = await grabAllSongsFromPlaylist(playListid);
 
         if (playlist) {
-          if(MusicStateManager.batching) {
+          if (MusicStateManager.batching) {
             await message.channel.send(
               "Still constructing Music Queue from a previous playlist! Please Queue this up after completion."
             );
@@ -107,7 +111,7 @@ const command: Command = {
             await batchQueue(playlist); // batch the first five
             update(client, message, "Successfully retrieved the playlist... Attempting to create the music queue...");
             const song = MusicStateManager.musicQueue.shift();
-  
+
             if (song) {
               if (!MusicStateManager.playingMusic) {
                 await play(client, message, connection, userChannel, song, playlist);
