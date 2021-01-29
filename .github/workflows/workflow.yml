@@ -45,4 +45,4 @@ jobs:
         - name: Docker Build Image
           run: docker build -t mushroombot:latest .
         - name: Docker Push
-          run: docker push lordmushroom/mushroombot:latest
+          run: docker push mushroombot:latest
