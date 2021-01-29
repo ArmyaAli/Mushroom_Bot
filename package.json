@@ -8,6 +8,7 @@
     "clean-build": "rm -r dist",
     "start": "node dist/bot.js",
     "dev": "nodemon",
+    "deploy": "npm run build && npm run start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -16,7 +17,6 @@
   "dependencies": {
     "@discordjs/opus": "^0.3.3",
     "@types/cheerio": "^0.22.23",
-    "@types/dotenv": "^8.2.0",
     "@types/spotify-api": "0.0.5",
     "@types/yt-search": "^2.3.0",
     "discord.js": "^12.5.1",
