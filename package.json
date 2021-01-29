@@ -4,7 +4,9 @@
   "description": "this is my mushroom bot! it has a lot of cool commands",
   "main": "src/bot.ts",
   "scripts": {
-    "build": "tsc && rm -r dist",
+    "build": "tsc",
+    "clean-build": "rm -r dist",
+    "start": "node dist/bot.js",
     "dev": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
