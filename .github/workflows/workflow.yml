@@ -1,7 +1,7 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: bot build
+name: bot build & send status to discord
 
 on:
   push:
@@ -27,13 +27,10 @@ jobs:
     - run: npm ci
     - run: touch .env &&  echo $BOT_TOKEN >> .env
     - run: npm run build --if-present
-  notify:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-    - name: Discord notification
+    - name: Send build to discord
       env:
         DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       uses: Ilshidur/action-discord@master
       with:
-        args: 'LordMushroom has pushed to {{ EVENT_PAYLOAD.repository.full_name }} All Hail LordMushroom'
+        args: 'LordMushroom has pushed a new build! BUILD STATUS: $ {{ job.status }}'
+
