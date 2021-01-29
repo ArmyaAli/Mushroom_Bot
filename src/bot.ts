@@ -6,11 +6,12 @@ import {Command} from "./command";
 const client: Discord.Client = new Discord.Client();
 const commands: Discord.Collection<string, Command> = new Discord.Collection();
 const commandContext = path.join(__dirname, "commands");
+
 let commandFiles: string[] = [];
 
 client.once("ready", async () => {
   readCommandsRecursive(commandContext, commandFiles);
-  commandFiles = commandFiles.filter((fileName) => fileName.endsWith(".ts"));
+  commandFiles = commandFiles.filter((fileName) => fileName.endsWith(".ts") || fileName.endsWith(".js"));
   for (const filePath of commandFiles) {
     const command = require(filePath);
     commands.set(command.name, command);
