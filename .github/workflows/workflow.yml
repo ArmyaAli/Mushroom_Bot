@@ -43,6 +43,7 @@ jobs:
         - name: Docker Build Image
           run: docker build -t mushroombot:latest .
         - name: Login & Push
-          run: | 
+          run: |
+            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
             docker tag mushroombot:latest lordmushroom/mushroombot/mushroombot:latest
             docker push lordmushroom/mushroombot/mushroombot:latest
