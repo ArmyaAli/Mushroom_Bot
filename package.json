@@ -4,7 +4,7 @@
   "description": "this is my mushroom bot! it has a lot of cool commands",
   "main": "src/bot.ts",
   "scripts": {
-    "build": "ts-node src/bot.ts",
+    "build": "tsc",
     "dev": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
