@@ -45,5 +45,5 @@ jobs:
         - name: Login & Push
           run: |
             echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-            docker tag mushroombot:latest lordmushroom/mushroombot/mushroombot:latest
+            docker tag mushroombot:latest lordmushroom/mushroombot:latest
             docker push lordmushroom/mushroombot/mushroombot:latest
