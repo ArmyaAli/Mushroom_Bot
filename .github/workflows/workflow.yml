@@ -6,8 +6,6 @@ name: bot build
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
   build:
@@ -18,12 +16,12 @@ jobs:
     steps:
     - name: Checkout Repo
     - uses: actions/checkout@v2
-    - name: Use Node.js 14
+    - name: Grab Node 14
       uses: actions/setup-node@v2
       with: 
         node-version: '14'
     - name: clean install
-    - run: npm ci
+      run: npm ci
     - name: create .env file
       run: touch .env &&  echo $BOT_TOKEN >> .env
     - name: build
