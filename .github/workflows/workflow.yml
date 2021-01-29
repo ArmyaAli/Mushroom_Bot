@@ -36,4 +36,4 @@ jobs:
         DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       uses: Ilshidur/action-discord@master
       with:
-        args: 'LordMushroom has pushed to {{ EVENT_PAYLOAD.repository.full_name }}'
+        args: 'LordMushroom has pushed to {{ EVENT_PAYLOAD.repository.full_name }} All Hail LordMushroom'
