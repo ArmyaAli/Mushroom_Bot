@@ -44,5 +44,4 @@ jobs:
           run: docker build -t mushroombot:latest .
         - name: Login & Push
           run: |
-            docker login -u $DOCKER_USERNAME --password-stdin $DOCKER_PASSWORD
             docker push lordmushroom/mushroombot
