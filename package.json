@@ -1,7 +1,7 @@
 {
   "name": "mushroom-bot",
   "version": "1.0.0",
-  "description": "this is my mushroom bot! it has a lot of cool commands",
+  "description": "This is my Mushroom bot! It has a lot of cool commands and ill be adding to it as time goes on.",
   "main": "src/bot.ts",
   "scripts": {
     "build": "tsc",
@@ -11,7 +11,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Ali Umar",
   "license": "ISC",
   "dependencies": {
     "@discordjs/opus": "^0.3.3",
