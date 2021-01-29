@@ -27,10 +27,11 @@ jobs:
     - run: npm ci
     - run: touch .env &&  echo $BOT_TOKEN >> .env
     - run: npm run build --if-present
+      
   docker:
     runs-on: ubuntu-latest
     env:
-      username:  ${{ secrets.DOCKER_USERNAME }}
+      username:  ${{ secrets.DOCKERHUB_USERNAME }}
       token: ${{ secrets.DOCKER_TOKEN }}
     steps:
         - name: Set up QEMU
