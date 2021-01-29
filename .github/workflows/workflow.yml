@@ -41,6 +41,6 @@ jobs:
         - name: Docker Login
           run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
         - name: Docker Build Image
-          run: docker build ./ -t mushroombot:latest
+          run: docker build -t mushroombot:latest .
         - name: Docker Push
           run: docker push lordmushroom/mushroombot:latest
