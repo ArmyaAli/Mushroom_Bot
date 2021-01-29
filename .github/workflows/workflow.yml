@@ -15,7 +15,7 @@ jobs:
       BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
     steps:
     - name: Checkout Repo
-    - uses: actions/checkout@v2
+      uses: actions/checkout@v2
     - name: Grab Node 14
       uses: actions/setup-node@v2
       with: 
