@@ -11,7 +11,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     env:
       BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
@@ -28,3 +27,13 @@ jobs:
     - run: npm ci
     - run: touch .env &&  echo $BOT_TOKEN >> .env
     - run: npm run build --if-present
+  notify:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Discord notification
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      uses: Ilshidur/action-discord@master
+      with:
+        args: 'LordMushroom has pushed to {{ EVENT_PAYLOAD.repository.full_name }}'
