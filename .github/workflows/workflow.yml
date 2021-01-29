@@ -45,4 +45,4 @@ jobs:
         - name: Login & Push
           run: | 
             docker tag mushroombot:latest lordmushroom/mushroombot/mushroombot:latest
-            docker push lordmushroom/mushroombot
+            docker push lordmushroom/mushroombot/mushroombot:latest
