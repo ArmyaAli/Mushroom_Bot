@@ -26,4 +26,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
+    - name: create .env file && send our secret into it
+    - run: touch .env && echo ${{ secrets.BOT_TOKEN }} >> .env
     - run: npm run build --if-present
