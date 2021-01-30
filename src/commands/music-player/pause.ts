@@ -5,7 +5,7 @@ import DistubeManager from "../../util/distubeManager";
 
 const command: Command = {
   name: "pause",
-  description: "Stops current song in the queue",
+  description: "Stops current song in the queue.",
   requiredPermissions: [],
   async execute(client: Client, message: Message, args: string[]) {
     try {
