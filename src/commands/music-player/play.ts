@@ -31,8 +31,10 @@ const play = async (
   update(client, message, `Now playing ${song.title}`)
 
   const onSongFinish = async () => {
+
     try {
       if (MusicStateManager.musicQueue.length === 0) {
+        console.log("Hello");
         MusicStateManager.playingMusic = false;
         
         setTimeout(async () => {
