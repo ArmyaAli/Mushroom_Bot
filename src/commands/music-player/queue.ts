@@ -6,13 +6,13 @@ import DistubeManager from "../../util/distubeManager";
 
 const command: Command = {
   name: "queue",
-  description: "shows the current queue of the DisTube music player",
+  description: "Displays the current queue of the DisTube music player.",
   requiredPermissions: [],
   async execute(client: Client, message: Message, args: string[]) {
     try {
       let queue: Queue | undefined = await DistubeManager.Instance?.getQueue(message);
       if (queue == undefined) {
-      message.channel.send('Currently no songs in the queue.');
+        message.channel.send('Currently no songs in the queue.');
       }
       else {
         message.channel.send('Current queue:\n' + queue!.songs.map((song, id) =>
