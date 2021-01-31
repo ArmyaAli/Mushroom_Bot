@@ -65,6 +65,6 @@ jobs:
           echo $RSA_KEY >> ../aws_key.pem
       - name: SSH into server
         run: |
-          ssh -i ../aws_key.pem ubuntu@$RSA_KEY
+          ssh -i ../aws_key.pem ubuntu@$ENDPOINT
             
       
