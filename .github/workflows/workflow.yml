@@ -55,7 +55,7 @@ jobs:
 #     needs: docker
     env:
       RSA_KEY: ${{ secrets.AWS_SSH_KEY }} 
-      ENDPOINT: ${{ secrets.INSTANCE_ENDPOINT }}
+      ENDPOINT: ${{ secrets.INSTANCE_ENDOPOINT }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
@@ -65,6 +65,6 @@ jobs:
           echo $RSA_KEY >> ../aws_key.pem
       - name: SSH into server
         run: |
-          ssh -i ../aws_key.pem ubuntu@${{ secrets.INSTANCE_ENDPOINT }} -tt 
+          ssh -tt -i ../aws_key.pem ubuntu@${{ secrets.INSTANCE_ENDPOINT }} 
             
       
