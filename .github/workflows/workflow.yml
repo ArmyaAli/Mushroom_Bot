@@ -64,6 +64,6 @@ jobs:
       - name: SSH into server
         run: |
           chmod 600 aws_key.pem
-          ssh -tt -o StrictHostKeyChecking=no -i aws_key.pem ubuntu@$ENDPOINT
+           ssh-copy-id ubuntu@$ENDPOINT
             
       
