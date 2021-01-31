@@ -64,6 +64,6 @@ jobs:
       - name: SSH into server
         run: |
           chmod 600 aws_key.pem
-           ssh-copy-id ubuntu@$ENDPOINT
+          ssh-copy-id ubuntu@$ENDPOINT
             
       
