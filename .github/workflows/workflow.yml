@@ -63,7 +63,7 @@ jobs:
           echo $RSA_KEY >> aws_key.pem
       - name: SSH into server
         run: |
-          chmod 400 aws_key.pem
+          chmod 600 aws_key.pem
           ssh -tt -o StrictHostKeyChecking=no -i aws_key.pem ubuntu@$ENDPOINT
             
       
