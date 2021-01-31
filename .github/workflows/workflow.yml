@@ -54,7 +54,7 @@ jobs:
     needs: docker
     steps:
       - name: Grab Heroku CLI
-      - run: |
+        run: |
           sudo snap install --classic heroku
           heroku container:login
 
