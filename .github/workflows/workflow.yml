@@ -54,8 +54,9 @@ jobs:
     runs-on: ubuntu-latest
 #     needs: docker
     env:
-      RSA_KEY: ${{ secrets.AWS_SSH_KEY }} 
       ENDPOINT: ${{ secrets.INSTANCE_ENDPOINT }}
+      AWS_ID: ${{ AWS_ACCESS_ID }}
+      AWS_SECRET: ${{ AWS_SECRET }}  
     steps:
       - name: Install AWS CLI
         run: |
@@ -64,4 +65,12 @@ jobs:
           sudo ./aws/install
       - name: test CLI
         run: aws --version
+      - name: SET AWS CREDENTIALS
+        run: |
+          aws configure set access_key $AWS_ID --profile CI
+          aws configure set secret_key $AWS_SECRET --profile CI
+          aws configure set region us-west-2 --profile CI
+          aws configure set output json --profile CI
+        
+        
       
