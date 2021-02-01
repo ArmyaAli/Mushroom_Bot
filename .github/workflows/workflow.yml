@@ -37,6 +37,7 @@ jobs:
       AWS_INSTANCE_ID: ${{ secrets.AWS_INSTANCE_ID }}
       AWS_ZONE: ${{ secrets.AWS_ZONE }}
       AWS_OS: ${{ secrets.AWS_OS_USER }}
+      BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
     steps:
       - name: Install AWS CLI
         run: |
@@ -63,16 +64,17 @@ jobs:
       - name: SSH to AWS INSTANCE
         run: |
           ssh -t -o StrictHostKeyChecking=no -i temp_key $AWS_OS@$ENDPOINT \
-          'bash -i -c
-          "
+          'bash -i -c "
           cd software;
           pm2 kill;
           cd software;
           rm -rf Mushroom_Bot;
           git clone https://github.com/ArmyaAli/Mushroom_Bot.git;
           cd Mushroom_Bot;
+          touch .env && cat >> $BOT_TOKEN;
           npm ci;
-          npm run deploy;
+          npm run build;
+          pm2 dist/bot.js;
           echo "successfully deployed";
           '"
       
