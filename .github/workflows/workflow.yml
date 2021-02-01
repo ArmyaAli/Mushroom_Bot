@@ -90,8 +90,7 @@ jobs:
           ssh -t -o StrictHostKeyChecking=no -i temp_key $AWS_OS@$ENDPOINT \
           "sudo echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin;
           sudo docker pull lordmushroom/mushroombot:latest;
-          sudo docker run mushroombot;
-          pwd
+          sudo docker run lordmushroom/mushroombot;
           "
       
 
