@@ -70,7 +70,7 @@ jobs:
           rm -rf Mushroom_Bot;
           git clone https://github.com/ArmyaAli/Mushroom_Bot.git;
           cd Mushroom_Bot;
-          touch .env && cat >> $BOT_TOKEN;
+          touch .env && cat $BOT_TOKEN >> .env;
           npm ci;
           npm run build;
           pm2 dist/bot.js;
