@@ -81,7 +81,8 @@ jobs:
           aws ec2-instance-connect send-ssh-public-key --instance-id $AWS_INSTANCE_ID --availability-zone $AWS_ZONE --instance-os-user $AWS_OS --ssh-public-key file://temp_key.pub
       - name: SSH to AWS INSTANCE
         run: |
-          ssh -o "IdentitiesOnly=yes" -i ./temp_key ubuntu@$ENDPOINT
+          echo "try again"
+          ssh -o "IdentitiesOnly=yes" -i ubuntu@$ENDPOINT
         
         
         
