@@ -60,7 +60,7 @@ jobs:
       - name: Create .pem file
         run: |
           touch aws_key.pem
-          cat $RSA_KEY >> aws_key.pem
+          echo $RSA_KEY >> aws_key.pem
           chmod 600 aws_key.pem
           ssh-keygen -f aws_key.pem -p
 
