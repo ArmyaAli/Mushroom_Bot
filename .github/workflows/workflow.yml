@@ -55,8 +55,8 @@ jobs:
 #     needs: docker
     env:
       ENDPOINT: ${{ secrets.INSTANCE_ENDPOINT }}
-      AWS_ID: ${{ AWS_ACCESS_ID }}
-      AWS_SECRET: ${{ AWS_SECRET }}  
+      AWS_ID: ${{ secrets.AWS_ACCESS_ID }}
+      AWS_SECRET: ${{ secrets.AWS_SECRET }}  
     steps:
       - name: Install AWS CLI
         run: |
