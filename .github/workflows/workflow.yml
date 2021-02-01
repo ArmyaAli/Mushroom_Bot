@@ -57,11 +57,9 @@ jobs:
       RSA_KEY: ${{ secrets.AWS_SSH_KEY }} 
       ENDPOINT: ${{ secrets.INSTANCE_ENDPOINT }}
     steps:
-      - name: Create .pem file
+      - name: Generate SSH Key
         run: |
-          touch aws_key.pem
-          echo $RSA_KEY >> aws_key.pem
-          chmod 600 aws_key.pem
+          ssh-keygen
           ssh-copy-id ubuntu@$ENDPOINT
 
       - name: SSH into server
