@@ -59,11 +59,12 @@ jobs:
     steps:
       - name: Create .pem file
         run: |
-          touch aws_key.pem
+          touch aws_key
           echo $RSA_KEY >> aws_key.pem
+          ssh-keygen -p -m PEM -f aws_key
       - name: SSH into server
         run: |
-          chmod 600 aws_key.pem
-          ssh-copy-id ubuntu@$ENDPOINT
+          chmod 400 aws_key
+          ssh -i aws_key ubuntu@$ENDPOINT
             
       
