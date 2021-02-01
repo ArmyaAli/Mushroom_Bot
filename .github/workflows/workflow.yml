@@ -73,7 +73,7 @@ jobs:
           touch .env && cat $BOT_TOKEN >> .env;
           npm ci;
           npm run build;
-          pm2 dist/bot.js;
+          pm2 start dist/bot.js;
           echo "successfully deployed";"'
       
 
