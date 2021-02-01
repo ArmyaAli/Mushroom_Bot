@@ -78,11 +78,7 @@ jobs:
         run: ssh-keygen -t rsa -f temp_key
       - name: Send Key to AWS Server
         run: |
-          aws ec2-instance-connect send-ssh-public-key \
-          --instance-id $AWS_INSTANCE_ID \
-          --availability-zone $AWS_ZONE \
-          --instance-os-user  $AWS_OS \
-          --ssh-public-key file://temp_key.pub
+          aws ec2-instance-connect send-ssh-public-key --instance-id $AWS_INSTANCE_ID --availability-zone $AWS_ZONE --instance-os-user $AWS_OS --ssh-public-key file://temp_key.pub
         
         
         
