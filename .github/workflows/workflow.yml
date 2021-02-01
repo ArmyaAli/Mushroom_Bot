@@ -73,7 +73,7 @@ jobs:
           aws configure set access_key $AWS_ID --profile CI
           aws configure set secret_key $AWS_SECRET --profile CI
           aws configure set region us-west-2 --profile CI
-          aws configure set output json --profile CI
+          aws configure set output text --profile CI
       - name: Create SSH Keypair
         run: ssh-keygen -t rsa -f temp_key
       - name: Send Key to AWS Server
