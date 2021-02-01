@@ -55,6 +55,8 @@ jobs:
 #     needs: docker
     env:
       ENDPOINT: ${{ secrets.INSTANCE_ENDPOINT }}
+      AWS_ACCESS_ID: ${{ secrets.AWS_ACCESS_ID }} 
+      AWS_SECRET: ${{ secrets.AWS_SECRET }}  
       AWS_INSTANCE_ID: ${{ secrets.AWS_INSTANCE_ID }}
       AWS_ZONE: ${{ secrets.AWS_ZONE }}
       AWS_OS: ${{ secrets.AWS_OS_USER }}
@@ -68,8 +70,8 @@ jobs:
         run: aws --version
       - name: SET AWS CREDENTIALS
         run: |
-          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_ID }} 
-          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET }} 
+          aws configure set aws_access_key_id $AWS_ACCESS_ID
+          aws configure set aws_secret_access_key $AWS_SECRET
           aws configure set default.region us-east-2 
           aws configure list
       - name: Create SSH Keypair
@@ -77,6 +79,10 @@ jobs:
       - name: Send Key to AWS Server
         run: |
           aws ec2-instance-connect send-ssh-public-key --instance-id $AWS_INSTANCE_ID --availability-zone $AWS_ZONE --instance-os-user $AWS_OS --ssh-public-key file://temp_key.pub
+      - name: SSH to AWS INSTANCE
+        run: ssh -i temp_key $AWS_OS@$ENDPOINT
+        
+        
         
         
         
