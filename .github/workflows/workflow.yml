@@ -70,10 +70,10 @@ jobs:
         run: aws --version
       - name: SET AWS CREDENTIALS
         run: |
-          aws configure set access_key $AWS_ID --profile CI
-          aws configure set secret_key $AWS_SECRET --profile CI
-          aws configure set region us-east-2 --profile CI
-          aws configure set output text --profile CI
+          aws configure set access_key $AWS_ID
+          aws configure set secret_key $AWS_SECRET
+          aws configure set region us-east-2
+          aws configure set output text
       - name: Create SSH Keypair
         run: ssh-keygen -t rsa -f temp_key
       - name: Send Key to AWS Server
