@@ -68,9 +68,9 @@ jobs:
         run: aws --version
       - name: SET AWS CREDENTIALS
         run: |
-          aws configure set access_key ${{ secrets.AWS_ACCESS_ID }} --profile AWS_DEFAULT_PROFILE 
-          aws configure set secret_key ${{ secrets.AWS_SECRET }} --profile AWS_DEFAULT_PROFILE
-          aws configure set region us-east-2 --profile AWS_DEFAULT_PROFILE
+          aws configure set access_key ${{ secrets.AWS_ACCESS_ID }} 
+          aws configure set secret_key ${{ secrets.AWS_SECRET }} 
+          aws configure set region us-east-2 
           aws configure list
       - name: Create SSH Keypair
         run: ssh-keygen -t rsa -f temp_key
