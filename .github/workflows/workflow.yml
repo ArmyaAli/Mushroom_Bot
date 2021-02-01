@@ -63,7 +63,9 @@ jobs:
           --ssh-public-key file://temp_key.pub
       - name: SSH to AWS INSTANCE
         run: |
-          ssh -t -o StrictHostKeyChecking=no -i temp_key $AWS_OS@$ENDPOINT 'bash -i -c "
+          ssh -t -o StrictHostKeyChecking=no SendEnv=$BOT_TOKEN -i temp_key $AWS_OS@$ENDPOINT \
+          'bash -i -c 
+          "
           pm2 kill;
           cd software;
           rm -rf Mushroom_Bot;
@@ -73,7 +75,8 @@ jobs:
           npm ci;
           npm run build;
           pm2 start dist/bot.js;
-          echo "successfully deployed";"'
+          echo "successfully deployed";
+          "'
       
 
         
