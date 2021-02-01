@@ -82,7 +82,7 @@ jobs:
           --instance-id $AWS_INSTANCE_ID \
           --availability-zone $AWS_ZONE \
           --instance-os-user  $AWS_OS \
-          --ssh-public-key temp_key.pub
+          --ssh-public-key file://temp_key.pub
         
         
         
