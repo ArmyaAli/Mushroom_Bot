@@ -64,13 +64,12 @@ jobs:
       - name: SSH to AWS INSTANCE
         run: |
           ssh -t -o StrictHostKeyChecking=no -i temp_key $AWS_OS@$ENDPOINT 'bash -i -c "
-          cd software;
           pm2 kill;
           cd software;
           rm -rf Mushroom_Bot;
           git clone https://github.com/ArmyaAli/Mushroom_Bot.git;
           cd Mushroom_Bot;
-          touch .env && cat $BOT_TOKEN >> .env;
+          touch .env && echo $BOT_TOKEN >> .env;
           npm ci;
           npm run build;
           pm2 start dist/bot.js;
