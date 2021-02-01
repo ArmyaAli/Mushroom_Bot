@@ -84,6 +84,7 @@ jobs:
       - name: SSH to AWS INSTANCE
         run: |
           ssh -t -o StrictHostKeyChecking=no -i temp_key $AWS_OS@$ENDPOINT
+          ssh sandbox2.domain.com 'uptime'
       - name: Docker Login
         run: |
           pwd
