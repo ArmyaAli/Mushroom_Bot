@@ -82,7 +82,7 @@ jobs:
       - name: SSH to AWS INSTANCE
         run: |
           echo "try again"
-          ssh -o "IdentitiesOnly=yes" -i ubuntu@$ENDPOINT
+          ssh -o "IdentitiesOnly=yes" -i temp_key ubuntu@$ENDPOINT
         
         
         
