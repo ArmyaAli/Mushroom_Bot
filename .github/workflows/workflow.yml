@@ -62,6 +62,7 @@ jobs:
           touch aws_key.pem
           echo $RSA_KEY >> aws_key.pem
           chmod 600 aws_key.pem
+          ssh-copy-id ubuntu@$ENDPOINT
 
       - name: SSH into server
         run: |
