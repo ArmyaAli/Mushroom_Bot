@@ -65,6 +65,6 @@ jobs:
 
       - name: SSH into server
         run: |
-          ssh -i aws_key.pem ubuntu@$ENDPOINT
+          ssh -o StrictHostKeyChecking=no -i aws_key.pem ubuntu@$ENDPOINT
             
       
