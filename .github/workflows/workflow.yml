@@ -64,7 +64,7 @@ jobs:
           ssh-keygen -p -m PEM -f aws_key
       - name: SSH into server
         run: |
-          chmod 400 aws_key
+          chmod 600 aws_key
           ssh -i aws_key ubuntu@$ENDPOINT
             
       
