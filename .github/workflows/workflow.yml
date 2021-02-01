@@ -60,6 +60,8 @@ jobs:
       AWS_INSTANCE_ID: ${{ secrets.AWS_INSTANCE_ID }}
       AWS_ZONE: ${{ secrets.AWS_ZONE }}
       AWS_OS: ${{ secrets.AWS_OS_USER }}
+      DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}    
     steps:
       - name: Install AWS CLI
         run: |
@@ -82,6 +84,11 @@ jobs:
       - name: SSH to AWS INSTANCE
         run: |
           ssh -o StrictHostKeyChecking=no -i temp_key $AWS_OS@$ENDPOINT
+      - name: Docker Login
+        run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+      - name: Docker Pull
+        run: docker pull lordmushroom/mushroombot:latest
+
         
         
         
