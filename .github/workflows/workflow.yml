@@ -57,13 +57,11 @@ jobs:
       RSA_KEY: ${{ secrets.AWS_SSH_KEY }} 
       ENDPOINT: ${{ secrets.INSTANCE_ENDPOINT }}
     steps:
-      - name: Generate SSH Key
+      - name: Install AWS CLI
         run: |
-          ssh-keygen
-          ssh-copy-id ubuntu@$ENDPOINT
-
-      - name: SSH into server
-        run: |
-          ssh -o StrictHostKeyChecking=no -i aws_key.pem ubuntu@$ENDPOINT
-            
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+      - name: test CLI
+        run: aws --version
       
