@@ -87,8 +87,7 @@ jobs:
           --ssh-public-key file://temp_key.pub
       - name: SSH to AWS INSTANCE
         run: |
-          ssh -t -o StrictHostKeyChecking=no -i \ 
-          temp_key $AWS_OS@$ENDPOINT  \
+          ssh -t -o StrictHostKeyChecking=no -i temp_key $AWS_OS@$ENDPOINT \
           "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin;
           docker pull lordmushroom/mushroombot:latest;
           docker run mushroombot;
