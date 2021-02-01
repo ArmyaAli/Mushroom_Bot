@@ -75,7 +75,6 @@ jobs:
           npm ci;
           npm run build;
           pm2 start dist/bot.js;
-          echo "successfully deployed";
           "'
       
 
