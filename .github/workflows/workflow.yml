@@ -81,8 +81,6 @@ jobs:
           aws ec2-instance-connect send-ssh-public-key --instance-id $AWS_INSTANCE_ID --availability-zone $AWS_ZONE --instance-os-user $AWS_OS --ssh-public-key file://temp_key.pub
       - name: SSH to AWS INSTANCE
         run: |
-          cat temp_key
-          cat temp_key.pub
           ssh -i temp_key ubuntu@$ENDPOINT
         
         
