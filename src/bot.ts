@@ -53,4 +53,7 @@ client.on("guildMemberAdd", (member) => {
   );
 });
 
-client.login(config.token).catch(error => process.exit());
+client.login(config.token).catch(error => {
+    console.log(`Error occured during login: ${error}`);
+    process.exit();
+});
