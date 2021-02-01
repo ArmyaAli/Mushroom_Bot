@@ -63,8 +63,8 @@ jobs:
           --ssh-public-key file://temp_key.pub
       - name: SSH to AWS INSTANCE
         run: |
-          ssh -t -o StrictHostKeyChecking=no SendEnv=$BOT_TOKEN -i temp_key $AWS_OS@$ENDPOINT \
-          'bash -i -c 
+          ssh -t -o StrictHostKeyChecking=no -i temp_key $AWS_OS@$ENDPOINT \
+          'BOT_TOKEN=$BOT_TOKEN bash -s 
           "
           pm2 kill;
           cd software;
