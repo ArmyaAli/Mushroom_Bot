@@ -80,18 +80,19 @@ jobs:
         run: ssh-keygen -t rsa -f temp_key
       - name: Send Key to AWS Server
         run: |
-          aws ec2-instance-connect send-ssh-public-key --instance-id $AWS_INSTANCE_ID --availability-zone $AWS_ZONE --instance-os-user $AWS_OS --ssh-public-key file://temp_key.pub
+          aws ec2-instance-connect send-ssh-public-key \
+          --instance-id $AWS_INSTANCE_ID \
+          --availability-zone $AWS_ZONE  \
+          --instance-os-user $AWS_OS     \
+          --ssh-public-key file://temp_key.pub
       - name: SSH to AWS INSTANCE
         run: |
-          ssh -tt -o StrictHostKeyChecking=no -i temp_key $AWS_OS@$ENDPOINT
-      - name: Docker Login
-        run: |
-          pwd
-          echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-      - name: Docker Pull
-        run: docker pull lordmushroom/mushroombot:latest
-      - name: Docker Run
-        run: ls -l
+          ssh -t -o StrictHostKeyChecking=no -i \ 
+          temp_key $AWS_OS@$ENDPOINT  \
+          "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin;
+          docker pull lordmushroom/mushroombot:latest;
+          docker run mushroombot;
+          "
       
 
         
