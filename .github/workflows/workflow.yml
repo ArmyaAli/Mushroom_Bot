@@ -84,13 +84,14 @@ jobs:
       - name: SSH to AWS INSTANCE
         run: |
           ssh -tt -o StrictHostKeyChecking=no -i temp_key $AWS_OS@$ENDPOINT
-#       - name: Docker Login
-#         run: |
-#           echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-#       - name: Docker Pull
-#         run: docker pull lordmushroom/mushroombot:latest
-#       - name: Docker Run
-#         run: ls -l
+      - name: Docker Login
+        run: |
+          pwd
+          echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+      - name: Docker Pull
+        run: docker pull lordmushroom/mushroombot:latest
+      - name: Docker Run
+        run: ls -l
       
 
         
