@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    name: build the bot
+    name: Test Build
     runs-on: ubuntu-latest
     env:
       BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
@@ -63,8 +63,7 @@ jobs:
           --ssh-public-key file://temp_key.pub
       - name: SSH to AWS INSTANCE
         run: |
-          ssh -t -o StrictHostKeyChecking=no -i temp_key $AWS_OS@$ENDPOINT \
-          'bash -i -c "
+          ssh -t -o StrictHostKeyChecking=no -i temp_key $AWS_OS@$ENDPOINT 'bash -i -c "
           cd software;
           pm2 kill;
           cd software;
