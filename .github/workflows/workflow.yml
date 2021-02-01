@@ -56,7 +56,10 @@ jobs:
     env:
       ENDPOINT: ${{ secrets.INSTANCE_ENDPOINT }}
       AWS_ID: ${{ secrets.AWS_ACCESS_ID }}
-      AWS_SECRET: ${{ secrets.AWS_SECRET }}  
+      AWS_SECRET: ${{ secrets.AWS_SECRET }}
+      AWS_INSTANCE_ID: ${{ secrets_AWS_INSTANCE_ID }}
+      AWS_ZONE: ${{ secrets.AWS_ZONE }}
+      AWS_OS: ${{ secrets.AWS_OS_USER }}
     steps:
       - name: Install AWS CLI
         run: |
@@ -71,6 +74,17 @@ jobs:
           aws configure set secret_key $AWS_SECRET --profile CI
           aws configure set region us-west-2 --profile CI
           aws configure set output json --profile CI
+      - name: Create SSH Keypair
+        run: ssh-keygen -t rsa -f temp_key
+      - name: Send Key to AWS Server
+        run: |
+          aws ec2-instance-connect send-ssh-public-key \
+          --instance-id $AWS_INSTANCE_ID \
+          --availability-zone $AWS_ZONE \
+          --instance-os-user  $AWS_OS \
+          --ssh-public-key temp_key.pub
+        
+        
         
         
       
