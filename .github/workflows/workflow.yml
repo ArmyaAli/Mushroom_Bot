@@ -57,7 +57,7 @@ jobs:
       ENDPOINT: ${{ secrets.INSTANCE_ENDPOINT }}
       AWS_ID: ${{ secrets.AWS_ACCESS_ID }}
       AWS_SECRET: ${{ secrets.AWS_SECRET }}
-      AWS_INSTANCE_ID: ${{ secrets_AWS_INSTANCE_ID }}
+      AWS_INSTANCE_ID: ${{ secrets.AWS_INSTANCE_ID }}
       AWS_ZONE: ${{ secrets.AWS_ZONE }}
       AWS_OS: ${{ secrets.AWS_OS_USER }}
     steps:
