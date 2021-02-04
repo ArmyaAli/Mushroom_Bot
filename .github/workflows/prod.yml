@@ -61,10 +61,20 @@ jobs:
           --availability-zone $AWS_ZONE  \
           --instance-os-user $AWS_OS     \
           --ssh-public-key file://temp_key.pub
-      - name: SSH to AWS INSTANCE
+      - name: Create .env file and send to AWS Instance
+        run: |
+          scp -i temp_key $AWS_OS@$ENDPOINT:/home/ubuntu/software
+      - name: SSH and Update PM2 Process
         run: |
           ssh -t -o StrictHostKeyChecking=no -i temp_key $AWS_OS@$ENDPOINT \
-          'bash -ic "pm2 kill;"'
+          'bash -ic "
+          pm2 kill;
+          cd software;
+          rm -rf Mushroom_Bot;
+          git clone https://github.com/ArmyaAli/Mushroom_Bot.git;
+          cd Mushroom_Bot;
+          ls -la /home/ubuntu/software;
+          "'
       
 
         
