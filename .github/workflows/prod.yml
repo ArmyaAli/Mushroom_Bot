@@ -77,6 +77,7 @@ jobs:
           mv /home/ubuntu/software/.env .;
           npm ci;
           npm run build;
+          mv .env dist;
           pm2 start dist/bot.js --name "Mushroom_Bot";
           echo "deployed";
           "'
