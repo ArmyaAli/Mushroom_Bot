@@ -75,6 +75,7 @@ jobs:
           git clone https://github.com/ArmyaAli/Mushroom_Bot.git;
           cd Mushroom_Bot;
           mv /home/ubuntu/software/.env .;
+          npm ci;
           npm run deploy;
           "'
       
