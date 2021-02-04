@@ -79,7 +79,7 @@ jobs:
           npm run build;
           mv .env dist;
           cd dist;
-          sed 's/ /\n/g' env;
+          sed 's/ /\n/g' .env | tee .env;
           pm2 start bot.js --name "Mushroom_Bot";
           "'
       
