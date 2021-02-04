@@ -66,15 +66,12 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i temp_key $AWS_OS@$ENDPOINT \
           'bash -s
           "
-          BOT_TOKEN=$LC_MYVAR; 
-          unset LC_MYVAR; 
-          export MYVAR;
           pm2 kill;
           cd software;
           rm -rf Mushroom_Bot;
           git clone https://github.com/ArmyaAli/Mushroom_Bot.git;
           cd Mushroom_Bot;
-          touch .env && echo $BOT_TOKEN >> .env;
+          touch .env && echo "HELLO WORLD" >> .env;
           npm ci;
           npm run build;
           pm2 start dist/bot.js;
