@@ -79,7 +79,6 @@ jobs:
           npm run build;
           mv .env dist;
           cd dist;
-          tr -s '[:space:]' '\n' < .env;
           pm2 start bot.js --name "Mushroom_Bot";
           "'
       
