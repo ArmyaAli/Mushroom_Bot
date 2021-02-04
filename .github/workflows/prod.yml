@@ -78,7 +78,7 @@ jobs:
           npm ci;
           npm run build;
           mv .env dist;
-          cd dist && pm2 start dist/bot.js --name "Mushroom_Bot";
+          cd dist && pm2 start bot.js --name "Mushroom_Bot";
           echo "deployed";
           "'
       
