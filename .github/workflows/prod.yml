@@ -64,6 +64,7 @@ jobs:
       - name: Create .env file and send to AWS Instance
         run: |
           touch .env && echo ${{ secrets.ENV_FILE }} >> .env
+          sed -i 's/ /\n/g/' .env;
           scp -o StrictHostKeyChecking=no -i temp_key .env $AWS_OS@$ENDPOINT:/home/ubuntu/software
       - name: SSH and Update PM2 Process
         run: |
@@ -79,7 +80,6 @@ jobs:
           npm run build;
           mv .env dist;
           cd dist;
-          sed -i 's/ /\n/g/' .env;
           pm2 start bot.js --name "Mushroom_Bot";
           "'
       
