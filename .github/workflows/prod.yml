@@ -63,7 +63,8 @@ jobs:
           --ssh-public-key file://temp_key.pub
       - name: Create .env file and send to AWS Instance
         run: |
-          scp -i temp_key $AWS_OS@$ENDPOINT:/home/ubuntu/software
+          touch .env && echo $BOT_TOKEN >> .env
+          scp -i temp_key .env $AWS_OS@$ENDPOINT:/home/ubuntu/software
       - name: SSH and Update PM2 Process
         run: |
           ssh -t -o StrictHostKeyChecking=no -i temp_key $AWS_OS@$ENDPOINT \
