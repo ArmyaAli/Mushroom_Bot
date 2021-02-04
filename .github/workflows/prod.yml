@@ -76,6 +76,7 @@ jobs:
           cd Mushroom_Bot;
           mv /home/ubuntu/software/.env .;
           npm ci;
+          npm run build;
           pm2 start dist/bot.ts --name "Mushroom_Bot";
           "'
       
