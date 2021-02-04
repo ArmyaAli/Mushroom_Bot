@@ -64,7 +64,7 @@ jobs:
       - name: SSH to AWS INSTANCE
         run: |
           ssh -o StrictHostKeyChecking=no -i temp_key $AWS_OS@$ENDPOINT \
-          'bash -s
+          'bash -l -c
           "
           pm2 kill;
           "'
