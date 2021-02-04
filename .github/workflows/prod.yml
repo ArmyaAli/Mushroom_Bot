@@ -64,7 +64,7 @@ jobs:
       - name: SSH to AWS INSTANCE
         run: |
           ssh -t -o StrictHostKeyChecking=no -o SendEnv=$BOT_TOKEN -i temp_key $AWS_OS@$ENDPOINT \
-          'bash -i -c 
+          'bash -s
           "
           BOT_TOKEN=$LC_MYVAR; 
           unset LC_MYVAR; 
