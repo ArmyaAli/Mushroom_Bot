@@ -1,25 +1,25 @@
 import { Client, Message, VoiceChannel, VoiceConnection } from "discord.js";
+import Queue from "distube/typings/Queue";
 import { Command } from "../../command";
-import { MusicStateManager } from "../../util/StateManagement";
+import DistubeManager from "../../util/distubeManager";
 
 const command: Command = {
     name: "skip",
-    description: "skips the current track in the queue and goes to the next one in line",
+    description: "Skips the current song playing in the queue.",
     requiredPermissions: [],
     async execute(client: Client, message: Message, args: string[]) {
-        const query = args.join(" ");
-        if (!message.member!.voice!.channel) {
-            await message.channel.send(
-                "You must be in a voice channel to use this command!");
-            return;
-        }
-
-        if (MusicStateManager.musicQueue.length != 0)
-            MusicStateManager.emit("skip", MusicStateManager.musicQueue.shift());
-        else
-            await message.channel.send("The queue is empty, you cannot skip anymore songs!");
-
         try {
+            if (DistubeManager.Instance) {
+                let queue: Queue = await DistubeManager.Instance.getQueue(
+                    message
+                );
+                if (queue == undefined) {
+                    message.channel.send("Currently no songs in the queue.");
+                } else {
+                    await DistubeManager.Instance.skip(message);
+                    message.channel.send("Skipping song.");
+                }
+            }
         } catch (error) {
             console.log(error);
         }

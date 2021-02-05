@@ -1,7 +1,9 @@
 import Discord, { BitFieldResolvable, Message, PermissionString, TextChannel } from "discord.js";
+import DistubeManager from "./util/distubeManager";
 import path from "path";
 import config, { readCommandsRecursive } from "./botconfig";
 import {Command} from "./command";
+import DisTube from "distube";
 
 const client: Discord.Client = new Discord.Client();
 const commands: Discord.Collection<string, Command> = new Discord.Collection();
@@ -10,6 +12,7 @@ const commandContext = path.join(__dirname, "commands");
 let commandFiles: string[] = [];
 
 client.once("ready", async () => {
+  DistubeManager.Instance = new DisTube(client);
   readCommandsRecursive(commandContext, commandFiles);
   commandFiles = commandFiles.filter((fileName) => fileName.endsWith(".ts") || fileName.endsWith(".js"));
   for (const filePath of commandFiles) {

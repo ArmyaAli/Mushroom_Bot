@@ -1,28 +1,31 @@
 import { Client, Message, VoiceChannel, VoiceConnection } from "discord.js";
+import Queue from "distube/typings/Queue";
 import { Command } from "../../command";
-import { MusicStateManager } from "../../util/StateManagement";
+import DistubeManager from "../../util/distubeManager";
 
 const command: Command = {
-  name: "pause",
-  description: "pauses the currently playing song",
-  requiredPermissions: [],
-  async execute(client: Client, message: Message, args: string[]) {
-    const query = args.join(" ");
-    if (!message.member!.voice!.channel) {
-      await message.channel.send("You must be in a voice channel to use this command!");
-      return;
-    }
-
-    if (MusicStateManager.dispatcher) {
-      MusicStateManager.dispatcher.pause();
-      await message.channel.send("Mushroomie! Paused playing music~!");
-    }
-
-    try {
-    } catch (error) {
-      console.log(error);
-    }
-  },
+    name: "pause",
+    description: "Stops current song in the queue.",
+    requiredPermissions: [],
+    async execute(client: Client, message: Message, args: string[]) {
+        try {
+            if (DistubeManager.Instance) {
+                let queue: Queue = DistubeManager.Instance.getQueue(
+                    message
+                );
+                if (queue == undefined) {
+                    message.channel.send("Currently no songs in the queue.");
+                } else if (DistubeManager.Instance.isPaused(message)) {
+                    message.channel.send("Song is currently paused.");
+                } else {
+                    DistubeManager.Instance.pause(message);
+                    message.channel.send("Pausing song.");
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    },
 };
 
 export = command;
