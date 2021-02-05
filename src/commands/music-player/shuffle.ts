@@ -14,20 +14,15 @@ const command: Command = {
                 let queue: Queue = await DistubeManager.Instance.getQueue(
                     message
                 );
-                if (queue == undefined) {
+                if (queue.songs.length === 0) {
                     message.channel.send("Currently no songs in the queue.");
                 } else {
                     DistubeManager.Instance.shuffle(message);
-                    message.channel.send(
-                        "Current queue:\n" +
-                        queue!.songs
-                            .map(
-                                (song, id) =>
-                                    `**${id + 1}**. [${song.name}](${song.url}) - \`${song.formattedDuration
-                                    }\``
-                            )
-                            .join("\n")
-                    );
+                    let output = "Next 10 songs in Queue!\n"
+                    for(let i = 0; i < 10; ++i) {
+                        output +=`**${i+1}**. [${queue.songs[i].name}] <${queue.songs[i].url}> - \`${queue.songs[i].formattedDuration}\`\n`
+                    }
+                    message.channel.send(output)
                 }
             }
         } catch (error) {

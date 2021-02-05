@@ -10,7 +10,7 @@ const command: Command = {
     async execute(client: Client, message: Message, args: string[]) {
         try {
             if (DistubeManager.Instance) {
-                let queue: Queue | undefined = await DistubeManager.Instance.getQueue(
+                let queue: Queue = await DistubeManager.Instance.getQueue(
                     message
                 );
                 if (queue == undefined) {
