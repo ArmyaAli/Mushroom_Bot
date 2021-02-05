@@ -40,7 +40,7 @@ export const grabAllSongsFromPlaylist = async (
   id: string | undefined
 ): Promise<Array<SPOTIFY_PLAYLIST_SONG> | undefined> => {
   if (id === undefined) return;
-  const URL = `https://api.spotify.com/v1/playlists/${id}/tracks?`;
+  const URL = `https://api.spotify.com/v1/playlists/{id}`;
 
   try {
     const BEARER_TOKEN = await authorize();
@@ -57,22 +57,23 @@ export const grabAllSongsFromPlaylist = async (
     const songData: Array<SPOTIFY_PLAYLIST_SONG> = [];
 
     let response = await fetch(URL, options);
+    console.log(response)
     let data = await response.json();
-    do {
-      data.items.forEach((song: any) => {
-        songData.push({
-          title: song.track.name,
-          artist: song.track.artists
-            .map((artist: any) => artist.name)
-            .join(","),
-          album: song.track.album.name,
-        });
-      });
-      if (data.next) {
-        response = await fetch(data.next, options);
-        data = await response.json();
-      }
-    } while (songData.length < data.total);
+    // do {
+    //   data.items.forEach((song: any) => {
+    //     songData.push({
+    //       title: song.track.name,
+    //       artist: song.track.artists
+    //         .map((artist: any) => artist.name)
+    //         .join(","),
+    //       album: song.track.album.name,
+    //     });
+    //   });
+    //   if (data.next) {
+    //     response = await fetch(data.next, options);
+    //     data = await response.json();
+    //   }
+    // } while (songData.length < data.total);
     return songData;
   } catch (err) {
     console.log(`Error: ${err}`);

@@ -10,20 +10,20 @@ const command: Command = {
     requiredPermissions: [],
     async execute(client: Client, message: Message, args: string[]) {
         try {
-            const query = args.join(" ");
-            if (query.startsWith('https://open.spotify.com/playlist/37i9dQZF1DWY6tYEFs22tT')) {
-                const rawsongs = await grabAllSongsFromPlaylist(query);
-                let songs: string[] = []
-                if (rawsongs) {
-                    songs = rawsongs.map((song) => song.title);
-                    await DistubeManager.Instance?.playCustomPlaylist(message, songs);
+            if (DistubeManager.Instance) {
+                const query = args.join(" ");
+                if (query.startsWith('https://open.spotify.com/playlist')) {
+                    const LIST_ID = query.substr(query.lastIndexOf('/') + 1);
+                    const RAW_SONGS = await grabAllSongsFromPlaylist(LIST_ID);
+                    let songs: string[] = [];
+                    if (RAW_SONGS) {
+                        songs = RAW_SONGS.map((song) => song.title);
+                        await DistubeManager.Instance.playCustomPlaylist(message, songs);
+                    }
+                } else {
+                    await DistubeManager.Instance.play(message, query);
                 }
-
-
-            } else {
-                await DistubeManager.Instance?.play(message, query);
             }
-
         } catch (error) {
             console.log(error)
         }
