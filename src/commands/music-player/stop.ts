@@ -4,7 +4,7 @@ import { Command } from "../../command";
 import DistubeManager from "../../util/distubeManager";
 
 const command: Command = {
-    name: "queue",
+    name: "stop",
     description: "Displays the current queue of the DisTube music player.",
     requiredPermissions: [],
     async execute(client: Client, message: Message, args: string[]) {
