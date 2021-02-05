@@ -16,7 +16,7 @@ const command: Command = {
                 if (queue.songs.length === 0) {
                     message.channel.send("Currently no songs in the queue.");
                 } else {
-                    let output = "Next 10 songs in Queue!\n"
+                    let output = "Next songs in Queue! (Up to the next 10)\n"
                     for(let i = 0; i < 10 && i < queue.songs.length; ++i) {
                         output +=`**${i+1}**. [${queue.songs[i].name}] <${queue.songs[i].url}> - \`${queue.songs[i].formattedDuration}\`\n`
                     }

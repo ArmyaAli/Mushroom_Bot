@@ -13,7 +13,7 @@ const command: Command = {
                 let queue: Queue = await DistubeManager.Instance.getQueue(
                     message
                 );
-                if (queue == undefined) {
+                if (queue.songs.length <= 1) {
                     message.channel.send("Currently no songs in the queue.");
                 } else {
                     await DistubeManager.Instance.skip(message);

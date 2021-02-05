@@ -18,8 +18,8 @@ const command: Command = {
                     message.channel.send("Currently no songs in the queue.");
                 } else {
                     DistubeManager.Instance.shuffle(message);
-                    let output = "Next 10 songs in Queue!\n"
-                    for(let i = 0; i < 10 || i < queue.songs.length; ++i) {
+                    let output = "Next songs in Queue! (Up to the next 10)\n"
+                    for(let i = 0; i < 10 && i < queue.songs.length; ++i) {
                         output +=`**${i+1}**. [${queue.songs[i].name}] <${queue.songs[i].url}> - \`${queue.songs[i].formattedDuration}\`\n`
                     }
                     message.channel.send(output)
