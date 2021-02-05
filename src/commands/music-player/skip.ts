@@ -4,8 +4,8 @@ import { Command } from "../../command";
 import DistubeManager from "../../util/distubeManager";
 
 const command: Command = {
-  name: "queue",
-  description: "Displays the current queue of the DisTube music player.",
+  name: "skip",
+  description: "Skips the current song playing in the queue.",
   requiredPermissions: [],
   async execute(client: Client, message: Message, args: string[]) {
     try {
@@ -15,17 +15,8 @@ const command: Command = {
       if (queue == undefined) {
         message.channel.send("Currently no songs in the queue.");
       } else {
-        message.channel.send(
-          "Current queue:\n" +
-            queue!.songs
-              .map(
-                (song, id) =>
-                  `**${id + 1}**. [${song.name}](${song.url}) - \`${
-                    song.formattedDuration
-                  }\``
-              )
-              .join("\n")
-        );
+        await DistubeManager.Instance?.skip(message);
+        message.channel.send("Skipping song.");
       }
     } catch (error) {
       console.log(error);
