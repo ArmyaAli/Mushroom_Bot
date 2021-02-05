@@ -18,7 +18,8 @@ const command: Command = {
                     let songs: string[] = [];
                     if (RAW_SONGS) {
                         songs = RAW_SONGS.map((song) => song.title);
-                        await DistubeManager.Instance.playCustomPlaylist(message, songs);
+                        console.log(songs)
+                        // await DistubeManager.Instance.playCustomPlaylist(message, songs);
                     }
                 } else {
                     await DistubeManager.Instance.play(message, query);
