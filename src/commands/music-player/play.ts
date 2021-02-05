@@ -10,6 +10,22 @@ const command: Command = {
     requiredPermissions: [],
     async execute(client: Client, message: Message, args: string[]) {
         try {
+            if(message.guild) {
+                const GUILD_ID = message.guild.id;
+                const USER_ID = message.author.id;
+                const server = client.guilds.cache.get(GUILD_ID); // Getting the guild.
+                if(server) {
+                    const member = server.members.cache.get(USER_ID); // Getting the member.
+                    if(member) {
+                        if(!member.voice.channel) {
+                            message.channel.send("You must be in a voice channel to use this command.")
+                            return;
+                        }
+                    }
+                }
+                
+            }
+
             if (DistubeManager.Instance) {
                 const query = args.join(" ");
                 if (query.startsWith('https://open.spotify.com/playlist')) {
