@@ -1,7 +1,7 @@
 import { Client, Message, VoiceChannel, VoiceConnection } from "discord.js";
-import { grabAllSongsFromPlaylist } from '../../util/spotify-API-service';
+import { grabAllSongsFromPlaylist } from '../../util/music-player-util/spotify-API-service';
 import { Command } from "../../command";
-import DistubeManager from "../../util/distubeManager";
+import DistubeManager from "../../util/global-util/distubeManager";
 
 
 const command: Command = {
@@ -10,20 +10,19 @@ const command: Command = {
     requiredPermissions: [],
     async execute(client: Client, message: Message, args: string[]) {
         try {
-            if(message.guild) {
+            if (message.guild) {
                 const GUILD_ID = message.guild.id;
                 const USER_ID = message.author.id;
                 const server = client.guilds.cache.get(GUILD_ID); // Getting the guild.
-                if(server) {
+                if (server) {
                     const member = server.members.cache.get(USER_ID); // Getting the member.
-                    if(member) {
-                        if(!member.voice.channel) {
+                    if (member) {
+                        if (!member.voice.channel) {
                             message.channel.send("You must be in a voice channel to use this command.")
                             return;
                         }
                     }
                 }
-                
             }
 
             if (DistubeManager.Instance) {

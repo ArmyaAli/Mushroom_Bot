@@ -1,5 +1,5 @@
 import Discord, { BitFieldResolvable, Message, PermissionString, TextChannel } from "discord.js";
-import DistubeManager from "./util/distubeManager";
+import DistubeManager from "./util/global-util/distubeManager";
 import path from "path";
 import config, { readCommandsRecursive } from "./botconfig";
 import {Command} from "./command";

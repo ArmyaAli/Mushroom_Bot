@@ -1,7 +1,7 @@
 import { Client, Message, VoiceChannel, VoiceConnection } from "discord.js";
 import Queue from "distube/typings/Queue";
 import { Command } from "../../command";
-import DistubeManager from "../../util/distubeManager";
+import DistubeManager from "../../util/global-util/distubeManager";
 
 const command: Command = {
     name: "queue",
