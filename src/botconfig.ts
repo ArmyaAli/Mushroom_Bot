@@ -2,6 +2,7 @@ import { Message, Client  } from "discord.js";
 import path from "path";
 import fileSystem from "fs";
 import * as dotenv from "dotenv";
+import { DisTubeOptions } from "distube";
 
 dotenv.config();
 
@@ -18,6 +19,11 @@ export const readCommandsRecursive = (commandContext: string, commandFiles: stri
 const config = {
     prefix: "!",
     token: process.env.BOT_TOKEN
-}
+};
+
+export const distubeConfig: DisTubeOptions = {
+    leaveOnEmpty: true,
+    leaveOnStop: false,
+};
 
 export default config;
