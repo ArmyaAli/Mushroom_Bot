@@ -1,7 +1,7 @@
 import Discord, { BitFieldResolvable, Message, PermissionString, TextChannel } from "discord.js";
 import DistubeManager from "./util/global-util/distubeManager";
 import path from "path";
-import config, { readCommandsRecursive } from "./botconfig";
+import config, { readCommandsRecursive, distubeConfig } from "./botconfig";
 import {Command} from "./command";
 import DisTube from "distube";
 
@@ -12,7 +12,10 @@ const commandContext = path.join(__dirname, "commands");
 let commandFiles: string[] = [];
 
 client.once("ready", async () => {
-  DistubeManager.Instance = new DisTube(client);
+  /* Set our music player */
+  DistubeManager.Instance = new DisTube(client, distubeConfig);
+  /* Register music player events */ 
+  DistubeManager.registerEvents();
   readCommandsRecursive(commandContext, commandFiles);
   commandFiles = commandFiles.filter((fileName) => fileName.endsWith(".ts") || fileName.endsWith(".js"));
   for (const filePath of commandFiles) {
