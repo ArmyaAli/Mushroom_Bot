@@ -1,1 +1,1 @@
-worker: node bot.js
+worker: ls -a && node dist/bot.js
