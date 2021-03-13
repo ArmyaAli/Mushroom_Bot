@@ -39,7 +39,7 @@ const authorize = async (): Promise<string | undefined> => {
 export const grabAllSongsFromPlaylist = async (
     id: string
 ): Promise<Array<string> | undefined> => {
-    console.log(id)
+
     const URL = `https://api.spotify.com/v1/playlists/${id}/tracks`
     try {
         const BEARER_TOKEN = await authorize();
@@ -53,13 +53,13 @@ export const grabAllSongsFromPlaylist = async (
         };
 
         const songData: Array<string> = [];
+
         let response = await fetch(URL, options);
         let data = await response.json();
-        // get initial data
         const TOTAL = data.total;
         let OFFSET = 0;
+
         while (OFFSET < TOTAL) {
-            console.log(data.items[0].track.artists)
             data.items.forEach((item: any) => {
                 songData.push(`${item.track.name},${item.track.artists.map((artist: any) => artist.name).join(',')}`)
             });
@@ -68,8 +68,6 @@ export const grabAllSongsFromPlaylist = async (
             response = await fetch(URL + `?offset=${OFFSET}&limit=100`, options);
             data = await response.json()
         }
-        console.log(songData)
-
 
         return songData;
     } catch (err) {
