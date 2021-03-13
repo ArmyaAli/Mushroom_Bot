@@ -19,7 +19,7 @@ const authorize = async (): Promise<string | undefined> => {
         // These properties are part of the Fetch Standard
         method: "POST",
         headers: {
-            "Content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Content-type": "application/x-www-form-urlencoded;",
             Authorization: `Basic ${Buffer.from(
                 `${CLIENT_ID}:${CLIENT_SECRET}`
             ).toString("base64")}`,
@@ -37,43 +37,40 @@ const authorize = async (): Promise<string | undefined> => {
 };
 
 export const grabAllSongsFromPlaylist = async (
-    id: string | undefined
-): Promise<Array<SPOTIFY_PLAYLIST_SONG> | undefined> => {
-    if (id === undefined) return;
-    const URL = `https://api.spotify.com/v1/playlists/{id}`;
+    id: string
+): Promise<Array<string> | undefined> => {
+    console.log(id)
+    const URL = `https://api.spotify.com/v1/playlists/${id}/tracks`
     try {
         const BEARER_TOKEN = await authorize();
-        
+
         const options: RequestInit = {
             // These properties are part of the Fetch Standard
             method: "GET",
             headers: {
-                "Content-type": "application/x-www-form-urlencoded; charset=UTF-8",
                 Authorization: `Bearer ${BEARER_TOKEN}`,
             }, // request headers. format is the identical to that accepted by the Headers constructor (see below)
-            compress: true,
         };
 
-        const songData: Array<SPOTIFY_PLAYLIST_SONG> = [];
-
+        const songData: Array<string> = [];
         let response = await fetch(URL, options);
-        console.log(response)
         let data = await response.json();
-        // do {
-        //   data.items.forEach((song: any) => {
-        //     songData.push({
-        //       title: song.track.name,
-        //       artist: song.track.artists
-        //         .map((artist: any) => artist.name)
-        //         .join(","),
-        //       album: song.track.album.name,
-        //     });
-        //   });
-        //   if (data.next) {
-        //     response = await fetch(data.next, options);
-        //     data = await response.json();
-        //   }
-        // } while (songData.length < data.total);
+        // get initial data
+        const TOTAL = data.total;
+        let OFFSET = 0;
+        while (OFFSET < TOTAL) {
+            console.log(data.items[0].track.artists)
+            data.items.forEach((item: any) => {
+                songData.push(`${item.track.name},${item.track.artists.map((artist: any) => artist.name).join(',')}`)
+            });
+
+            OFFSET += 100
+            response = await fetch(URL + `?offset=${OFFSET}&limit=100`, options);
+            data = await response.json()
+        }
+        console.log(songData)
+
+
         return songData;
     } catch (err) {
         console.log(`Error: ${err}`);
