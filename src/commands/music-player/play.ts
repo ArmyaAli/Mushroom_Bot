@@ -32,8 +32,7 @@ const command: Command = {
                     const RAW_SONGS = await grabAllSongsFromPlaylist(LIST_ID);
                     let songs: string[] = [];
                     if (RAW_SONGS) {
-                        songs = RAW_SONGS.map((song) => song.title);
-                        console.log(songs)
+                        console.log(RAW_SONGS)
                         // await DistubeManager.Instance.playCustomPlaylist(message, songs);
                     }
                 } else {
