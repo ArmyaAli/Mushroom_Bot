@@ -2,8 +2,25 @@ import { Client, Message, VoiceChannel, VoiceConnection } from "discord.js";
 import { grabAllSongsFromPlaylist } from '../../util/music-player-util/spotify-API-service';
 import { Command } from "../../command";
 import DistubeManager from "../../util/global-util/distubeManager";
+import yts from 'yt-search'
 
-
+const grabFirstFive = async (songs: string[]) => {
+    const result = []
+    for (let i = 0; i < 5; ++i) {
+        const song = await yts(songs[i]);
+        result.push(song.videos[0].url)
+        songs.shift();
+    }
+    return result;
+}
+const constructSongUrlArray = async (songs: string[]) => {
+    const result = []
+    for (const song in songs) {
+        const query = await yts(song)
+        result.push(query.videos[0].url)
+    }
+    return result
+}
 const command: Command = {
     name: "play",
     description: "Searches youtube for a specified song and plays it. Plays spotify playlists as well.",
@@ -28,12 +45,19 @@ const command: Command = {
             if (DistubeManager.Instance) {
                 const query = args.join(" ");
                 if (query.startsWith('https://open.spotify.com/playlist')) {
-                    const LIST_ID = query.substr(query.lastIndexOf('/') + 1);
-                    const RAW_SONGS = await grabAllSongsFromPlaylist(LIST_ID);
-                    let songs: string[] = [];
+                    const LIST_ID: string = query.substr(query.lastIndexOf('/') + 1);
+                    const RAW_SONGS: string[] | undefined = await grabAllSongsFromPlaylist(LIST_ID);
                     if (RAW_SONGS) {
-                        console.log(RAW_SONGS)
-                        // await DistubeManager.Instance.playCustomPlaylist(message, songs);
+                        const YOUTUBE_URLS: string[] = []
+                        const firstFive = await grabFirstFive(RAW_SONGS);
+                        constructSongUrlArray(RAW_SONGS).then(async (data: string[]) => {
+                            await message.channel.send(`Finished Grabbing Playlist. Adding to Queue.`)
+                            if (DistubeManager.Instance) {
+                                await DistubeManager.Instance.playCustomPlaylist(message, data, {playSkip: false});
+                            }
+                            console.log(data)
+                        })
+                        await DistubeManager.Instance.playCustomPlaylist(message, firstFive, {playSkip: false});
                     }
                 } else {
                     await DistubeManager.Instance.play(message, query);
