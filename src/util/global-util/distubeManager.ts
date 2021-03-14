@@ -8,7 +8,7 @@ class _DistubeManager {
     addingPlaylist: boolean;
     constructor() {
         this.Instance = null;
-        this.addingPlaylist = false;
+        this.addingPlaylist = true;
     }
 
     registerEvents(): void {

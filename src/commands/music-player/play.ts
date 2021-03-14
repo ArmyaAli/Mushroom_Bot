@@ -30,18 +30,25 @@ const command: Command = {
                 if (query.startsWith('https://open.spotify.com/playlist')) {
                     const LIST_ID: string = query.substr(query.lastIndexOf('/') + 1);
                     const RAW_SONGS: string[] | undefined = await grabAllSongsFromPlaylist(LIST_ID);
+                    
                     if (RAW_SONGS) {
-                        DistubeManager.addingPlaylist = true;
-                        for (const song of RAW_SONGS) {
-                            const query = await yts(song.split(',').join(" "));
-                            const url = query.videos[0].url;
-                            await DistubeManager.Instance.play(message, url);
+                        const playListLength = RAW_SONGS.length;
+                        while(RAW_SONGS.length > 0) {
+                            for (let i = 0; i < 5; ++i) {
+                                const song = RAW_SONGS.shift()!.split(',').join(" ")
+                                const query = await yts(song);
+                                const url = query.videos[0].url;
+                                DistubeManager.Instance.play(message, url);
+                                console.log(url)
+                            }
                         }
                         await message.channel.send(`Finished adding the spotify playlist. All ${RAW_SONGS.length} songs are now in Queue!`);
-                        DistubeManager.addingPlaylist = false;
+                        
                     }
                 } else {
+                    DistubeManager.addingPlaylist = false;
                     await DistubeManager.Instance.play(message, query);
+                    DistubeManager.addingPlaylist = true;
                 }
             }
         } catch (error) {
