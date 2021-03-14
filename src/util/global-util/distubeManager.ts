@@ -5,9 +5,10 @@ import Song from "distube/typings/Song";
 
 class _DistubeManager {
     Instance: DisTube | null;
-
+    addingPlaylist: boolean;
     constructor() {
         this.Instance = null;
+        this.addingPlaylist = false;
     }
 
     registerEvents(): void {
@@ -24,13 +25,15 @@ class _DistubeManager {
                     `Playing \`${song.name}\` - \`${song.formattedDuration}\`\nRequested by: ${song.user}\n`
                 )
             });
-            this.Instance.on("addSong", (message: Message, queue: Queue, song: Song) => message.channel.send(
-                `Added ${song.name} - \`${song.formattedDuration}\` to the queue by ${song.user}`
-            ));
+            this.Instance.on("addSong", (message: Message, queue: Queue, song: Song) => {
+                if (!this.addingPlaylist)
+                    message.channel.send(
+                        `Added ${song.name} - \`${song.formattedDuration}\` to the queue by ${song.user}`)
+            });
             this.Instance.on("error", (message: Message, err) => message.channel.send(
                 "An error encountered: " + err
             ));
-            this.Instance.on("finish", (message: Message) => message.channel.send("No more song in queue"));
+            this.Instance.on("finish", (message: Message) => message.channel.send("No more song in queue Leaving the voice channel shortly."));
 
 
         }
