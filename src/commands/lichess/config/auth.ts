@@ -9,10 +9,8 @@ export const authorize = async () => {
         }
     };
     try {
-        console.log(ACCOUNT)
         const response = await fetch(ACCOUNT, options);
         const authenticated = await response.json();
-        console.log(authenticated)
         return authenticated;
     } catch (error) {
         console.log(`Error: ${error}`);
