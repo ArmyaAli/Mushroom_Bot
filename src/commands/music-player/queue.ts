@@ -1,4 +1,4 @@
-import { Client, Message, VoiceChannel, VoiceConnection } from "discord.js";
+import { Client, Message, MessageFlags, VoiceChannel, VoiceConnection } from "discord.js";
 import Queue from "distube/typings/Queue";
 import { Command } from "../../command";
 import DistubeManager from "../../util/global-util/distubeManager";
@@ -13,14 +13,18 @@ const command: Command = {
                 let queue: Queue = await DistubeManager.Instance.getQueue(
                     message
                 );
-                if (queue.songs.length === 0) {
-                    message.channel.send("Currently no songs in the queue.");
-                } else {
-                    let output = "Next songs in Queue! (Up to the next 10)\n"
-                    for(let i = 0; i < 10 && i < queue.songs.length; ++i) {
-                        output +=`**${i+1}**. [${queue.songs[i].name}] <${queue.songs[i].url}> - \`${queue.songs[i].formattedDuration}\`\n`
+                if (queue) {
+                    if (queue.songs.length === 0) {
+                        message.channel.send("Currently no songs in the queue.");
+                    } else {
+                        let output = "Next songs in Queue! (Up to the next 10)\n"
+                        for (let i = 0; i < 10 && i < queue.songs.length; ++i) {
+                            output += `**${i + 1}**. [${queue.songs[i].name}] <${queue.songs[i].url}> - \`${queue.songs[i].formattedDuration}\`\n`
+                        }
+                        message.channel.send(output)
                     }
-                   message.channel.send(output)
+                } else {
+                    message.channel.send(`Queue is not avaliable yet or does not exist!`)
                 }
             }
 
