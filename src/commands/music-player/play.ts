@@ -28,22 +28,27 @@ const command: Command = {
             if (DistubeManager.Instance) {
                 const query = args.join(" ");
                 if (query.startsWith('https://open.spotify.com/playlist')) {
+                    if (DistubeManager.addingPlaylist) {
+                        message.channel.send(`Please wait till current playlist is finished being added to the Music Queue.`)
+                        return;
+                    }
                     const LIST_ID: string = query.substr(query.lastIndexOf('/') + 1);
                     const RAW_SONGS: string[] | undefined = await grabAllSongsFromPlaylist(LIST_ID);
-                    
+
                     if (RAW_SONGS) {
+                        DistubeManager.addingPlaylist = true;
                         const playListLength = RAW_SONGS.length;
-                        while(RAW_SONGS.length > 0) {
-                            for (let i = 0; i < 5; ++i) {
-                                const song = RAW_SONGS.shift()!.split(',').join(" ")
-                                const query = await yts(song);
-                                const url = query.videos[0].url;
-                                DistubeManager.Instance.play(message, url);
-                                console.log(url)
-                            }
+                        while (RAW_SONGS.length > 0) {
+                            const song = RAW_SONGS.shift()!.split(',').join(" ")
+                            const query = await yts(song);
+                            const url = query.videos[0].url;
+                            DistubeManager.Instance.play(message, url);
+                            console.log(url)
                         }
-                        await message.channel.send(`Finished adding the spotify playlist. All ${RAW_SONGS.length} songs are now in Queue!`);
-                        
+                        await message.channel.send(`Finished adding the spotify playlist. All ${playListLength} songs are now in Queue!`);
+                        DistubeManager.addingPlaylist = false;
+                    } else {
+                        await message.channel.send(`Failed to add the Spotify Songs to the Music Queue.`);
                     }
                 } else {
                     DistubeManager.addingPlaylist = false;

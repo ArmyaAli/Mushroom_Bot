@@ -6,9 +6,11 @@ import Song from "distube/typings/Song";
 class _DistubeManager {
     Instance: DisTube | null;
     addingPlaylist: boolean;
+    isPlayList: boolean;
     constructor() {
         this.Instance = null;
-        this.addingPlaylist = true;
+        this.isPlayList = true;
+        this.addingPlaylist = false;
     }
 
     registerEvents(): void {
