@@ -4,6 +4,7 @@ import { Command } from "../../command";
 import DistubeManager from "../../util/global-util/distubeManager";
 import yts from 'yt-search'
 
+/* Ads the rest of the song to the distube queue */
 const addRestOfSongs = async (message: Message, RAW_SONGS: string[]) => {
     const size = RAW_SONGS.length
     if (DistubeManager.Instance) {
