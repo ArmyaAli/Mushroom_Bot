@@ -17,7 +17,8 @@ jobs:
     - name: set permissions
       run: chmod 600 key
     - name: Attempt to SSH into the PI
-      run: ssh -o StrictHostKeyChecking=no -p $PORT -i key $USER@$ENDPOINT
+      run: |
+        ssh -o StrictHostKeyChecking=no -p $PORT -i key $USER@$ENDPOINT 'whoami'
       env:
         PORT: ${{ secrets.SSH_PORT }}
         USER: ${{ secrets.USER }}
