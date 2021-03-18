@@ -12,10 +12,8 @@ jobs:
     name: Test Build
     runs-on: ubuntu-latest
     steps:
-    - name: SSH into my Raspberry PI
-      run: |
-        touch github_key && echo ${{ secrets.SSH_KEY }} >> github_key
-        ls -a
-        cat github_key
-        ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} -i github_key ali@${{ secrets.ENDPOINT }}
+    - name: Create SSH Key
+      run: touch github_key && echo ${{ secrets.SSH_KEY }} >> github_key
+    - name: Attempt to SSH into the PI
+      run: ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} -i github_key ali@${{ secrets.ENDPOINT }}
         
