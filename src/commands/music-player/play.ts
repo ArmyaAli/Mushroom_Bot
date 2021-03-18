@@ -4,6 +4,23 @@ import { Command } from "../../command";
 import DistubeManager from "../../util/global-util/distubeManager";
 import yts from 'yt-search'
 
+const addRestOfSongs = async (message: Message, RAW_SONGS: string[]) => {
+    const size = RAW_SONGS.length
+    if (DistubeManager.Instance) {
+        while (RAW_SONGS.length > 0) {
+            for (let i = 0; i < 5; ++i) {
+               const rawsong = RAW_SONGS.shift()
+                if(!rawsong) return
+                const song = rawsong!.split(',').join(" ")
+                const query = await yts(song);
+                const link = query.videos[0].url
+                DistubeManager.Instance.play(message, link);
+                console.log(link)
+            } 
+        }
+    }
+}
+
 const command: Command = {
     name: "play",
     description: "Searches youtube for a specified song and plays it. Plays spotify playlists as well.",
@@ -29,7 +46,7 @@ const command: Command = {
                 const query = args.join(" ");
                 if (query.startsWith('https://open.spotify.com/playlist')) {
                     if (DistubeManager.addingPlaylist) {
-                        message.channel.send(`Please wait till current playlist is finished being added to the Music Queue.`)
+                        message.channel.send(`There is already a playlist Queued up. Remove it, and then queue up a new one.`)
                         return;
                     }
                     const LIST_ID: string = query.substr(query.lastIndexOf('/') + 1);
@@ -38,15 +55,17 @@ const command: Command = {
                     if (RAW_SONGS) {
                         DistubeManager.addingPlaylist = true;
                         const playListLength = RAW_SONGS.length;
-                        while (RAW_SONGS.length > 0) {
-                            const song = RAW_SONGS.shift()!.split(',').join(" ")
-                            const query = await yts(song);
-                            const url = query.videos[0].url;
-                            DistubeManager.Instance.play(message, url);
-                            console.log(url)
+                        const firstSong = RAW_SONGS.shift()!.split(',').join(" ")
+                        const first = await yts(firstSong);
+                        DistubeManager.playListQueue.push(first.videos[0].url);
+                        // play the queue
+                        const song = DistubeManager.playListQueue.shift()
+                        if (song) {
+                            await DistubeManager.Instance.play(message, song);
+                            await addRestOfSongs(message, RAW_SONGS);
+                            await message.channel.send(`Finished adding the spotify playlist. All ${playListLength} songs are now in Queue!`);
+                            DistubeManager.addingPlaylist = false;
                         }
-                        await message.channel.send(`Finished adding the spotify playlist. All ${playListLength} songs are now in Queue!`);
-                        DistubeManager.addingPlaylist = false;
                     } else {
                         await message.channel.send(`Failed to add the Spotify Songs to the Music Queue.`);
                     }
