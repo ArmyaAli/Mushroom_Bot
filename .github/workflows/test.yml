@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Create SSH Key
-      run: |
-       touch key
-       ls -a
-       echo ${{ secrets.SSH_KEY }} >> key
+      run: 'echo "$SSH_KEY" > key'
+      shell: bash
+      env:
+        SSH_KEY: ${{ secrets.SSH_KEY }}
     - name: Attempt to SSH into the PI
       run: ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} -i key ${{ secrets.USER }}@${{ secrets.ENDPOINT }}
         
