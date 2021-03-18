@@ -57,9 +57,8 @@ const command: Command = {
                         const playListLength = RAW_SONGS.length;
                         const firstSong = RAW_SONGS.shift()!.split(',').join(" ")
                         const first = await yts(firstSong);
-                        DistubeManager.playListQueue.push(first.videos[0].url);
                         // play the queue
-                        const song = DistubeManager.playListQueue.shift()
+                        const song = first.videos[0].url
                         if (song) {
                             await DistubeManager.Instance.play(message, song);
                             await addRestOfSongs(message, RAW_SONGS);
