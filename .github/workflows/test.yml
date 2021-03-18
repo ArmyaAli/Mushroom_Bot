@@ -18,7 +18,12 @@ jobs:
       run: chmod 600 key
     - name: Attempt to SSH into the PI
       run: |
-        ssh -o StrictHostKeyChecking=no -p $PORT -i key $USER@$ENDPOINT 'whoami'
+        ssh -t -o StrictHostKeyChecking=no -p $PORT -i key $USER@$ENDPOINT '
+        cd dev;
+        git clone https://github.com/ArmyaAli/Mushroom_Bot.git;
+        cd Mushroom_Bot;
+        npm ci;
+        '
       env:
         PORT: ${{ secrets.SSH_PORT }}
         USER: ${{ secrets.USER }}
