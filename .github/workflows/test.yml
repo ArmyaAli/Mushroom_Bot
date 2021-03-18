@@ -17,5 +17,5 @@ jobs:
         touch github_key && echo ${{ secrets.SSH_KEY }} >> github_key
         ls -a
         cat github_key
-        ssh -o StrictHostKeyChecking=no -i github_key ali@${{ secrets.ENDPOINT }}:
+        ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} -i github_key ali@${{ secrets.ENDPOINT }}
         
