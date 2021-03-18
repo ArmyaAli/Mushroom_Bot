@@ -33,8 +33,9 @@ jobs:
         '
         cd dev/Mushroom_Bot;
         git pull;
-        cd Mushroom_Bot;
         npm ci;
+        npm run build;
+        num run start-pm2;
         '
       env:
         PORT: ${{ secrets.SSH_PORT }}
