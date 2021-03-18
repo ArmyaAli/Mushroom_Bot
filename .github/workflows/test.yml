@@ -25,6 +25,8 @@ jobs:
       run: scp -o StrictHostKeyChecking=no -i key -P $PORT .env $USER@$ENDPOINT:dev/Mushroom_Bot
       env:
         PORT: ${{ secrets.SSH_PORT }}
+        USER: ${{ secrets.USER }}
+        ENDPOINT: ${{ secrets.ENDPOINT }}
     - name: SSH & Deploy
       run: |
         ssh -t -o StrictHostKeyChecking=no -p $PORT -i key $USER@$ENDPOINT \
