@@ -16,7 +16,7 @@ jobs:
       run: |
        touch key 
        ls -a
-       echo ${{ secrets.SSH_KEY }} > key
+       echo ${{ secrets.SSH_KEY }} > ./key
     - name: Attempt to SSH into the PI
       run: ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} -i key ali@${{ secrets.ENDPOINT }}
         
