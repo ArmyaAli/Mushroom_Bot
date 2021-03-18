@@ -16,11 +16,19 @@ jobs:
         SSH_KEY: ${{ secrets.SSH_KEY }}
     - name: set permissions
       run: chmod 600 key
-    - name: Attempt to SSH into the PI
+    - name: Create .env file and populate it
+      run: 'touch .env && echo "$SSH_KEY" > .env'
+      shell: bash
+      env:
+        SSH_KEY: ${{ secrets.ENV_FILE }}
+    - name: Send .env file to PI
+      run: scp -o StrictHostKeyChecking=no -P $PORT -i key $USER@$ENDPOINT:~/dev/Mushroom_Bot
+    - name: SSH & Deploy
       run: |
-        ssh -t -o StrictHostKeyChecking=no -p $PORT -i key $USER@$ENDPOINT '
-        cd dev;
-        git clone https://github.com/ArmyaAli/Mushroom_Bot.git;
+        ssh -t -o StrictHostKeyChecking=no -p $PORT -i key $USER@$ENDPOINT \
+        '
+        cd dev/Mushroom_Bot;
+        git pull;
         cd Mushroom_Bot;
         npm ci;
         '
