@@ -15,5 +15,5 @@ jobs:
     - name: SSH into my Raspberry PI
       run: |
         touch github_key && echo ${{ secrets.SSH_KEY }} >> github_key
-        ssh -o StrictHostKeyChecking=no -i github_key ali@${{ secrets.ENDPOINT }}
+        ssh -o StrictHostKeyChecking=no -i github_key ali@${{ secrets.ENDPOINT }}:
         
