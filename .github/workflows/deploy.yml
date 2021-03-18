@@ -47,9 +47,11 @@ jobs:
         ENDPOINT: ${{ secrets.ENDPOINT }}
     - name: SSH & Deploy
       run: |
-        ssh -t -o StrictHostKeyChecking=no -p $PORT -i key $USER@$ENDPOINT:~/dev/Mushroom_Bot
+        ssh -t -o StrictHostKeyChecking=no -p $PORT -i key $USER@$ENDPOINT \
         '
+        cd dev/Mushroom_Bot;
         git pull;
+        npm ci;
         npm run build;
         npm run start-pm2;
         '
