@@ -1,4 +1,4 @@
-name: SSH to RaspberryPI
+name: Build, Test, Deploy
 
 on:
   push:
@@ -6,7 +6,24 @@ on:
 
 jobs:
   build:
-    name: SSH into my PI!
+    name: Build
+    runs-on: ubuntu-latest
+    env:
+      BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v2
+    - name: Grab Node 14
+      uses: actions/setup-node@v2
+      with: 
+        node-version: '14'
+    - name: clean install
+      run: npm ci
+    - name: build
+      run: npm run build --if-present
+
+  deploy:
+    name: Deploy
     runs-on: ubuntu-latest
     steps:
     - name: Create SSH Key
@@ -35,7 +52,7 @@ jobs:
         git pull;
         npm ci;
         npm run build;
-        num run start-pm2;
+        npm run start-pm2;
         '
       env:
         PORT: ${{ secrets.SSH_PORT }}
