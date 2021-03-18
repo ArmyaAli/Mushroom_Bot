@@ -1,1 +1,0 @@
-worker: ls -a && node dist/bot.js
