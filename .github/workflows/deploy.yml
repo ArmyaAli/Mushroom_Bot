@@ -52,7 +52,7 @@ jobs:
         cd dev/Mushroom_Bot;
         git pull;
         npm ci;
-        pm2 kill;
+        pm2 kill Mushroom_Bot;
         npm run build;
         npm run start-pm2;
         '
