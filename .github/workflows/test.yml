@@ -23,7 +23,7 @@ jobs:
         PORT: ${{ secrets.SSH_PORT }}
         ENV: ${{ secrets.ENV_FILE }}
     - name: Send .env file to PI
-      run: scp -o StrictHostKeyChecking=no -P $PORT -i key $USER@$ENDPOINT:~/dev/Mushroom_Bot
+      run: scp -o StrictHostKeyChecking=no -p $PORT -i key $USER@$ENDPOINT:~/dev/Mushroom_Bot
     - name: SSH & Deploy
       run: |
         ssh -t -o StrictHostKeyChecking=no -p $PORT -i key $USER@$ENDPOINT \
