@@ -14,6 +14,12 @@ jobs:
       shell: bash
       env:
         SSH_KEY: ${{ secrets.SSH_KEY }}
+    - name: set permissions
+      run: chmod 600 key
     - name: Attempt to SSH into the PI
-      run: ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} -i key ${{ secrets.USER }}@${{ secrets.ENDPOINT }}
+      run: ssh -o StrictHostKeyChecking=no -p $PORT -i key $USER@$ENDPOINT
+      env:
+        PORT: ${{ secrets.SSH_PORT }}
+        USER: ${{ secrets.USER }
+        ENDPOINT: ${{ secrets.ENDPOINT }}
         
