@@ -10,21 +10,13 @@ const command: Command = {
     async execute(client: Client, message: Message, args: string[]) {
         try {
             if (DistubeManager.Instance) {
-                if(DistubeManager.musicQueue.length > 0) {
+                if (DistubeManager.musicQueue.length > 0) {
                     const next = DistubeManager.musicQueue.shift()
                     if (next)
                         await DistubeManager.Instance.playSkip(message, next.url)
                     return;
                 }
-                let queue: Queue = await DistubeManager.Instance.getQueue(
-                    message
-                );
-                if (queue.songs.length <= 1) {
-                    message.channel.send("Currently no songs in the queue.");
-                } else {
-                    await DistubeManager.Instance.skip(message);
-                    message.channel.send("Skipping song.");
-                }
+                message.channel.send("Currently no songs in the queue.");
             }
         } catch (error) {
             console.log(error);
