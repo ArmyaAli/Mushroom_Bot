@@ -7,7 +7,7 @@
     "build": "tsc",
     "clean-build": "rm -r dist",
     "start": "node dist/bot.js" ,
-    "start-pm2": "pm2 start dist/bot.js --name 'Mushroom_Bot'",
+    "start-pm2": "pm2 start -f dist/bot.js --name 'Mushroom_Bot'",
     "dev": "nodemon",
     "deploy": "npm run build && npm run start",
     "test": "echo \"Error: no test specified\" && exit 1"
