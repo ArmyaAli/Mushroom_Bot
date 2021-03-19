@@ -11,11 +11,9 @@ export interface SongData {
 class _DistubeManager {
     Instance: DisTube | null;
     addingPlaylist: boolean;
-    isPlayList: boolean;
-    musicQueue: SongData [];
+    musicQueue: SongData[];
     constructor() {
         this.Instance = null;
-        this.isPlayList = false;
         this.addingPlaylist = false;
         this.musicQueue = [];
     }
@@ -26,6 +24,7 @@ class _DistubeManager {
             this.Instance.on("empty", (message: Message) => message.channel.send("Channel is empty. Leaving the channel"))
 
             this.Instance.on("finish", (message: Message) => {
+                console.log("Finish event occued")
                 if (this.musicQueue.length > 0) {
                     const next = this.musicQueue.shift()
                     if (this.Instance) {
@@ -40,11 +39,8 @@ class _DistubeManager {
             })
 
             this.Instance.on("initQueue", (queue: Queue) => {
-                if (this.addingPlaylist) {
-                    queue.autoplay = false;
-                    queue.volume = 100;
-                    this.isPlayList = true;
-                }
+                queue.autoplay = false;
+                queue.volume = 50;
             });
 
             this.Instance.on("playSong", (message: Message, queue: Queue, song: Song) => {
@@ -53,9 +49,8 @@ class _DistubeManager {
                 )
             });
             this.Instance.on("addSong", (message: Message, queue: Queue, song: Song) => {
-                if (!this.addingPlaylist)
-                    message.channel.send(
-                        `Added ${song.name} - \`${song.formattedDuration}\` to the queue by ${song.user}`)
+                message.channel.send(
+                    `Added ${song.name} - \`${song.formattedDuration}\` to the queue by ${song.user}`)
             });
             this.Instance.on("error", (message: Message, err) => message.channel.send(
                 "An error encountered: " + err
