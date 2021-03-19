@@ -10,6 +10,12 @@ const command: Command = {
     async execute(client: Client, message: Message, args: string[]) {
         try {
             if (DistubeManager.Instance) {
+                if(DistubeManager.addingPlaylist) {
+                    const next = DistubeManager.currentSpotifyPlaylist.shift()
+                    if (next)
+                        await DistubeManager.Instance.playSkip(message, next.url)
+                    return;
+                }
                 let queue: Queue = await DistubeManager.Instance.getQueue(
                     message
                 );
