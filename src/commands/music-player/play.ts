@@ -54,7 +54,7 @@ const command: Command = {
                 const query = args.join(" ");
                 if (query.startsWith('https://open.spotify.com/playlist')) {
                     if (DistubeManager.addingPlaylist) {
-                        message.channel.send(`There is already a playlist Queued up. Remove it, and then queue up a new one.`)
+                        message.channel.send(`There is already a playlist being Queued UP. !stop, and then queue up a new one.`)
                         return;
                     }
                     const LIST_ID: string = query.substr(query.lastIndexOf('/') + 1);
@@ -78,7 +78,7 @@ const command: Command = {
                     }
                 } else {
                     if (DistubeManager.Instance.isPlaying(message)) {
-                        addSong(message, query)
+                        await addSong(message, query)
                     } else {
                         await DistubeManager.Instance.play(message, query);
                     }
