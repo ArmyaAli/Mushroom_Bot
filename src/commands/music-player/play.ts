@@ -4,17 +4,24 @@ import { Command } from "../../command";
 import DistubeManager from "../../util/global-util/distubeManager";
 import yts from 'yt-search'
 
+
+const addSong = async (message: Message, query: string) => {
+    if (DistubeManager.Instance) {
+        const searchResult = await yts(query);
+        DistubeManager.musicQueue.push({ name: searchResult.videos[0].title, artist: "", url: searchResult.videos[0].url })
+        await message.channel.send(`Adding the song, ${searchResult.videos[0].title} to the Music Queue`);
+    }
+}
 /* Ads the rest of the song to the distube queue */
 const addRestOfSongs = async (message: Message, RAW_SONGS: string[]) => {
     if (DistubeManager.Instance) {
-
         for (let i = 0; i < RAW_SONGS.length; ++i) {
             const rawsong = RAW_SONGS[i]
             if (!rawsong) return
             const name = rawsong!.split(',')[0]
             const artist = rawsong!.split(',')[1]
-            const query = await yts(name);
-            DistubeManager.currentSpotifyPlaylist.push({name: name, artist: artist, url: query.videos[0].url})
+            const query = await yts(name + " " + artist);
+            DistubeManager.musicQueue.push({ name: name, artist: artist, url: query.videos[0].url })
         }
         await message.channel.send(`Finished adding the spotify playlist`);
         DistubeManager.addingPlaylist = false;
@@ -55,12 +62,14 @@ const command: Command = {
 
                     if (RAW_SONGS) {
                         DistubeManager.addingPlaylist = true;
-                        const playListLength = RAW_SONGS.length;
-                        const firstSong = RAW_SONGS.shift()!.split(',').join(" ")
-                        const first = await yts(firstSong);
-                        // play the queue
-                        const song = first.videos[0].url
-                        if (song) {
+                        if (DistubeManager.musicQueue.length > 0) {
+                            addRestOfSongs(message, RAW_SONGS);
+                        } else {
+                            const playListLength = RAW_SONGS.length;
+                            const firstSong = RAW_SONGS.shift()!.split(',').join(" ")
+                            const first = await yts(firstSong);
+                            // play the queue
+                            const song = first.videos[0].url
                             await DistubeManager.Instance.play(message, song);
                             addRestOfSongs(message, RAW_SONGS);
                         }
@@ -68,9 +77,12 @@ const command: Command = {
                         await message.channel.send(`Failed to add the Spotify Songs to the Music Queue.`);
                     }
                 } else {
-                    DistubeManager.addingPlaylist = false;
-                    await DistubeManager.Instance.play(message, query);
-                    DistubeManager.addingPlaylist = true;
+                    if (DistubeManager.Instance.isPlaying(message)) {
+                        addSong(message, query)
+                    } else {
+                        await DistubeManager.Instance.play(message, query);
+                    }
+
                 }
             }
         } catch (error) {
