@@ -6,19 +6,18 @@ import yts from 'yt-search'
 
 /* Ads the rest of the song to the distube queue */
 const addRestOfSongs = async (message: Message, RAW_SONGS: string[]) => {
-    const size = RAW_SONGS.length
     if (DistubeManager.Instance) {
-        while (RAW_SONGS.length > 0) {
-            for (let i = 0; i < 5; ++i) {
-               const rawsong = RAW_SONGS.shift()
-                if(!rawsong) return
-                const song = rawsong!.split(',').join(" ")
-                const query = await yts(song);
-                const link = query.videos[0].url
-                DistubeManager.Instance.play(message, link);
-                console.log(link)
-            } 
+
+        for (let i = 0; i < RAW_SONGS.length; ++i) {
+            const rawsong = RAW_SONGS[i]
+            if (!rawsong) return
+            const name = rawsong!.split(',')[0]
+            const artist = rawsong!.split(',')[1]
+            const query = await yts(name);
+            DistubeManager.currentSpotifyPlaylist.push({name: name, artist: artist, url: query.videos[0].url})
         }
+        await message.channel.send(`Finished adding the spotify playlist`);
+        DistubeManager.addingPlaylist = false;
     }
 }
 
@@ -41,6 +40,7 @@ const command: Command = {
                         }
                     }
                 }
+
             }
 
             if (DistubeManager.Instance) {
@@ -62,9 +62,7 @@ const command: Command = {
                         const song = first.videos[0].url
                         if (song) {
                             await DistubeManager.Instance.play(message, song);
-                            await addRestOfSongs(message, RAW_SONGS);
-                            await message.channel.send(`Finished adding the spotify playlist. All ${playListLength} songs are now in Queue!`);
-                            DistubeManager.addingPlaylist = false;
+                            addRestOfSongs(message, RAW_SONGS);
                         }
                     } else {
                         await message.channel.send(`Failed to add the Spotify Songs to the Music Queue.`);
