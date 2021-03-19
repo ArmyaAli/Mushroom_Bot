@@ -1,8 +1,21 @@
 import { Client, Message, VoiceChannel, VoiceConnection } from "discord.js";
 import Queue from "distube/typings/Queue";
 import { Command } from "../../command";
-import DistubeManager from "../../util/global-util/distubeManager";
+import DistubeManager, { SongData } from "../../util/global-util/distubeManager";
 
+// https://bost.ocks.org/mike/shuffle/
+const shuffle = (array: SongData[]) => {
+    let m = array.length, t, i;
+    while (m) {
+      i = Math.floor(Math.random() * m--);
+  
+      // And swap it with the current element.
+      t = array[m];
+      array[m] = array[i];
+      array[i] = t;
+    }
+    return array;
+  }
 const command: Command = {
     name: "shuffle",
     description:
@@ -11,6 +24,10 @@ const command: Command = {
     async execute(client: Client, message: Message, args: string[]) {
         try {
             if (DistubeManager.Instance) {
+                if(DistubeManager.addingPlaylist) {
+                    shuffle(DistubeManager.currentSpotifyPlaylist)
+                    return;
+                }
                 let queue: Queue = await DistubeManager.Instance.getQueue(
                     message
                 );
