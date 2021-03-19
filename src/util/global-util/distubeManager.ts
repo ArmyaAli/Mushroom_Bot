@@ -12,12 +12,12 @@ class _DistubeManager {
     Instance: DisTube | null;
     addingPlaylist: boolean;
     isPlayList: boolean;
-    currentSpotifyPlaylist: SongData [];
+    musicQueue: SongData [];
     constructor() {
         this.Instance = null;
-        this.isPlayList = true;
+        this.isPlayList = false;
         this.addingPlaylist = false;
-        this.currentSpotifyPlaylist = [];
+        this.musicQueue = [];
     }
 
     registerEvents(): void {
@@ -26,8 +26,8 @@ class _DistubeManager {
             this.Instance.on("empty", (message: Message) => message.channel.send("Channel is empty. Leaving the channel"))
 
             this.Instance.on("finish", (message: Message) => {
-                if (this.addingPlaylist) {
-                    const next = this.currentSpotifyPlaylist.shift()
+                if (this.musicQueue.length > 0) {
+                    const next = this.musicQueue.shift()
                     if (this.Instance) {
                         if (next)
                             this.Instance.play(message, next.url);
@@ -43,6 +43,7 @@ class _DistubeManager {
                 if (this.addingPlaylist) {
                     queue.autoplay = false;
                     queue.volume = 100;
+                    this.isPlayList = true;
                 }
             });
 
