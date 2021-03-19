@@ -10,15 +10,8 @@ const command: Command = {
     async execute(client: Client, message: Message, args: string[]) {
         try {
             if (DistubeManager.Instance) {
-                let queue: Queue = await DistubeManager.Instance.getQueue(
-                    message
-                );
-                if (queue.songs.length === 0) {
-                    message.channel.send("Currently no songs in the queue.");
-                } else {
-                    DistubeManager.Instance.stop(message);
-                    message.channel.send("Stopped the queue!");
-                }
+                DistubeManager.Instance.stop(message);
+                DistubeManager.musicQueue = []
             }
         } catch (error) {
             console.log(error);
