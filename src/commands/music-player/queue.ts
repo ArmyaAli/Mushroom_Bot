@@ -10,8 +10,8 @@ const command: Command = {
     async execute(client: Client, message: Message, args: string[]) {
         try {
             if (DistubeManager.Instance) {
-                if(DistubeManager.addingPlaylist) {
-                    const queue = DistubeManager.currentSpotifyPlaylist;
+                if(DistubeManager.musicQueue.length > 0) {
+                    const queue = DistubeManager.musicQueue;
                     let output = "Next songs in Queue! (Up to the next 10)\n"
                     for (let i = 0; i < 10 && i < queue.length; ++i) {
                         output += `**${i + 1}**. ${queue[i].name} by ${queue[i].artist}\n`

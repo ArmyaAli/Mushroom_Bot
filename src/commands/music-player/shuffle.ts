@@ -25,7 +25,7 @@ const command: Command = {
         try {
             if (DistubeManager.Instance) {
                 if(DistubeManager.addingPlaylist) {
-                    shuffle(DistubeManager.currentSpotifyPlaylist)
+                    shuffle(DistubeManager.musicQueue)
                     return;
                 }
                 let queue: Queue = await DistubeManager.Instance.getQueue(
