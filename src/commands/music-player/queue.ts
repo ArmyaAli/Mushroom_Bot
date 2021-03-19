@@ -10,32 +10,18 @@ const command: Command = {
     async execute(client: Client, message: Message, args: string[]) {
         try {
             if (DistubeManager.Instance) {
-                if(DistubeManager.musicQueue.length > 0) {
+                if (DistubeManager.musicQueue.length > 0) {
                     const queue = DistubeManager.musicQueue;
                     let output = "Next songs in Queue! (Up to the next 10)\n"
                     for (let i = 0; i < 10 && i < queue.length; ++i) {
                         output += `**${i + 1}**. ${queue[i].name} by ${queue[i].artist}\n`
-                        
+
                     }
                     message.channel.send(output)
                     return;
                 }
-                let queue: Queue = await DistubeManager.Instance.getQueue(
-                    message
-                );
-                if (queue) {
-                    if (queue.songs.length === 0) {
-                        message.channel.send("Currently no songs in the queue.");
-                    } else {
-                        let output = "Next songs in Queue! (Up to the next 10)\n"
-                        for (let i = 0; i < 10 && i < queue.songs.length; ++i) {
-                            output += `**${i + 1}**. [${queue.songs[i].name}] <${queue.songs[i].url}> - \`${queue.songs[i].formattedDuration}\`\n`
-                        }
-                        message.channel.send(output)
-                    }
-                } else {
-                    message.channel.send(`Queue is not avaliable yet or does not exist!`)
-                }
+
+                message.channel.send(`Queue is not avaliable yet or does not exist!`)
             }
 
         } catch (error) {
