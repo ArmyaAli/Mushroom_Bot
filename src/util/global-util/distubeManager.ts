@@ -3,26 +3,50 @@ import DisTube, { DisTubeOptions } from "distube";
 import Queue from "distube/typings/Queue";
 import Song from "distube/typings/Song";
 
+export interface SongData {
+    name: string;
+    artist: string;
+    url: string;
+}
 class _DistubeManager {
     Instance: DisTube | null;
     addingPlaylist: boolean;
     isPlayList: boolean;
+    currentSpotifyPlaylist: SongData [];
     constructor() {
         this.Instance = null;
         this.isPlayList = true;
         this.addingPlaylist = false;
+        this.currentSpotifyPlaylist = [];
     }
 
     registerEvents(): void {
         if (this.Instance) {
 
             this.Instance.on("empty", (message: Message) => message.channel.send("Channel is empty. Leaving the channel"))
-            this.Instance.on("playSong", (message: Message, queue: Queue, song: Song) => {
-                const status = (queue: Queue) => {
-                    `Volume: \`${queue.volume}%\` | Loop: \`${queue.repeatMode ? queue.repeatMode == 2 ?
-                        "Server Queue" : "This Song" : "Off"}\` | Autoplay: \`$ {queue.autoplay ? "On" : "Off"}\``
-                }
 
+            this.Instance.on("finish", (message: Message) => {
+                if (this.addingPlaylist) {
+                    const next = this.currentSpotifyPlaylist.shift()
+                    if (this.Instance) {
+                        if (next)
+                            this.Instance.play(message, next.url);
+                        // playlist is done
+                        else
+                            this.Instance.getQueue(message).autoplay = false;
+                    }
+                } else
+                    message.channel.send("No more song in queue Leaving the voice channel shortly.")
+            })
+
+            this.Instance.on("initQueue", (queue: Queue) => {
+                if (this.addingPlaylist) {
+                    queue.autoplay = false;
+                    queue.volume = 100;
+                }
+            });
+
+            this.Instance.on("playSong", (message: Message, queue: Queue, song: Song) => {
                 message.channel.send(
                     `Playing \`${song.name}\` - \`${song.formattedDuration}\`\nRequested by: ${song.user}\n`
                 )
@@ -35,7 +59,7 @@ class _DistubeManager {
             this.Instance.on("error", (message: Message, err) => message.channel.send(
                 "An error encountered: " + err
             ));
-            this.Instance.on("finish", (message: Message) => message.channel.send("No more song in queue Leaving the voice channel shortly."));
+
 
 
         }
