@@ -1,9 +1,12 @@
-import { Client, Message, VoiceChannel, VoiceConnection } from "discord.js";
+import { Client, Message, MessageEmbed } from "discord.js";
 import { grabAllSongsFromPlaylist } from '../../util/music-player-util/spotify-API-service';
 import { Command } from "../../command";
 import DistubeManager from "../../util/global-util/distubeManager";
 import yts from 'yt-search'
 
+const finishedPlaylist = new MessageEmbed()
+      .setTitle('Spotify Playlist Fully Added!')
+      .setColor(0xff0000)
 
 const addSong = async (message: Message, query: string) => {
     if (DistubeManager.Instance) {
@@ -16,14 +19,12 @@ const addSong = async (message: Message, query: string) => {
 const addRestOfSongs = async (message: Message, RAW_SONGS: string[]) => {
     if (DistubeManager.Instance) {
         for (let i = 0; i < RAW_SONGS.length; ++i) {
-            const rawsong = RAW_SONGS[i]
-            if (!rawsong) return
-            const name = rawsong!.split(',')[0]
-            const artist = rawsong!.split(',')[1]
+            const name = RAW_SONGS[i].split(',')[0]
+            const artist = RAW_SONGS[i].split(',')[1]
             const query = await yts(name + " " + artist);
             DistubeManager.musicQueue.push({ name: name, artist: artist, url: query.videos[0].url })
         }
-        await message.channel.send(`Finished adding the spotify playlist`);
+        await message.channel.send(finishedPlaylist);
         DistubeManager.addingPlaylist = false;
     }
 }
@@ -61,6 +62,7 @@ const command: Command = {
                     const RAW_SONGS: string[] | undefined = await grabAllSongsFromPlaylist(LIST_ID);
 
                     if (RAW_SONGS) {
+                        finishedPlaylist.setDescription(`Added a total of ${RAW_SONGS.length} to the Music Queue!`)
                         DistubeManager.addingPlaylist = true;
                         if (DistubeManager.musicQueue.length > 0) {
                             addRestOfSongs(message, RAW_SONGS);
