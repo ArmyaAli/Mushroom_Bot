@@ -17,17 +17,17 @@ const command: Command = {
                         output += `**${i + 1}**. ${queue[i].name} by ${queue[i].artist}\n`
 
                     }
+                    output += `There are ${DistubeManager.musicQueue.length} total songs in the Queue`
                     message.channel.send(output)
                     return;
                 }
-
-                message.channel.send(`Queue is not avaliable yet or does not exist!`)
+                await message.channel.send(`Queue is not avaliable yet or does not exist!`)
             }
 
-        } catch (error) {
-            console.log(error);
-        }
-    },
+        } catch(error) {
+        console.log(error);
+    }
+},
 };
 
 export = command;
