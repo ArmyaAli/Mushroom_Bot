@@ -39,7 +39,6 @@ class _DistubeManager {
                     }
                 } else {
                     message.channel.send("No more song in queue Leaving the voice channel shortly.")
-
                 }
             })
 
@@ -49,6 +48,11 @@ class _DistubeManager {
             });
 
             this.Instance.on("playSong", (message: Message, queue: Queue, song: Song) => {
+                if(this.musicQueue.length === 0) {
+                    if(this.Instance) {
+                        this.Instance?.addRelatedVideo(message)
+                    }
+                }
                 message.channel.send(
                     `Playing \`${song.name}\` - \`${song.formattedDuration}\`\nRequested by: ${song.user}\n`
                 )
