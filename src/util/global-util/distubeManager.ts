@@ -21,7 +21,10 @@ class _DistubeManager {
     registerEvents(): void {
         if (this.Instance) {
 
-            this.Instance.on("empty", (message: Message) => message.channel.send("Channel is empty. Leaving the channel"))
+            this.Instance.on("empty", async (message: Message) => {
+                this.addingPlaylist = false;
+                await message.channel.send("Channel is empty. Leaving the channel. Mushoomie ~ !!")
+            })
 
             this.Instance.on("finish", (message: Message) => {
                 console.log("Finish event occued")
@@ -34,8 +37,10 @@ class _DistubeManager {
                         else
                             this.Instance.getQueue(message).autoplay = false;
                     }
-                } else
+                } else {
                     message.channel.send("No more song in queue Leaving the voice channel shortly.")
+
+                }
             })
 
             this.Instance.on("initQueue", (queue: Queue) => {
