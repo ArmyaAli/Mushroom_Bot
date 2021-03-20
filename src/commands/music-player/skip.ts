@@ -16,7 +16,10 @@ const command: Command = {
                         await DistubeManager.Instance.playSkip(message, next.url)
                     return;
                 }
-                message.channel.send("Currently no songs in the queue.");
+
+                message.channel.send("Currently no songs in the queue. Defaulting to playing the next related song...");
+                await DistubeManager.Instance.addRelatedVideo(message)
+                DistubeManager.Instance.skip(message)
             }
         } catch (error) {
             console.log(error);
