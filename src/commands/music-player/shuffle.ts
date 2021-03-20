@@ -28,25 +28,20 @@ const command: Command = {
     async execute(client: Client, message: Message, args: string[]) {
         try {
             if (DistubeManager.Instance) {
-                if (DistubeManager.addingPlaylist) {
-                    if (DistubeManager.musicQueue.length === 0) {
-                        message.channel.send("Currently no songs in the queue.");
-                        return;
-                    }
-                    shuffle(DistubeManager.musicQueue);
-                    message.channel.send(shuffledEmbed);
-                    if (DistubeManager.musicQueue.length > 0) {
-                        const queue = DistubeManager.musicQueue;
-                        let output = "Next songs in Queue! (Up to the next 10)\n"
-                        for (let i = 0; i < 10 && i < queue.length; ++i) {
-                            output += `**${i + 1}**. ${queue[i].name} by ${queue[i].artist}\n`
-
-                        }
-                        message.channel.send(output)
-                    }
-                   
+                if (DistubeManager.musicQueue.length === 0) {
+                    message.channel.send("Currently no songs in the queue.");
                     return;
                 }
+                shuffle(DistubeManager.musicQueue);
+                message.channel.send(shuffledEmbed);
+                const queue = DistubeManager.musicQueue;
+                let output = "Next songs in Queue! (Up to the next 10)\n"
+                for (let i = 0; i < 10 && i < queue.length; ++i) {
+                    output += `**${i + 1}**. ${queue[i].name} by ${queue[i].artist}\n`
+                }
+                message.channel.send(output)
+
+                return;
             }
         } catch (error) {
             console.log(error);
