@@ -83,9 +83,9 @@ const command: Command = {
                     }
                 } else {
                     if (DistubeManager.Instance.isPlaying(message)) {
-                        await addSong(message, query)
+                        addSong(message, query)
                     } else {
-                        await DistubeManager.Instance.play(message, query);
+                        DistubeManager.Instance.play(message, query);
                     }
 
                 }

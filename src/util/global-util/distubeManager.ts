@@ -12,10 +12,12 @@ class _DistubeManager {
     Instance: DisTube | null;
     addingPlaylist: boolean;
     musicQueue: SongData[];
+    nextRelated: string;
     constructor() {
         this.Instance = null;
         this.addingPlaylist = false;
         this.musicQueue = [];
+        this.nextRelated = "";
     }
 
     registerEvents(): void {
@@ -26,21 +28,27 @@ class _DistubeManager {
                 await message.channel.send("Channel is empty. Leaving the channel. Mushoomie ~ !!")
             })
 
-            this.Instance.on("finish", (message: Message) => {
+            this.Instance.on("finish", async (message: Message) => {
                 console.log("Finish event occued")
-                if (this.musicQueue.length > 0) {
-                    const next = this.musicQueue.shift()
-                    if (this.Instance) {
-                        if (next)
+                if (this.Instance) {
+                    if (this.musicQueue.length > 0) {
+                        const next = this.musicQueue.shift()
+                        if (next) {
                             this.Instance.play(message, next.url);
-                        // playlist is done
-                        else
-                            this.Instance.getQueue(message).autoplay = false;
+                        }
+                    } else {
+                        if(this.nextRelated != "") {
+                            await message.channel.send("No more song in queue, will start autoplaying soon or leave!")
+                            await this.Instance.play(message, this.nextRelated);
+                            return;
+                        }
+                        setTimeout(() => {
+                            (message.member?.voice.channel as VoiceChannel).leave();
+                        }, 5000)
+                        
                     }
-                } else {
-                    message.channel.send("No more song in queue Leaving the voice channel shortly.")
                 }
-            })
+            });
 
             this.Instance.on("initQueue", (queue: Queue) => {
                 queue.autoplay = false;
@@ -48,19 +56,22 @@ class _DistubeManager {
             });
 
             this.Instance.on("playSong", (message: Message, queue: Queue, song: Song) => {
-                if(this.musicQueue.length === 0) {
-                    if(this.Instance) {
-                        this.Instance?.addRelatedVideo(message)
+                if (this.Instance) {
+                    this.Instance.addRelatedVideo(message);
+                    const relatedSong = this.Instance.getQueue(message).songs.shift()
+                    if (relatedSong) {
+                        this.nextRelated = relatedSong.url
+                    }
+
+                    if (song) {
+                        this.Instance.play(message, song.url);
                     }
                 }
                 message.channel.send(
-                    `Playing \`${song.name}\` - \`${song.formattedDuration}\`\nRequested by: ${song.user}\n`
+                    `Playing \`${song.name}\` - \`${song.formattedDuration}\``
                 )
             });
-            this.Instance.on("addSong", (message: Message, queue: Queue, song: Song) => {
-                message.channel.send(
-                    `Added ${song.name} - \`${song.formattedDuration}\` to the queue by ${song.user}`)
-            });
+
             this.Instance.on("error", (message: Message, err) => message.channel.send(
                 "An error encountered: " + err
             ));
