@@ -50,9 +50,10 @@ class _DistubeManager {
             });
 
             this.Instance.on("playSong", (message: Message, queue: Queue, song: Song) => {
-                console.log(this.currentSong)
+                // `Playing \`${song.name}\` - \`${song.formattedDuration}\`\nRequested by: ${song.user}\n${status(queue)}`
+
                 message.channel.send(
-                    `Playing \`${song.name}\` - \`${song.formattedDuration}\` - requested-by @${this.currentSong === null ? message.member?.user.tag : this.currentSong!.requestedBy}`
+                    `Playing \`${song.name}\` - \`${song.formattedDuration}\`\nRequested by: ${this.currentSong === null ? message.member?.user : this.currentSong!.requestedBy}`
                 )
             });
 
