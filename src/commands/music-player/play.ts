@@ -8,22 +8,22 @@ const finishedPlaylist = new MessageEmbed()
     .setTitle('Spotify Playlist Fully Added!')
     .setColor(0xff0000)
 
-const addSong = async (message: Message, query: string) => {
+const addSong = async (message: Message, query: string, author: string) => {
     if (DistubeManager.Instance) {
         const searchResult = await yts(query);
-        DistubeManager.musicQueue.push({ name: searchResult.videos[0].title, artist: "", url: searchResult.videos[0].url })
+        DistubeManager.musicQueue.push({ name: searchResult.videos[0].title, artist: "", url: searchResult.videos[0].url, requestedBy: author})
         await message.channel.send(`Adding the song, ${searchResult.videos[0].title} to the Music Queue`);
     }
 }
 /* Ads the rest of the song to the distube queue */
-const addRestOfSongs = async (message: Message, RAW_SONGS: string[]) => {
+const addRestOfSongs = async (message: Message, RAW_SONGS: string[], author: string) => {
     if (DistubeManager.Instance) {
         for (let i = 0; i < RAW_SONGS.length; ++i) {
             if(!DistubeManager.addingPlaylist) break;
             const name = RAW_SONGS[i].split(',')[0]
             const artist = RAW_SONGS[i].split(',')[1]
             const query = await yts(name + " " + artist);
-            DistubeManager.musicQueue.push({ name: name, artist: artist, url: query.videos[0].url })
+            DistubeManager.musicQueue.push({ name: name, artist: artist, url: query.videos[0].url, requestedBy: author})
         }
 
         if(!DistubeManager.addingPlaylist) {
@@ -40,6 +40,10 @@ const command: Command = {
     description: "Searches youtube for a specified song and plays it. Plays spotify playlists as well.",
     requiredPermissions: [],
     async execute(client: Client, message: Message, args: string[]) {
+        let author = ""
+
+        if(message.member) 
+            author = message.member.user.tag;
         try {
             if (message.guild) {
                 const GUILD_ID = message.guild.id;
@@ -70,21 +74,21 @@ const command: Command = {
                     if (RAW_SONGS) {
                         DistubeManager.addingPlaylist = true;
                         if (DistubeManager.musicQueue.length > 0) {
-                            addRestOfSongs(message, RAW_SONGS);
+                            addRestOfSongs(message, RAW_SONGS, author);
                             return;
                         }
                         const firstSong = RAW_SONGS.shift()!.split(',').join(" ")
                         const first = await yts(firstSong);
                         const song = first.videos[0].url
                         await DistubeManager.Instance.play(message, song);
-                        addRestOfSongs(message, RAW_SONGS);
+                        addRestOfSongs(message, RAW_SONGS, author);
                     } else {
                         await message.channel.send(`Failed to add the Spotify Songs to the Music Queue.`);
                     }
                 } else {
                     if (DistubeManager.Instance.isPlaying(message)) {
                         DistubeManager.Instance.getQueue(message).autoplay = false;
-                        addSong(message, query)
+                        addSong(message, query, author)
                     } else {
                         if(DistubeManager.Instance.getQueue(message)) {
                             DistubeManager.Instance.getQueue(message).autoplay = true;

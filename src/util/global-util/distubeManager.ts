@@ -7,15 +7,18 @@ export interface SongData {
     name: string;
     artist: string;
     url: string;
+    requestedBy: string;
 }
 class _DistubeManager {
     Instance: DisTube | null;
     addingPlaylist: boolean;
     musicQueue: SongData[];
+    currentSong: SongData | null;
     constructor() {
         this.Instance = null;
         this.addingPlaylist = false;
         this.musicQueue = [];
+        this.currentSong = null;
     }
 
     registerEvents(): void {
@@ -31,6 +34,7 @@ class _DistubeManager {
                     if (this.musicQueue.length > 0) {
                         const next = this.musicQueue.shift()
                         if (next) {
+                            this.currentSong = next;
                             this.Instance.play(message, next.url);
                         }
                     } else {
@@ -40,13 +44,15 @@ class _DistubeManager {
             });
 
             this.Instance.on("initQueue", (queue: Queue) => {
+                
                 queue.autoplay = true;
                 queue.volume = 50;
             });
 
             this.Instance.on("playSong", (message: Message, queue: Queue, song: Song) => {
+                console.log(this.currentSong)
                 message.channel.send(
-                    `Playing \`${song.name}\` - \`${song.formattedDuration}\``
+                    `Playing \`${song.name}\` - \`${song.formattedDuration}\` - requested-by @${this.currentSong === null ? message.member?.user.tag : this.currentSong!.requestedBy}`
                 )
             });
 

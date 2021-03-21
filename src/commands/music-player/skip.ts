@@ -12,8 +12,10 @@ const command: Command = {
             if (DistubeManager.Instance) {
                 if (DistubeManager.musicQueue.length > 0) {
                     const next = DistubeManager.musicQueue.shift()
-                    if (next)
+                    if (next) {
+                        DistubeManager.currentSong = next;
                         await DistubeManager.Instance.playSkip(message, next.url)
+                    }
                     return;
                 }
 
