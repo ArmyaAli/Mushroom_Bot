@@ -15,6 +15,7 @@ const command: Command = {
                     if (next) {
                         DistubeManager.currentSong = next;
                         await DistubeManager.Instance.playSkip(message, next.url)
+                        DistubeManager.Instance.getQueue(message).autoplay = true;
                     }
                     return;
                 }
@@ -22,7 +23,8 @@ const command: Command = {
                 message.channel.send("Currently no songs in the queue. Defaulting to playing the next related song...");
                 await DistubeManager.Instance.addRelatedVideo(message)
                 DistubeManager.Instance.skip(message)
-            }
+                
+            };
         } catch (error) {
             console.log(error);
         }

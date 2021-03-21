@@ -1,4 +1,4 @@
-import { Client, Message, MessageEmbed } from "discord.js";
+import { Client, Guild, GuildMember, Message, MessageEmbed, User } from "discord.js";
 import { grabAllSongsFromPlaylist } from '../../util/music-player-util/spotify-API-service';
 import { Command } from "../../command";
 import DistubeManager from "../../util/global-util/distubeManager";
@@ -8,16 +8,21 @@ const finishedPlaylist = new MessageEmbed()
     .setTitle('Spotify Playlist Fully Added!')
     .setColor(0xff0000)
 
-const addSong = async (message: Message, query: string, author: string) => {
+const addSong = async (message: Message, query: string, author: User | null) => {
     if (DistubeManager.Instance) {
         const searchResult = await yts(query);
-        DistubeManager.musicQueue.push({ name: searchResult.videos[0].title, artist: "", url: searchResult.videos[0].url, requestedBy: author})
-        await message.channel.send(`Adding the song, ${searchResult.videos[0].title} to the Music Queue`);
+        const songTitle = searchResult.videos[0].title
+        const songLink = searchResult.videos[0].url
+        DistubeManager.musicQueue.push({ name: songTitle, url: songLink, requestedBy: author})
+        message.channel.send(
+            `Adding \`${songTitle}\` to the Queue\nRequested by: ${author}`
+        )
     }
 }
 /* Ads the rest of the song to the distube queue */
-const addRestOfSongs = async (message: Message, RAW_SONGS: string[], author: string) => {
+const addRestOfSongs = async (message: Message, RAW_SONGS: string[],  author: User | null) => {
     if (DistubeManager.Instance) {
+        
         for (let i = 0; i < RAW_SONGS.length; ++i) {
             if(!DistubeManager.addingPlaylist) break;
             const name = RAW_SONGS[i].split(',')[0]
@@ -40,10 +45,11 @@ const command: Command = {
     description: "Searches youtube for a specified song and plays it. Plays spotify playlists as well.",
     requiredPermissions: [],
     async execute(client: Client, message: Message, args: string[]) {
-        let author = ""
+        let author = null
 
         if(message.member) 
-            author = message.member.user.tag;
+            author = message.member.user
+
         try {
             if (message.guild) {
                 const GUILD_ID = message.guild.id;

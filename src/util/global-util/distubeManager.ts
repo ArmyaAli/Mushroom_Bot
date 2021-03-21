@@ -1,13 +1,13 @@
-import { BaseClient, Client, Message, VoiceChannel, VoiceConnection } from "discord.js";
+import { BaseClient, Client, GuildMember, Message, User, VoiceChannel, VoiceConnection } from "discord.js";
 import DisTube, { DisTubeOptions } from "distube";
 import Queue from "distube/typings/Queue";
 import Song from "distube/typings/Song";
 
 export interface SongData {
     name: string;
-    artist: string;
+    artist?: string;
     url: string;
-    requestedBy: string;
+    requestedBy: User | null;
 }
 class _DistubeManager {
     Instance: DisTube | null;
@@ -50,10 +50,9 @@ class _DistubeManager {
             });
 
             this.Instance.on("playSong", (message: Message, queue: Queue, song: Song) => {
-                // `Playing \`${song.name}\` - \`${song.formattedDuration}\`\nRequested by: ${song.user}\n${status(queue)}`
-
+                console.log(`autoplay: status ${queue.autoplay}`);
                 message.channel.send(
-                    `Playing \`${song.name}\` - \`${song.formattedDuration}\`\nRequested by: ${this.currentSong === null ? message.member?.user : this.currentSong!.requestedBy}`
+                    `Playing \`${song.name}\` - \`${song.formattedDuration}\`\nRequested by: ${this.currentSong === null ? message.member?.user : this.currentSong?.requestedBy}`
                 )
             });
 
