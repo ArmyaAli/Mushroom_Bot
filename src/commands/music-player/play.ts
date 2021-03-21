@@ -83,9 +83,14 @@ const command: Command = {
                     }
                 } else {
                     if (DistubeManager.Instance.isPlaying(message)) {
+                        DistubeManager.Instance.getQueue(message).autoplay = false;
                         addSong(message, query)
                     } else {
+                        if(DistubeManager.Instance.getQueue(message)) {
+                            DistubeManager.Instance.getQueue(message).autoplay = true;
+                        }
                         DistubeManager.Instance.play(message, query);
+                        
                     }
 
                 }
