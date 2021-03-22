@@ -16,6 +16,8 @@ const command: Command = {
                 DistubeManager.Instance.stop(message);
                 DistubeManager.musicQueue = []
                 DistubeManager.addingPlaylist = false;
+                DistubeManager.currentSong = null;
+                DistubeManager.firstAuthor = undefined;
                 await message.channel.send(stoppedPlaylist)
             }
         } catch (error) {

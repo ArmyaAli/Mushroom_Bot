@@ -14,6 +14,7 @@ class _DistubeManager {
     addingPlaylist: boolean;
     musicQueue: SongData[];
     currentSong: SongData | null;
+    firstAuthor: User | undefined;
     constructor() {
         this.Instance = null;
         this.addingPlaylist = false;
@@ -50,9 +51,8 @@ class _DistubeManager {
             });
 
             this.Instance.on("playSong", (message: Message, queue: Queue, song: Song) => {
-                console.log(`autoplay: status ${queue.autoplay}`);
                 message.channel.send(
-                    `Playing \`${song.name}\` - \`${song.formattedDuration}\`\nRequested by: ${this.currentSong === null ? message.member?.user : this.currentSong?.requestedBy}`
+                    `Playing \`${song.name}\` - \`${song.formattedDuration}\`\nRequested by: ${this.currentSong === null ? this?.firstAuthor : this.currentSong?.requestedBy}`
                 )
             });
 

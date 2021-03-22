@@ -99,6 +99,7 @@ const command: Command = {
                         if(DistubeManager.Instance.getQueue(message)) {
                             DistubeManager.Instance.getQueue(message).autoplay = true;
                         }
+                        DistubeManager.firstAuthor = message.member?.user;
                         DistubeManager.Instance.play(message, query);
                         
                     }
