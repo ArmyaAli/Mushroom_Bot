@@ -16,6 +16,7 @@ export interface multiGuildQueue {
     currentSong: SongData | null;
     firstAuthor: User | undefined;
     addingPlaylist: boolean;
+    message: Message;
 }
 
 // if nobody is playing music -> there will be no queue
@@ -63,9 +64,6 @@ class _MusicManager {
             player.Instance.on("error", (message: Message, err) => message.channel.send(
                 "An error encountered: " + err
             ));
-
-
-
         }
 
     }
