@@ -55,24 +55,22 @@ client.on("guildMemberAdd", (member) => {
     );
 });
 
-client.on("voiceStateUpdate", (oldState: VoiceState, newState: VoiceState) => {
+client.on("voiceStateUpdate", async (oldState: VoiceState, newState: VoiceState) => {
     const oldChannel = oldState.channel;
     const oldGuild = oldState.guild;
+
+    /* This will check if a channel in the specific guild that the Specific Music Queue in the map is empty and leaves the voice channel is it becomes empty. Maybe we can improve it in the sense that it does not leave the voice if somebody comes back */
     if (oldChannel && oldGuild) {
-        if (oldChannel.members.size === 1) {
-            if (latestMessage) {
-                const channelToMessage = oldGuild.channels.cache.get(latestMessage.channel.id) as TextChannel;
-                channelToMessage.send("Empty channel. Leaving in 30 seconds!! Mushroomie ~~");
-            }
+        if (oldChannel.members.size === 1) { // if the bot is the only one in the channel
+            const toDispose = MusicManager.musicQueue.get(oldGuild.id);
+            if (toDispose) {
+                await toDispose.message.channel.send("Empty channel. Leaving in 15 seconds!! Mushroomie ~~");
 
-            setTimeout(() => {
-                const toDispose = MusicManager.musicQueue.get(oldGuild.id);
-
-                if (toDispose) {
+                setTimeout(() => {
                     MusicManager.musicQueue.delete(oldGuild.id);
-                }
-                oldState.channel?.leave();
-            }, 30000)
+                    oldState.channel?.leave()
+                }, 15000)
+            }
         }
     }
 });
