@@ -1,5 +1,5 @@
 import Discord, { BitFieldResolvable, Message, PermissionString, TextChannel, VoiceState } from "discord.js";
-import DistubeManager from "./util/global-util/distubeManager";
+import MusicManager from "./util/global-util/musicManager";
 import path from "path";
 import config, { readCommandsRecursive, distubeConfig } from "./botconfig";
 import { Command } from "./command";
@@ -13,9 +13,9 @@ let commandFiles: string[] = [];
 
 client.once("ready", async () => {
     /* Set our music player */
-    DistubeManager.Instance = new DisTube(client, distubeConfig);
+    // MusicManager.Instance = new DisTube(client, distubeConfig);
     /* Register music player events */
-    DistubeManager.registerEvents();
+    // MusicManager.registerEvents();
     readCommandsRecursive(commandContext, commandFiles);
     commandFiles = commandFiles.filter((fileName) => fileName.endsWith(".ts") || fileName.endsWith(".js"));
     for (const filePath of commandFiles) {
@@ -68,10 +68,10 @@ client.on("voiceStateUpdate", (oldState: VoiceState, newState: VoiceState) => {
         if (oldSize <= 1) {
             s_message?.channel.send("Empty Voice Channel...Leaving the Voice Channel in 30 seconds...")
             setTimeout(() => {
-                DistubeManager.musicQueue = [];
-                DistubeManager.firstAuthor = undefined;
-                DistubeManager.addingPlaylist = false;
-                DistubeManager.currentSong = null;
+                // MusicManager.musicQueue = [];
+                // MusicManager.firstAuthor = undefined;
+                // MusicManager.addingPlaylist = false;
+                // MusicManager.currentSong = null;
                 oldState.channel?.leave();
             }, 30000)
         }
