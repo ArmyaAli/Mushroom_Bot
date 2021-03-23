@@ -1,9 +1,7 @@
 import Discord, { BitFieldResolvable, Message, PermissionString, TextChannel, VoiceState } from "discord.js";
-import MusicManager from "./util/global-util/musicManager";
 import path from "path";
 import config, { readCommandsRecursive, distubeConfig } from "./botconfig";
 import { Command } from "./command";
-import DisTube from "distube";
 
 const client: Discord.Client = new Discord.Client();
 const commands: Discord.Collection<string, Command> = new Discord.Collection();
@@ -60,23 +58,28 @@ client.on("guildMemberAdd", (member) => {
     );
 });
 
-client.on("voiceStateUpdate", (oldState: VoiceState, newState: VoiceState) => {
-    const oldSize = oldState.channel?.members.size;
-    const newSize = newState.channel?.members.size;
-    console.log(oldSize, newSize)
-    if (oldSize) {
-        if (oldSize <= 1) {
-            s_message?.channel.send("Empty Voice Channel...Leaving the Voice Channel in 30 seconds...")
-            setTimeout(() => {
-                // MusicManager.musicQueue = [];
-                // MusicManager.firstAuthor = undefined;
-                // MusicManager.addingPlaylist = false;
-                // MusicManager.currentSong = null;
-                oldState.channel?.leave();
-            }, 30000)
-        }
-    }
-});
+// client.on("voiceStateUpdate", (oldState: VoiceState, newState: VoiceState) => {
+//     const oldSize = oldState.channel?.members.size;
+//     const newSize = newState.channel?.members.size;
+//     const currentChannelId = oldState.channelID;
+//     const currentGuild = oldState.guild;
+//     if (currentChannelId) {
+//         const currentChannel = oldState.guild.channels.cache.get(currentChannelId)
+//         if (oldSize && currentGuild.channels.) {
+//             if (oldSize <= 1) {
+//                 s_message?.channel.send("Empty Voice Channel...Leaving the Voice Channel in 30 seconds...")
+//                 setTimeout(() => {
+//                     // MusicManager.musicQueue = [];
+//                     // MusicManager.firstAuthor = undefined;
+//                     // MusicManager.addingPlaylist = false;
+//                     // MusicManager.currentSong = null;
+//                     oldState.channel?.leave();
+//                 }, 30000)
+//             }
+//         }
+//     }
+
+// });
 
 client.login(config.token).catch(error => {
     console.log(`Error occured during login: ${error}`);
