@@ -15,41 +15,42 @@ const addSong = async (player: multiGuildQueue, message: Message, query: string,
         const searchResult = await yts(query);
         const songTitle = searchResult.videos[0].title
         const songLink = searchResult.videos[0].url
-        player.Queue.push({ name: songTitle, url: songLink, requestedBy: author})
+        player.Queue.push({ name: songTitle, url: songLink, requestedBy: author })
         message.channel.send(
             `Adding \`${songTitle}\` to the Queue\nRequested by: ${author}`
         )
     }
 }
-// /* Ads the rest of the song to the distube queue */
-// const addRestOfSongs = async (player: multiGuildQueue, message: Message, RAW_SONGS: string[],  author: User | null) => {
-//     if (player.Instance) {
+/* Ads the rest of the song to the distube queue */
+const addRestOfSongs = async (player: multiGuildQueue, message: Message, RAW_SONGS: string[], author: User | null) => {
+    if (player.Instance) {
 
-//         for (let i = 0; i < RAW_SONGS.length; ++i) {
-//             if(!player.addingPlaylist) break;
-//             const name = RAW_SONGS[i].split(',')[0]
-//             const artist = RAW_SONGS[i].split(',')[1]
-//             const query = await yts(name + " " + artist);
-//             player.Queue.push({ name: name, artist: artist, url: query.videos[0].url, requestedBy: author})
-//         }
+        for (let i = 0; i < RAW_SONGS.length; ++i) {
+            if (!player.addingPlaylist) break;
+            const name = RAW_SONGS[i].split(',')[0]
+            const artist = RAW_SONGS[i].split(',')[1]
+            const query = await yts(name + " " + artist);
+            player.Queue.push({ name: name, artist: artist, url: query.videos[0].url, requestedBy: author })
+        }
 
-//         if(!player.addingPlaylist) {
-//             player.Queue = []   
-//             return;
-//         }
-//         await message.channel.send(finishedPlaylist);
-//         player.addingPlaylist = false;
-//     }
-// }
+        if (!player.addingPlaylist) {
+            player.Queue = []
+            return;
+        }
+        
+        await message.channel.send(finishedPlaylist);
+        player.addingPlaylist = false;
+    }
+}
 
 const assignQueue = (client: Client, message: Message) => {
     try {
         const GUILD_ID = message.guild?.id;
         if (GUILD_ID) {
             if (!MusicManager.musicQueue.has(GUILD_ID)) {
-                MusicManager.musicQueue.set(GUILD_ID, { Instance: new DisTube(client, distubeConfig), Queue: [], currentSong: null, firstAuthor: undefined, addingPlaylist: false })
+                MusicManager.musicQueue.set(GUILD_ID, { Instance: new DisTube(client, distubeConfig), Queue: [], currentSong: null, firstAuthor: undefined, addingPlaylist: false, message: message })
                 const thisQueue = MusicManager.musicQueue.get(GUILD_ID)
-                if(thisQueue)
+                if (thisQueue)
                     MusicManager.registerEvents(thisQueue);
             }
         }
@@ -111,14 +112,14 @@ const command: Command = {
                         if (RAW_SONGS) {
                             player.addingPlaylist = true;
                             if (player.Queue.length > 0) {
-                                // addRestOfSongs(message, RAW_SONGS, author);
+                                addRestOfSongs(player, message, RAW_SONGS, author);
                                 return;
                             }
                             const firstSong = RAW_SONGS.shift()!.split(',').join(" ")
                             const first = await yts(firstSong);
                             const song = first.videos[0].url
                             await player.Instance.play(message, song);
-                            // addRestOfSongs(message, RAW_SONGS, author);
+                            addRestOfSongs(player, message, RAW_SONGS, author);
                         } else {
                             await message.channel.send(`Failed to add the Spotify Songs to the Music Queue.`);
                         }
