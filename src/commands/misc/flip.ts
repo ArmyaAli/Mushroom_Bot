@@ -6,10 +6,9 @@ const command: Command = {
   description: "Heads or Tails!",
   requiredPermissions: [],
   execute(client: Client, message: Message, args: string[])  {
-    const test = ["Heads", "Tails"]    
+    const test = ["assets/head.jpg", "assets/tails.png"]
     const random = Math.floor(Math.random() * 2)
-    console.log(random)
-    message.channel.send(test[random])
+    message.channel.send({files: [test[random]]})
   }
 }
 
