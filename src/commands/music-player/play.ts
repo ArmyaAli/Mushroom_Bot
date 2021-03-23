@@ -1,7 +1,7 @@
 import { Client, Guild, GuildMember, Message, MessageEmbed, User } from "discord.js";
 import { grabAllSongsFromPlaylist } from '../../util/music-player-util/spotify-API-service';
 import { Command } from "../../command";
-import MusicManager from "../../util/global-util/musicManager";
+import MusicManager, { multiGuildQueue } from "../../util/music-player-util/musicManager";
 import { distubeConfig } from "../../botconfig"
 import yts from 'yt-search'
 import DisTube from "distube";
@@ -10,35 +10,35 @@ const finishedPlaylist = new MessageEmbed()
     .setTitle('Spotify Playlist Fully Added!')
     .setColor(0xff0000)
 
-// const addSong = async (message: Message, query: string, author: User | null) => {
-//     if (MusicManager.Instance) {
-//         const searchResult = await yts(query);
-//         const songTitle = searchResult.videos[0].title
-//         const songLink = searchResult.videos[0].url
-//         MusicManager.musicQueue.push({ name: songTitle, url: songLink, requestedBy: author})
-//         message.channel.send(
-//             `Adding \`${songTitle}\` to the Queue\nRequested by: ${author}`
-//         )
-//     }
-// }
+const addSong = async (player: multiGuildQueue, message: Message, query: string, author: User | null) => {
+    if (player.Instance) {
+        const searchResult = await yts(query);
+        const songTitle = searchResult.videos[0].title
+        const songLink = searchResult.videos[0].url
+        player.Queue.push({ name: songTitle, url: songLink, requestedBy: author})
+        message.channel.send(
+            `Adding \`${songTitle}\` to the Queue\nRequested by: ${author}`
+        )
+    }
+}
 // /* Ads the rest of the song to the distube queue */
-// const addRestOfSongs = async (message: Message, RAW_SONGS: string[],  author: User | null) => {
-//     if (MusicManager.Instance) {
+// const addRestOfSongs = async (player: multiGuildQueue, message: Message, RAW_SONGS: string[],  author: User | null) => {
+//     if (player.Instance) {
 
 //         for (let i = 0; i < RAW_SONGS.length; ++i) {
-//             if(!MusicManager.addingPlaylist) break;
+//             if(!player.addingPlaylist) break;
 //             const name = RAW_SONGS[i].split(',')[0]
 //             const artist = RAW_SONGS[i].split(',')[1]
 //             const query = await yts(name + " " + artist);
-//             MusicManager.musicQueue.push({ name: name, artist: artist, url: query.videos[0].url, requestedBy: author})
+//             player.Queue.push({ name: name, artist: artist, url: query.videos[0].url, requestedBy: author})
 //         }
 
-//         if(!MusicManager.addingPlaylist) {
-//             MusicManager.musicQueue = []   
+//         if(!player.addingPlaylist) {
+//             player.Queue = []   
 //             return;
 //         }
 //         await message.channel.send(finishedPlaylist);
-//         MusicManager.addingPlaylist = false;
+//         player.addingPlaylist = false;
 //     }
 // }
 
@@ -125,7 +125,7 @@ const command: Command = {
                     } else {
                         if (player.Instance.isPlaying(message)) {
                             player.Instance.getQueue(message).autoplay = false;
-                            // addSong(message, query, author)
+                            addSong(player, message, query, author)
                         } else {
                             if (player.Instance.getQueue(message)) {
                                 player.Instance.getQueue(message).autoplay = true;
