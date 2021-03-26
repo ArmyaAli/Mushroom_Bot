@@ -18,11 +18,8 @@ const command: Command = {
                 if (player) {
                     if (player.Instance) {
                         player.Instance.stop(message);
-                        player.Queue = []
-                        player.addingPlaylist = false;
-                        player.currentSong = null;
-                        player.firstAuthor = undefined;
-                        await message.channel.send(stoppedPlaylist)
+                        MusicManager.musicQueue.delete(GUILD_ID);
+                        message.channel.send("Stopped and cleared the Queue. Mushroom ~!!")
                     }
                 }
             }
