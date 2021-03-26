@@ -2,6 +2,7 @@ import { Client, Message, MessageEmbed } from "discord.js";
 import Queue from "distube/typings/Queue";
 import { Command } from "../../command";
 import MusicManager, { SongData } from "../../util/music-player-util/musicManager";
+import { checkVoiceStatus } from "./common";
 
 const shuffledEmbed = new MessageEmbed()
     .setTitle('Shuffled All Songs in the Queue')
@@ -28,6 +29,7 @@ const command: Command = {
     requiredPermissions: [],
     async execute(client: Client, message: Message, args: string[]) {
         try {
+            if (!checkVoiceStatus(client, message)) return;
             const GUILD_ID = message.guild?.id;
             if (GUILD_ID) {
                 const player = MusicManager.musicQueue.get(GUILD_ID);

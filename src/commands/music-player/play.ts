@@ -5,6 +5,7 @@ import MusicManager, { multiGuildQueue } from "../../util/music-player-util/musi
 import { distubeConfig } from "../../botconfig"
 import yts from 'yt-search'
 import DisTube from "distube";
+import { checkVoiceStatus } from "./common";
 
 const finishedPlaylist = new MessageEmbed()
     .setTitle('Spotify Playlist Fully Added!')
@@ -59,28 +60,6 @@ const assignQueue = (client: Client, message: Message) => {
     }
 }
 
-const checkVoiceStatus = (client: Client, message: Message) => {
-    let inVoice = true;
-    try {
-        if (message.guild) {
-            const GUILD_ID = message.guild.id;
-            const USER_ID = message.author.id;
-            const server = client.guilds.cache.get(GUILD_ID); // Getting the guild.
-            if (server) {
-                const member = server.members.cache.get(USER_ID); // Getting the member.
-                if (member) {
-                    if (!member.voice.channel) {
-                        message.channel.send("You must be in a voice channel to use this command.")
-                        inVoice = false
-                    }
-                }
-            }
-            return inVoice
-        }
-    } catch (err) {
-        console.log(`Procedure [inVoice] in Play command, Error: ${err}`)
-    }
-}
 const command: Command = {
     name: "play",
     description: "Searches youtube for a specified song and plays it. Plays spotify playlists as well.",

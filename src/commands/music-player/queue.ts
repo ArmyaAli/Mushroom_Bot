@@ -2,13 +2,15 @@ import { Client, Message, MessageFlags, VoiceChannel, VoiceConnection } from "di
 import Queue from "distube/typings/Queue";
 import { Command } from "../../command";
 import MusicManager from "../../util/music-player-util/musicManager";
+import { checkVoiceStatus } from "./common";
 
 const command: Command = {
     name: "queue",
     description: "Displays the current queue of the DisTube music player.",
     requiredPermissions: [],
     async execute(client: Client, message: Message, args: string[]) {
-        try {
+        try {  
+            if (!checkVoiceStatus(client, message)) return;
             const GUILD_ID = message.guild?.id;
             if (GUILD_ID) {
                 const player = MusicManager.musicQueue.get(GUILD_ID);

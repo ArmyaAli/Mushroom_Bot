@@ -2,6 +2,7 @@ import { Client, Message, VoiceChannel, VoiceConnection } from "discord.js";
 import Queue from "distube/typings/Queue";
 import { Command } from "../../command";
 import MusicManager from "../../util/music-player-util/musicManager";
+import { checkVoiceStatus } from "./common";
 
 
 const command: Command = {
@@ -10,6 +11,7 @@ const command: Command = {
     requiredPermissions: [],
     async execute(client: Client, message: Message, args: string[]) {
         try {
+            if (!checkVoiceStatus(client, message)) return;
             const GUILD_ID = message.guild?.id;
             if (GUILD_ID) {
                 const player = MusicManager.musicQueue.get(GUILD_ID);
