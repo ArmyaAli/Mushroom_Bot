@@ -49,12 +49,6 @@ class _MusicManager {
                 }
             });
 
-            player.Instance.on("initQueue", (queue: Queue) => {
-
-                queue.autoplay = true;
-                queue.volume = 50;
-            });
-
             player.Instance.on("playSong", (message: Message, queue: Queue, song: Song) => {
                 message.channel.send(
                     `Playing \`${song.name}\` - \`${song.formattedDuration}\`\nRequested by: ${player.currentSong === null ? player?.firstAuthor : player.currentSong?.requestedBy}`
