@@ -19,7 +19,7 @@ const command: Command = {
                         const queue = player.Queue;
                         let output = "Next songs in Queue! (Up to the next 10)\n"
                         for (let i = 0; i < 10 && i < queue.length; ++i) {
-                            output += `**${i + 1}**. ${queue[i].name} by ${queue[i].artist}\n`
+                            output += `**${i + 1}**. ${queue[i].name}\n`
 
                         }
                         output += `There are ${player.Queue.length} total songs in the Queue`
