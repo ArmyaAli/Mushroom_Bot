@@ -106,7 +106,7 @@ const command: Command = {
                             if (author)
                                 addSong(player, message, query, author)
                         } else {
-                            if (player.Instance.getQueue(message))
+                            if (player.Queue.length == 0)
                                 player.Instance.getQueue(message).autoplay = true;
 
                             player.firstAuthor = message.member?.user;
