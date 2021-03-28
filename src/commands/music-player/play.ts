@@ -38,7 +38,7 @@ const addRestOfSongs = async (player: multiGuildQueue, message: Message, RAW_SON
             player.Queue = []
             return;
         }
-        
+
         await message.channel.send(finishedPlaylist);
         player.addingPlaylist = false;
     }
@@ -48,12 +48,12 @@ const assignQueue = (client: Client, message: Message) => {
     try {
         const GUILD_ID = message.guild?.id;
         if (GUILD_ID) {
-            if (!MusicManager.musicQueue.has(GUILD_ID)) {
-                MusicManager.musicQueue.set(GUILD_ID, { Instance: new DisTube(client, distubeConfig), Queue: [], currentSong: null, firstAuthor: undefined, addingPlaylist: false, message: message })
-                const thisQueue = MusicManager.musicQueue.get(GUILD_ID)
-                if (thisQueue)
-                    MusicManager.registerEvents(thisQueue);
-            }
+            if (MusicManager.musicQueue.has(GUILD_ID)) return;
+            
+            MusicManager.musicQueue.set(GUILD_ID, { Instance: new DisTube(client, distubeConfig), Queue: [], currentSong: null, firstAuthor: message.author, addingPlaylist: false, message: message })
+            const thisQueue = MusicManager.musicQueue.get(GUILD_ID)
+            if (thisQueue)
+                MusicManager.registerEvents(thisQueue);
         }
     } catch (err) {
         console.log(`Procedure [assignQueue] in Play command, Error: ${err}`)
@@ -68,16 +68,12 @@ const command: Command = {
         if (!checkVoiceStatus(client, message)) return;
         // we need to assign the the command callee a Queue (if they don't have one already)
         assignQueue(client, message);
-        console.log(MusicManager.musicQueue)
-        let author = null
+        let author = message.member?.user
 
-        if (message.member)
-            author = message.member.user
         try {
             const GUILD_ID = message.guild?.id;
             if (GUILD_ID) {
                 const player = MusicManager.musicQueue.get(GUILD_ID);
-                console.log(player)
                 if (player) {
                     const query = args.join(" ");
                     if (query.startsWith('https://open.spotify.com/playlist')) {
@@ -91,25 +87,28 @@ const command: Command = {
                         if (RAW_SONGS) {
                             player.addingPlaylist = true;
                             if (player.Queue.length > 0) {
-                                addRestOfSongs(player, message, RAW_SONGS, author);
+                                if(author)
+                                    addRestOfSongs(player, message, RAW_SONGS, author);
                                 return;
                             }
                             const firstSong = RAW_SONGS.shift()!.split(',').join(" ")
                             const first = await yts(firstSong);
                             const song = first.videos[0].url
                             await player.Instance.play(message, song);
-                            addRestOfSongs(player, message, RAW_SONGS, author);
+                            if(author)
+                                addRestOfSongs(player, message, RAW_SONGS, author);
                         } else {
                             await message.channel.send(`Failed to add the Spotify Songs to the Music Queue.`);
                         }
                     } else {
                         if (player.Instance.isPlaying(message)) {
                             player.Instance.getQueue(message).autoplay = false;
-                            addSong(player, message, query, author)
+                            if (author)
+                                addSong(player, message, query, author)
                         } else {
-                            if (player.Instance.getQueue(message)) {
+                            if (player.Instance.getQueue(message))
                                 player.Instance.getQueue(message).autoplay = true;
-                            }
+
                             player.firstAuthor = message.member?.user;
                             player.Instance.play(message, query);
 
