@@ -20,7 +20,6 @@ const command: Command = {
                         if (next) {
                             player.currentSong = next;
                             await player.Instance.playSkip(message, next.url)
-                            player.Instance.getQueue(message).autoplay = true;
                         }
                         return;
                     }
