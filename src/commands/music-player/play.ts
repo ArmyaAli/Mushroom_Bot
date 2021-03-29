@@ -49,7 +49,7 @@ const assignQueue = (client: Client, message: Message) => {
         const GUILD_ID = message.guild?.id;
         if (GUILD_ID) {
             if (MusicManager.musicQueue.has(GUILD_ID)) return;
-            
+
             MusicManager.musicQueue.set(GUILD_ID, { Instance: new DisTube(client, distubeConfig), Queue: [], currentSong: null, firstAuthor: message.author, addingPlaylist: false, message: message })
             const thisQueue = MusicManager.musicQueue.get(GUILD_ID)
             if (thisQueue)
@@ -87,7 +87,7 @@ const command: Command = {
                         if (RAW_SONGS) {
                             player.addingPlaylist = true;
                             if (player.Queue.length > 0) {
-                                if(author)
+                                if (author)
                                     addRestOfSongs(player, message, RAW_SONGS, author);
                                 return;
                             }
@@ -95,7 +95,7 @@ const command: Command = {
                             const first = await yts(firstSong);
                             const song = first.videos[0].url
                             await player.Instance.play(message, song);
-                            if(author)
+                            if (author)
                                 addRestOfSongs(player, message, RAW_SONGS, author);
                         } else {
                             await message.channel.send(`Failed to add the Spotify Songs to the Music Queue.`);
@@ -106,11 +106,10 @@ const command: Command = {
                             if (author)
                                 addSong(player, message, query, author)
                         } else {
-                            if (player.Queue.length == 0)
-                                player.Instance.getQueue(message).autoplay = true;
-
                             player.firstAuthor = message.member?.user;
-                            player.Instance.play(message, query);
+                            await player.Instance.play(message, query);
+                            if (player.Queue.length === 0)
+                                player.Instance.getQueue(message).autoplay = true;
 
                         }
 
