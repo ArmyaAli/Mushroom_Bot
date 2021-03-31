@@ -1,7 +1,7 @@
 import { Client, Guild, GuildMember, Message, MessageEmbed, User } from "discord.js";
 import { grabAllSongsFromPlaylist } from '../../util/music-player-util/spotify-API-service';
 import { Command } from "../../command";
-import MusicManager, { multiGuildQueue } from "../../util/music-player-util/musicManager";
+import MusicManager, { musicPlayer } from "../../util/music-player-util/musicManager";
 import { distubeConfig } from "../../botconfig"
 import yts from 'yt-search'
 import DisTube from "distube";
@@ -11,7 +11,7 @@ const finishedPlaylist = new MessageEmbed()
     .setTitle('Spotify Playlist Fully Added!')
     .setColor(0xff0000)
 
-const addSong = async (player: multiGuildQueue, message: Message, query: string, author: User) => {
+const addSong = async (player: musicPlayer, message: Message, query: string, author: User) => {
     if (player.Instance) {
         const searchResult = await yts(query);
         const songTitle = searchResult.videos[0].title
@@ -23,7 +23,7 @@ const addSong = async (player: multiGuildQueue, message: Message, query: string,
     }
 }
 /* Ads the rest of the song to the distube queue */
-const addRestOfSongs = async (player: multiGuildQueue, message: Message, RAW_SONGS: string[], author: User | null) => {
+const addRestOfSongs = async (player: musicPlayer, message: Message, RAW_SONGS: string[], author: User | null) => {
     if (player.Instance) {
 
         for (let i = 0; i < RAW_SONGS.length; ++i) {

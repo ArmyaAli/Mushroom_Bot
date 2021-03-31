@@ -10,7 +10,7 @@ export interface SongData {
     requestedBy: User | null;
 }
 
-export interface multiGuildQueue {
+export interface musicPlayer {
     Instance: DisTube;
     Queue: SongData[];
     currentSong: SongData | null;
@@ -21,13 +21,13 @@ export interface multiGuildQueue {
 
 // if nobody is playing music -> there will be no queue
 class _MusicManager {
-    musicQueue: Map<string, multiGuildQueue>;
+    musicQueue: Map<string, musicPlayer>;
 
     constructor() {
         this.musicQueue = new Map();
     }
 
-    registerEvents(player: multiGuildQueue): void {
+    registerEvents(player: musicPlayer): void {
         if (player.Instance) {
 
             player.Instance.on("empty", (message: Message) => {
