@@ -1,4 +1,3 @@
-import { Message, Client  } from "discord.js";
 import path from "path";
 import fileSystem from "fs";
 import * as dotenv from "dotenv";
@@ -22,7 +21,6 @@ const config = {
 };
 
 export const distubeConfig: DisTubeOptions = {
-    leaveOnEmpty: true,
     leaveOnStop: false,
 };
 
