@@ -16,7 +16,7 @@ client.once("ready", async () => {
     commandFiles = commandFiles.filter((fileName) => fileName.endsWith(".ts") || fileName.endsWith(".js"));
 
     for (const filePath of commandFiles) {
-        const command = require(filePath);
+        const command = await import(filePath);
         commands.set(command.name, command);
     }
 
