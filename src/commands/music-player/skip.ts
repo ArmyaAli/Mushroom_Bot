@@ -15,11 +15,16 @@ const command: Command = {
             if (GUILD_ID) {
                 const player = MusicManager.musicQueue.get(GUILD_ID);
                 if (player) {
-                    if (player.Queue.length > 0) {
-                        const next = player.Queue.shift()
+                    const queue = player.Queue;
+                    if (queue.length > 0) {
+                        const next = queue.shift()
                         if (next) {
                             player.currentSong = next;
                             await player.Instance.playSkip(message, next.url)
+                        }
+
+                        if(queue.length === 0) {
+                            player.Instance.getQueue(message).autoplay = true;
                         }
                         return;
                     }
