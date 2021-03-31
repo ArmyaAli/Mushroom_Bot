@@ -18,7 +18,7 @@ const command: Command = {
           await message.channel.delete();
         } else {
           if(parseInt(args.join()) > 0)
-            await (message.channel as TextChannel).bulkDelete(parseInt(args.join())+1)
+            await (message.channel as TextChannel).bulkDelete(parseInt(args.join()))
           else
             await message.channel.send("How do I delete exactly ZERO messages...");
         }
