@@ -32,7 +32,6 @@ const command: Command = {
                     message.channel.send("Currently no songs in the queue. Defaulting to playing the next related song...");
                     await player.Instance.addRelatedVideo(message)
                     player.Instance.skip(message)
-
                 }
             }
         } catch (error) {
