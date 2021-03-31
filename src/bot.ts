@@ -24,6 +24,7 @@ client.once("ready", async () => {
         console.log(`Event Proc [client.once("ready")] threw error: ${err}`)
     }
     console.log(`Logged in as ${client.user!.tag}!`);
+
 }).on("message", async (message: Message) => {
     try {
         if (!message.content.startsWith(config.prefix) || message.author.bot) return;
@@ -68,7 +69,6 @@ client.once("ready", async () => {
     } catch (err) {
         console.log(`Event Proc [client.on("voiceStateUpdate")] threw error: ${err}`)
     }
-
 });
 
 client.login(config.token).catch(error => {
