@@ -2,6 +2,7 @@ import { Client, Message } from 'discord.js';
 import { Command } from '../../command';
 
 const command: Command = {
+    
   name: "kick",
   description: "lets an *admin* kick a mentioned user",
   requiredPermissions: ['KICK_MEMBERS'],
@@ -27,4 +28,4 @@ const command: Command = {
   }
 }
 
-export = command;
+export default command;

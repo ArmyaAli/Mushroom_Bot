@@ -58,4 +58,4 @@ const command: Command = {
     },
 };
 
-export = command;
+export default command;

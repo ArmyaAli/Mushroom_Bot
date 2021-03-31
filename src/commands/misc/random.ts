@@ -30,7 +30,6 @@ const command: Command = {
       const nextjson = await nextresponse.json();
       const photos = nextjson.photos.photo;
       const chosen = photos[Math.floor(Math.random() * 100)];
-      // https://live.staticflickr.com/{server-id}/{id}_{secret}_{size-suffix}.jpg
       const lastThree = `${chosen.id}_${chosen.secret}_m.jpg`;
       const url = photoLink + path
         .join(chosen.server, lastThree)
@@ -45,4 +44,4 @@ const command: Command = {
   },
 };
 
-export = command;
+export default command;

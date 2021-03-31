@@ -11,7 +11,7 @@ const finishedPlaylist = new MessageEmbed()
     .setTitle('Spotify Playlist Fully Added!')
     .setColor(0xff0000)
 
-const addSong = async (player: multiGuildQueue, message: Message, query: string, author: User | null) => {
+const addSong = async (player: multiGuildQueue, message: Message, query: string, author: User) => {
     if (player.Instance) {
         const searchResult = await yts(query);
         const songTitle = searchResult.videos[0].title
@@ -123,4 +123,4 @@ const command: Command = {
     },
 };
 
-export = command;
+export default command;
