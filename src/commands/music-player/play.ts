@@ -86,7 +86,7 @@ const command: Command = {
 
                         if (RAW_SONGS) {
                             player.addingPlaylist = true;
-                            if (player.Queue.length > 0) {
+                            if (player.Queue.length > 0 || player.Instance.isPlaying) {
                                 if (author)
                                     addRestOfSongs(player, message, RAW_SONGS, author);
                                 return;
