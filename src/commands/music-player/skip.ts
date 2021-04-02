@@ -23,9 +23,6 @@ const command: Command = {
                             await player.Instance.playSkip(message, next.url)
                         }
 
-                        if(queue.length === 0) {
-                            player.Instance.getQueue(message).autoplay = true;
-                        }
                         return;
                     }
 
