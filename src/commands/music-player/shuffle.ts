@@ -47,7 +47,6 @@ const command: Command = {
                             output += `**${i + 1}**. ${queue[i].name} by ${queue[i].artist}\n`
                         }
                         message.channel.send(output)
-
                         return;
                     }
                 }
