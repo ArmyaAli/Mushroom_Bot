@@ -50,8 +50,18 @@ const assignQueue = (client: Client, message: Message) => {
         if (GUILD_ID) {
             if (MusicManager.musicQueue.has(GUILD_ID)) return;
 
-            MusicManager.musicQueue.set(GUILD_ID, { Instance: new DisTube(client, distubeConfig), Queue: [], currentSong: null, firstAuthor: message.author, addingPlaylist: false, message: message })
+            MusicManager.musicQueue.set(GUILD_ID,
+            {
+                    Instance: new DisTube(client, distubeConfig),
+                    Queue: [],
+                    currentSong: null,
+                    firstAuthor: message.author,
+                    addingPlaylist: false,
+                    message: message
+            });
+
             const thisQueue = MusicManager.musicQueue.get(GUILD_ID)
+            
             if (thisQueue)
                 MusicManager.registerEvents(thisQueue);
         }
@@ -102,17 +112,19 @@ const command: Command = {
                         }
                     } else {
                         if (player.Instance.isPlaying(message)) {
-                            player.Instance.getQueue(message).autoplay = false;
+                            if(player.autoplay) {
+                                player.autoplay = player.Instance.toggleAutoplay(message);
+                            }
                             if (author)
                                 addSong(player, message, query, author)
                         } else {
                             player.firstAuthor = message.member?.user;
-                            await player.Instance.play(message, query);
-                            if (player.Queue.length === 0)
-                                player.Instance.getQueue(message).autoplay = true;
-
+                            await player.Instance.play(message, query); 
+                            
+                            if(!player.autoplay && player.Queue.length === 0) {
+                                player.autoplay = player.Instance.toggleAutoplay(message);
+                            }
                         }
-
                     }
                 }
             }

@@ -17,6 +17,7 @@ export interface musicPlayer {
     firstAuthor: User | undefined;
     addingPlaylist: boolean;
     message: Message;
+    autoplay?: boolean;
 }
 
 // if nobody is playing music -> there will be no queue
@@ -29,11 +30,6 @@ class _MusicManager {
 
     registerEvents(player: musicPlayer): void {
         if (player.Instance) {
-
-            player.Instance.on("empty", (message: Message) => {
-                player.addingPlaylist = false;
-                message.channel.send("Channel is empty. Leaving the channel. Mushoomie ~ !!")
-            })
 
             player.Instance.on("finish", (message: Message) => {
                 if (player.Instance) {
@@ -49,7 +45,13 @@ class _MusicManager {
                 }
             });
 
+            player.Instance.on("initQueue", (queue: Queue) => {
+                queue.autoplay = player.autoplay = true;
+                queue.volume = 100;
+            });
+
             player.Instance.on("playSong", (message: Message, queue: Queue, song: Song) => {
+                queue.autoplay = player.Queue.length === 0 ? true : false;
                 message.channel.send(
                     `Playing \`${song.name}\` - \`${song.formattedDuration}\`\nRequested by: ${player.currentSong === null ? player?.firstAuthor : player.currentSong?.requestedBy}`
                 )
