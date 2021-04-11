@@ -112,18 +112,18 @@ const command: Command = {
                         }
                     } else {
                         if (player.Instance.isPlaying(message)) {
-                            if(player.autoplay) {
-                                player.autoplay = player.Instance.toggleAutoplay(message);
-                            }
+                            // if(player.autoplay) {
+                            //     player.autoplay = player.Instance.toggleAutoplay(message);
+                            // }
                             if (author)
                                 addSong(player, message, query, author)
                         } else {
                             player.firstAuthor = message.member?.user;
                             await player.Instance.play(message, query); 
                             
-                            if(!player.autoplay && player.Queue.length === 0) {
-                                player.autoplay = player.Instance.toggleAutoplay(message);
-                            }
+                            // if(!player.autoplay && player.Queue.length === 0) {
+                            //     player.autoplay = player.Instance.toggleAutoplay(message);
+                            // }
                         }
                     }
                 }
