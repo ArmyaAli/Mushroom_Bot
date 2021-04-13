@@ -88,7 +88,7 @@ const command: Command = {
                     const query = args.join(" ");
                     if (query.startsWith('https://open.spotify.com/playlist')) {
                         if (player.addingPlaylist) {
-                            message.channel.send(`There is already a playlist being Queued UP. !stop, and then queue up a new one.`)
+                            message.channel.send(`There is already a playlist being processed. Wait until it is finished or use !stop and the Queue a new one.`)
                             return;
                         }
                         const LIST_ID: string = query.substr(query.lastIndexOf('/') + 1);
@@ -96,20 +96,25 @@ const command: Command = {
 
                         if (RAW_SONGS) {
                             player.addingPlaylist = true;
+
                             if (player.Queue.length > 0 || player.Instance.isPlaying) {
                                 if (author)
                                     addRestOfSongs(player, message, RAW_SONGS, author);
                                 return;
                             }
+
                             const firstSong = RAW_SONGS.shift()!.split(',').join(" ")
                             const first = await yts(firstSong);
                             const song = first.videos[0].url
                             await player.Instance.play(message, song);
+
                             if (author)
                                 addRestOfSongs(player, message, RAW_SONGS, author);
-                        } else {
-                            await message.channel.send(`Failed to add the Spotify Songs to the Music Queue.`);
-                        }
+                            return;
+                        } 
+                        
+                        await message.channel.send(`Failed to add the Spotify Songs to the Music Queue.`);
+                        
                     } else {
                         if (player.Instance.isPlaying(message)) {
                             // if(player.autoplay) {
