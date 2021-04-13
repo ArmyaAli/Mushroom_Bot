@@ -117,19 +117,27 @@ const command: Command = {
                         
                     } else {
                         if (player.Instance.isPlaying(message)) {
-                            // if(player.autoplay) {
-                            //     player.autoplay = player.Instance.toggleAutoplay(message);
-                            // }
-                            if (author)
-                                addSong(player, message, query, author)
-                        } else {
-                            player.firstAuthor = message.member?.user;
-                            await player.Instance.play(message, query); 
                             
-                            // if(!player.autoplay && player.Queue.length === 0) {
-                            //     player.autoplay = player.Instance.toggleAutoplay(message);
-                            // }
+                            if (author)
+                               await addSong(player, message, query, author)
+                            
+                            if(player.autoplay === true && player.Queue.length > 0) 
+                                player.autoplay = player.Instance.toggleAutoplay(message);
+
+
+                            console.log(`Hit the playing, autoplay ${player.autoplay}`)
+                            
+                            return;
+                        } 
+                        
+                        player.firstAuthor = message.member?.user;
+                        await player.Instance.play(message, query); 
+                        
+                        if(player.autoplay === false && player.Queue.length === 0) {
+                            player.autoplay = player.Instance.toggleAutoplay(message);
                         }
+                        
+                        console.log(`Hit the not playing, autoplay ${player.autoplay}`)
                     }
                 }
             }
