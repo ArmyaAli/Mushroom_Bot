@@ -21,6 +21,9 @@ const command: Command = {
                         if (next) {
                             player.currentSong = next;
                             await player.Instance.playSkip(message, next.url)
+
+                            if(queue.length === 0 && player.autoplay === true)
+                                player.Instance.toggleAutoplay(message);
                         }
 
                         return;
