@@ -1,5 +1,5 @@
-import { BaseClient, Client, Guild, GuildMember, Message, User, VoiceChannel, VoiceConnection } from "discord.js";
-import DisTube, { DisTubeOptions } from "distube";
+import { Message, User } from "discord.js";
+import DisTube from "distube";
 import Queue from "distube/typings/Queue";
 import Song from "distube/typings/Song";
 
