@@ -115,6 +115,9 @@ const command: Command = {
                         
                         await message.channel.send(`Failed to add the Spotify Songs to the Music Queue.`);
                         
+
+                    } else if (query.startsWith("https://www.youtube.com/watch")) {
+                        // handle logic to handle youtube video links
                     } else {
                         if (player.Instance.isPlaying(message)) {
                             
