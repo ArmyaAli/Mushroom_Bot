@@ -53,6 +53,7 @@ class _MusicManager {
             player.Instance.on("playSong", (message: Message, queue: Queue, song: Song) => {
 
                 if(player.Queue.length === 0 && queue.autoplay === false) {
+                    console.log("if inside playSong event ran")
                     queue.autoplay = true;
                 }
                 console.log(`Autoplay Status in playSong ${queue.autoplay}`)

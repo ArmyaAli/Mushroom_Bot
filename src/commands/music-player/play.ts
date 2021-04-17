@@ -124,7 +124,7 @@ const command: Command = {
                             if (author)
                                await addSong(player, message, query, author)
                             
-                            if(player.autoplay === true && player.Queue.length > 0) 
+                            if(player.autoplay === true) 
                                 player.autoplay = player.Instance.toggleAutoplay(message);
 
 
