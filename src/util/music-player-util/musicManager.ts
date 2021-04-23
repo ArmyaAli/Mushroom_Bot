@@ -54,7 +54,7 @@ class _MusicManager {
 
                 if(player.Queue.length === 0 && queue.autoplay === false) {
                     console.log("if inside playSong event ran")
-                    queue.autoplay = true;
+                    player.autoplay = queue.autoplay = true;
                 }
                 console.log(`Autoplay Status in playSong ${queue.autoplay}`)
                 message.channel.send(
