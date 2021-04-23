@@ -51,17 +51,17 @@ const assignQueue = (client: Client, message: Message) => {
             if (MusicManager.musicQueue.has(GUILD_ID)) return;
 
             MusicManager.musicQueue.set(GUILD_ID,
-            {
+                {
                     Instance: new DisTube(client, distubeConfig),
                     Queue: [],
                     currentSong: null,
                     firstAuthor: message.author,
                     addingPlaylist: false,
                     message: message
-            });
+                });
 
             const thisQueue = MusicManager.musicQueue.get(GUILD_ID)
-            
+
             if (thisQueue)
                 MusicManager.registerEvents(thisQueue);
         }
@@ -111,35 +111,32 @@ const command: Command = {
                             if (author)
                                 addRestOfSongs(player, message, RAW_SONGS, author);
                             return;
-                        } 
-                        
+                        }
+
                         await message.channel.send(`Failed to add the Spotify Songs to the Music Queue.`);
                         
-
-                    } else if (query.startsWith("https://www.youtube.com/watch")) {
-                        // handle logic to handle youtube video links
                     } else {
                         if (player.Instance.isPlaying(message)) {
-                            
+
                             if (author)
-                               await addSong(player, message, query, author)
-                            
-                            if(player.autoplay === true) 
+                                await addSong(player, message, query, author)
+
+                            if (player.autoplay === true)
                                 player.autoplay = player.Instance.toggleAutoplay(message);
 
 
                             console.log(`Hit the playing, autoplay ${player.autoplay}`)
-                            
+
                             return;
-                        } 
-                        
+                        }
+
                         player.firstAuthor = message.member?.user;
-                        await player.Instance.play(message, query); 
-                        
-                        if(player.autoplay === false && player.Queue.length === 0) {
+                        await player.Instance.play(message, query);
+
+                        if (player.autoplay === false && player.Queue.length === 0) {
                             player.autoplay = player.Instance.toggleAutoplay(message);
                         }
-                        
+
                         console.log(`Hit the not playing, autoplay ${player.autoplay}`)
                     }
                 }
