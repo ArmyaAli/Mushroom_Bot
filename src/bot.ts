@@ -19,6 +19,7 @@ client.once("ready", async () => {
             if (command.default) {
                 commands.set(command.default.name, command.default);
             }
+            
         }
     } catch (err) {
         console.log(`Event Proc [client.once("ready")] threw error: ${err}`)
