@@ -1,5 +1,4 @@
 import { Client, Message, MessageEmbed } from "discord.js";
-import Queue from "distube/typings/Queue";
 import { Command } from "../../command";
 import MusicManager from "../../util/music-player-util/musicManager";
 import { checkVoiceStatus } from "./common";
