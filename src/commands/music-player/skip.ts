@@ -23,9 +23,9 @@ const command: Command = {
                             await player.Instance.playSkip(message, next.url)
 
                             if(queue.length === 0 && player.autoplay === false)
-                               player.autoplay = player.Instance.toggleAutoplay(message);
+                                player.autoplay = player.Instance.toggleAutoplay(message);
                                 
-                            if(queue.length > 0 && player.autoplay === true)
+                            else if(queue.length > 0 && player.autoplay === true)
                                 player.autoplay = player.Instance.toggleAutoplay(message)
                         }
 
