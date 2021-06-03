@@ -11,7 +11,7 @@ const finishedPlaylist = new MessageEmbed()
     .setTitle('Spotify Playlist Fully Added!')
     .setColor(0xff0000)
 
-const addSong = async (player: musicPlayer, message: Message, query: string, author: User) => {
+const addSong = async (player: musicPlayer, message: Message, query: string, author: User | null) => {
     if (player.Instance) {
         const searchResult = await yts(query);
         const songTitle = searchResult.videos[0].title
@@ -78,10 +78,10 @@ const command: Command = {
         if (!checkVoiceStatus(client, message)) return;
         // we need to assign the the command callee a Queue (if they don't have one already)
         assignQueue(client, message);
-        let author = message.member?.user
 
         try {
             const GUILD_ID = message.guild?.id;
+            let author = message.member?.user
             if (GUILD_ID) {
                 const player = MusicManager.musicQueue.get(GUILD_ID);
                 if (player) {
@@ -114,29 +114,23 @@ const command: Command = {
                         }
 
                         await message.channel.send(`Failed to add the Spotify Songs to the Music Queue.`);
-                        
+
                     } else {
                         if (player.Instance.isPlaying(message)) {
-
-                            if (author)
-                                await addSong(player, message, query, author)
+                            await addSong(player, message, query, author ?? null)
 
                             if (player.autoplay === true)
                                 player.autoplay = player.Instance.toggleAutoplay(message);
 
-
                             console.log(`Hit the playing, autoplay ${player.autoplay}`)
-
                             return;
                         }
 
-                        player.firstAuthor = message.member?.user;
                         await player.Instance.play(message, query);
 
                         if (player.autoplay === false && player.Queue.length === 0) {
                             player.autoplay = player.Instance.toggleAutoplay(message);
                         }
-
                         console.log(`Hit the not playing, autoplay ${player.autoplay}`)
                     }
                 }
