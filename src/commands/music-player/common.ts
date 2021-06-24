@@ -11,12 +11,12 @@ export const checkVoiceStatus = (client: Client, message: Message) => {
                 const member = server.members.cache.get(USER_ID); // Getting the member.
                 if (member) {
                     if (!member.voice.channel) {
-                        message.channel.send("You must be in a voice channel to use this command.")
-                        inVoice = false
+                        message.channel.send("You must be in a voice channel to use this command.");
+                        inVoice = false;
                     }
                 }
             }
-            return inVoice
+            return inVoice;
         }
     } catch (err) {
         console.log(`Procedure [inVoice] in Play command, Error: ${err}`)
