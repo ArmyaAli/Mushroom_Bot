@@ -1,5 +1,7 @@
-import { Client, Message } from "discord.js";
+import { Client, Message, VoiceConnection } from "discord.js";
 import yts from "yt-search";
+import ytdl from "ytdl-core";
+import { MusicPlayer, Player } from "./playerState";
 
 export const checkVoiceStatus = (client: Client, message: Message) => {
     let inVoice = true;
@@ -24,12 +26,50 @@ export const checkVoiceStatus = (client: Client, message: Message) => {
     }
 }
 
+export const assignQueue = async (message: Message) => {
+    try {
+        const guildId = message.guild?.id;
+
+        if (guildId) {
+            if (Player.GuildQueues.has(guildId)) return;
+            const connection = await message?.member?.voice?.channel?.join()
+            if (connection) {
+                Player.GuildQueues.set(guildId,
+                {
+                    musicQueue: [],
+                    playingMusic: false,
+                    currentSong: "",
+                    message: message,
+                });
+            }
+        }
+    } catch (err) {
+        console.log(`Procedure [assignQueue] error: ${err}`)
+    }
+}
+
 export const getFirstThreeSearchResults = async (query: string) => {
     try {
         const results = await yts(query);
         const firstThree = results.videos.slice(0, 3);
-        return firstThree.map((video) => { return {title: video.title, url: video.url } });
+        return firstThree.map((video) => { return { title: video.title, url: video.url } });
     } catch (err) {
         console.error(`Procedure [getFirstThreeSearchResults] error: ${err}`);
+    }
+}
+
+export const onSongFinish = async (player: MusicPlayer, connection: VoiceConnection) => {
+    if (player.musicQueue.length > 0) {
+        const next = player.musicQueue.shift();
+        if (next) {
+            const video = ytdl(next, { filter: 'audioonly' });
+            const volatileDispatcher = connection.play(video);
+            console.log('playing next')
+            player.message.channel.send(`Playing next song in Queue. Queue contains ${player.musicQueue.length} songs`)
+            volatileDispatcher?.on('finish', () => onSongFinish(player, connection))
+        }
+    } else {
+        player.message.channel.send(`Finished playing all the songs in the queue`)
+        player.playingMusic = false;
     }
 }
