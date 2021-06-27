@@ -35,12 +35,12 @@ export const assignQueue = async (message: Message) => {
             const connection = await message?.member?.voice?.channel?.join()
             if (connection) {
                 Player.GuildQueues.set(guildId,
-                {
-                    musicQueue: [],
-                    playingMusic: false,
-                    currentSong: "",
-                    message: message,
-                });
+                    {
+                        musicQueue: [],
+                        playingMusic: false,
+                        currentSong: null,
+                        message: message,
+                    });
             }
         }
     } catch (err) {
@@ -62,14 +62,22 @@ export const onSongFinish = async (player: MusicPlayer, connection: VoiceConnect
     if (player.musicQueue.length > 0) {
         const next = player.musicQueue.shift();
         if (next) {
-            const video = ytdl(next, { filter: 'audioonly' });
+            const video = ytdl(next.url, { filter: 'audioonly', dlChunkSize: 0 });
+            player.currentSong = await ytdl.getInfo(next.url);
             const volatileDispatcher = connection.play(video);
             console.log('playing next')
-            player.message.channel.send(`Playing next song in Queue. Queue contains ${player.musicQueue.length} songs`)
             volatileDispatcher?.on('finish', () => onSongFinish(player, connection))
+                .on('start', () => {
+                    player.message.channel.send(
+                        `Playing \`${player.currentSong?.videoDetails.title}\` - \`${TimeFormat(parseInt(player.currentSong?.videoDetails.lengthSeconds ?? "0"))}\`Requested by: ${next.requestedBy ?? 'unknown'}`)
+                })
         }
     } else {
         player.message.channel.send(`Finished playing all the songs in the queue`)
         player.playingMusic = false;
     }
+}
+
+export const TimeFormat = (seconds: number) => {
+    return new Date(seconds * 1000).toISOString().substr(11, 8)
 }
