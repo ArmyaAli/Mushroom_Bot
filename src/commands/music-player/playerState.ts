@@ -1,8 +1,14 @@
-import { Message } from "discord.js";
+import { Message, User } from "discord.js";
+import ytdl from "ytdl-core";
+
+export interface queueEntry {
+    url: string;
+    requestedBy: User;
+}
 
 export interface MusicPlayer {
-    musicQueue: string[];
-    currentSong: string;
+    musicQueue: queueEntry[];
+    currentSong: ytdl.videoInfo | null;
     playingMusic: boolean;
     message: Message;
 }
