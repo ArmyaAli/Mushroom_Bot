@@ -65,7 +65,7 @@ export const onSongFinish = async (player: MusicPlayer) => {
             const next = player.musicQueue.shift();
             if (next) {
                 const connection = await player.message.member?.voice.channel?.join();
-                const video = ytdl(next.url, { filter: 'audioonly', dlChunkSize: 0 });
+                const video = await ytdl(next.url, { filter: 'audioonly', dlChunkSize: 0 });
                 player.currentSong = await ytdl.getInfo(next.url);
                 const volatileDispatcher = connection?.play(video);
                 console.log('playing next')
