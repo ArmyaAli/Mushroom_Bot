@@ -35,12 +35,12 @@ export const assignQueue = async (message: Message) => {
             const connection = await message?.member?.voice?.channel?.join()
             if (connection) {
                 Player.GuildQueues.set(guildId,
-                    {
-                        musicQueue: [],
-                        playingMusic: false,
-                        currentSong: null,
-                        message: message,
-                    });
+                {
+                    musicQueue: [],
+                    playingMusic: false,
+                    currentSong: null,
+                    message: message,
+                });
             }
         }
     } catch (err) {
@@ -76,8 +76,8 @@ export const onSongFinish = async (player: MusicPlayer) => {
                     })
             }
         } else {
-            player.message.channel.send(`Finished playing all the songs in the queue`)
-            player.playingMusic = false;
+            player.message.channel.send(`Queue is empty! Moving to autoplay the next related song (from Youtube!)`);
+            autoplay(player);
         }
     } catch (err) {
         console.error(`Procedure [onSongFinish] error: ${err}`);
@@ -86,4 +86,22 @@ export const onSongFinish = async (player: MusicPlayer) => {
 
 export const TimeFormat = (seconds: number) => {
     return new Date(seconds * 1000).toISOString().substr(11, 8)
+}
+
+export const autoplay = async (player: MusicPlayer) => {
+    const related = player.currentSong?.related_videos;
+    if (related) {
+        const next = "https://www.youtube.com/watch?v=" + related[0].id;
+        const connection = await player.message.member?.voice.channel?.join();
+        const video = await ytdl(next, { filter: 'audioonly', dlChunkSize: 0 });
+        player.currentSong = await ytdl.getInfo(next);
+        const volatileDispatcher = connection?.play(video);
+        volatileDispatcher?.on('finish', () => onSongFinish(player))
+            .on('start', () => {
+                player.message.channel.send(
+                    `Playing \`${player.currentSong?.videoDetails.title}\` - \`${TimeFormat(parseInt(player.currentSong?.videoDetails.lengthSeconds ?? "0"))}\`Requested by: ${player.message.author ?? 'unknown'}`)
+            })
+        console.log(next)
+
+    }
 }
