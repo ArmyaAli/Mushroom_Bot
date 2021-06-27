@@ -58,23 +58,29 @@ export const getFirstThreeSearchResults = async (query: string) => {
     }
 }
 
-export const onSongFinish = async (player: MusicPlayer, connection: VoiceConnection) => {
-    if (player.musicQueue.length > 0) {
-        const next = player.musicQueue.shift();
-        if (next) {
-            const video = ytdl(next.url, { filter: 'audioonly', dlChunkSize: 0 });
-            player.currentSong = await ytdl.getInfo(next.url);
-            const volatileDispatcher = connection.play(video);
-            console.log('playing next')
-            volatileDispatcher?.on('finish', () => onSongFinish(player, connection))
-                .on('start', () => {
-                    player.message.channel.send(
-                        `Playing \`${player.currentSong?.videoDetails.title}\` - \`${TimeFormat(parseInt(player.currentSong?.videoDetails.lengthSeconds ?? "0"))}\`Requested by: ${next.requestedBy ?? 'unknown'}`)
-                })
+export const onSongFinish = async (player: MusicPlayer) => {
+    try {
+        console.log('onSongFinish has RAN');
+        if (player.musicQueue.length > 0) {
+            const next = player.musicQueue.shift();
+            if (next) {
+                const connection = await player.message.member?.voice.channel?.join();
+                const video = ytdl(next.url, { filter: 'audioonly', dlChunkSize: 0 });
+                player.currentSong = await ytdl.getInfo(next.url);
+                const volatileDispatcher = connection?.play(video);
+                console.log('playing next')
+                volatileDispatcher?.on('finish', () => onSongFinish(player))
+                    .on('start', () => {
+                        player.message.channel.send(
+                            `Playing \`${player.currentSong?.videoDetails.title}\` - \`${TimeFormat(parseInt(player.currentSong?.videoDetails.lengthSeconds ?? "0"))}\`Requested by: ${next.requestedBy ?? 'unknown'}`)
+                    })
+            }
+        } else {
+            player.message.channel.send(`Finished playing all the songs in the queue`)
+            player.playingMusic = false;
         }
-    } else {
-        player.message.channel.send(`Finished playing all the songs in the queue`)
-        player.playingMusic = false;
+    } catch (err) {
+        console.error(`Procedure [onSongFinish] error: ${err}`);
     }
 }
 

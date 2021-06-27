@@ -30,9 +30,9 @@ const command: Command = {
                             player.currentSong = await ytdl.getInfo(next.url);
                             const dispatcher = connection.play(video); // first one 
                             player.playingMusic = true;
-                            dispatcher?.on("finish", () => onSongFinish(player, connection))
+                            dispatcher?.on("finish", () => onSongFinish(player))
                                 .on('start', () => {
-                                    message.channel.send(`Playing \`${player.currentSong?.videoDetails.title}\` - \`${TimeFormat(parseInt(player.currentSong?.videoDetails.lengthSeconds ?? "0"))}\`Requested by: ${user ?? 'unknown'}`);
+                                    message.channel.send(`Playing \`${player.currentSong?.videoDetails.title}\` - \`${TimeFormat(parseInt(player.currentSong?.videoDetails.lengthSeconds ?? "0"))}\n\`Requested by: ${user ?? 'unknown'}`);
                                 })
                         }
                     }
