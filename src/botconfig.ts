@@ -17,7 +17,7 @@ export const readCommandsRecursive = (commandContext: string, commandFiles: stri
 
 const config = {
     prefix: "!",
-    token: process.env.BOT_TOKEN
+    token: process.env.BOT_TOKEN_DEV
 };
 
 export const distubeConfig: DisTubeOptions = {
