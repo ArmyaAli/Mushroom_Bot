@@ -1,7 +1,7 @@
 import { Client, Guild, GuildMember, Message, MessageEmbed, User } from "discord.js";
 import ytdl from "ytdl-core";
 import { Command } from "../../command";
-import { assignQueue, checkVoiceStatus, getFirstThreeSearchResults, onSongFinish } from "./playerAPI";
+import { assignQueue, checkVoiceStatus, getFirstThreeSearchResults, onSongFinish, TimeFormat } from "./playerAPI";
 import { Player } from "./playerState";
 
 const command: Command = {
@@ -19,21 +19,25 @@ const command: Command = {
                 if (player) {
                     const connection = await message.member?.voice.channel?.join();
                     if (connection) {
-                        const musicQueue = player.musicQueue;
                         const results = await getFirstThreeSearchResults(query);
-
                         if (results) {
+                            const user = message.author;
                             if (player.playingMusic) {
-                                player.musicQueue.push(results[0].url)
-                                player.message.channel.send(`Added song to the queue, Q contains ${player.musicQueue.length} songs`);
-                                console.log(musicQueue);
+                                player.musicQueue.push({ url: results[0].url, requestedBy: user ?? 'unknown' });
+                                message.channel.send(`Added \`${results[0].title}\` - To the Queue\nRequested by: ${user ?? 'unknown'}`);
                             } else {
                                 const song = results[0]
-                                const video = ytdl(song.url, { filter: 'audioonly' });
+                                const video = await ytdl(song.url, { filter: 'audioonly', dlChunkSize: 0 });
+                                player.currentSong = await ytdl.getInfo(song.url);
                                 const dispatcher = connection.play(video); // first one 
                                 player.playingMusic = true;
-                                message.channel.send(`Playing: ${song.title}`);
-                                dispatcher?.on("finish", () => onSongFinish(player, connection));
+
+                                dispatcher?.on("finish", () => onSongFinish(player, connection))
+                                    .on('start', () => {
+                                        message.channel.send(
+                                            `Playing \`${song.title}\` - \`${TimeFormat(parseInt(player.currentSong?.videoDetails.lengthSeconds ?? "0"))}\n\`Requested by: ${user ?? 'unknown'}`
+                                        )
+                                    })
                             }
                         }
 
