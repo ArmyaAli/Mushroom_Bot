@@ -18,6 +18,7 @@ const addSong = async (player: musicPlayer, message: Message, query: string, aut
         const songLink = searchResult.videos[0].url
         player.Queue.push({ name: songTitle, url: songLink, requestedBy: author })
         message.channel.send(
+            
             `Adding \`${songTitle}\` to the Queue\nRequested by: ${author}`
         )
     }
