@@ -71,10 +71,12 @@ export const onSongFinish = async (player: MusicPlayer) => {
                 const volatileDispatcher = connection?.play(video);
                 console.log('playing next')
                 volatileDispatcher?.on('finish', () => onSongFinish(player))
-                    .on('start', () => {
-                        player.message.channel.send(
-                            `Playing \`${player.currentSong?.videoDetails.title}\` - \`${TimeFormat(parseInt(player.currentSong?.videoDetails.lengthSeconds ?? "0"))}\`Requested by: ${next.requestedBy ?? 'unknown'}`)
-                    })
+                await player.message.channel.send(
+                    `Playing \`${player.currentSong?.videoDetails.title}\` - \`${TimeFormat(parseInt(player.currentSong?.videoDetails.lengthSeconds ?? "0"))}\`Requested by: ${next.requestedBy ?? 'unknown'}`)
+                    // .on('start', async () => {
+                    //     await player.message.channel.send(
+                    //         `Playing \`${player.currentSong?.videoDetails.title}\` - \`${TimeFormat(parseInt(player.currentSong?.videoDetails.lengthSeconds ?? "0"))}\`Requested by: ${next.requestedBy ?? 'unknown'}`)
+                    // })
             }
         } else {
             if (player.autoplay) {
@@ -102,8 +104,8 @@ export const autoplay = async (player: MusicPlayer) => {
         player.currentSong = await ytdl.getInfo(next);
         const volatileDispatcher = connection?.play(video);
         volatileDispatcher?.on('finish', () => onSongFinish(player))
-            .on('start', () => {
-                player.message.channel.send(
+            .on('start', async () => {
+                await player.message.channel.send(
                     `Playing \`${player.currentSong?.videoDetails.title}\` - \`${TimeFormat(parseInt(player.currentSong?.videoDetails.lengthSeconds ?? "0"))}\`Requested by: ${player.message.author ?? 'unknown'}`)
             })
     }
