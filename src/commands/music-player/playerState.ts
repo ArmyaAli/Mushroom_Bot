@@ -2,6 +2,7 @@ import { Message, User } from "discord.js";
 import ytdl from "ytdl-core";
 
 export interface queueEntry {
+    title: string;
     url: string;
     requestedBy: User;
 }
