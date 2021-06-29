@@ -1,4 +1,4 @@
-import { Client, Message, VoiceConnection } from "discord.js";
+import { Client, Message } from "discord.js";
 import yts from "yt-search";
 import ytdl from "ytdl-core";
 import { MusicPlayer, Player } from "./playerState";
@@ -35,12 +35,13 @@ export const assignQueue = async (message: Message) => {
             const connection = await message?.member?.voice?.channel?.join()
             if (connection) {
                 Player.GuildQueues.set(guildId,
-                {
-                    musicQueue: [],
-                    playingMusic: false,
-                    currentSong: null,
-                    message: message,
-                });
+                    {
+                        musicQueue: [],
+                        playingMusic: false,
+                        currentSong: null,
+                        autoplay: true,
+                        message: message,
+                    });
             }
         }
     } catch (err) {
@@ -76,8 +77,12 @@ export const onSongFinish = async (player: MusicPlayer) => {
                     })
             }
         } else {
-            player.message.channel.send(`Queue is empty! Moving to autoplay the next related song (from Youtube!)`);
-            autoplay(player);
+            if (player.autoplay) {
+                player.message.channel.send(`Queue is empty! Moving to autoplay the next related song (from Youtube!)`);
+                autoplay(player);
+            } else {
+                player.message.channel.send(`Finshed playing songs in the music queue. Queue is empty!`);
+            }
         }
     } catch (err) {
         console.error(`Procedure [onSongFinish] error: ${err}`);
