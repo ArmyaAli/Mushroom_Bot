@@ -1,5 +1,4 @@
-import { error } from "console";
-import { Client, Guild, GuildMember, Message, MessageEmbed, User } from "discord.js";
+import { Client, Message } from "discord.js";
 import ytdl from "ytdl-core";
 import { Command } from "../../command";
 import { assignQueue, checkVoiceStatus, getFirstThreeSearchResults, onSongFinish, TimeFormat } from "./playerAPI";
@@ -32,7 +31,6 @@ const command: Command = {
                                 player.currentSong = await ytdl.getInfo(song.url);
                                 const dispatcher = connection.play(video); // first one 
                                 player.playingMusic = true;
-
                                 dispatcher?.on("finish", () => onSongFinish(player))
                                     .on('start', () => {
                                         message.channel.send(
