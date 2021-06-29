@@ -43,7 +43,6 @@ const command: Command = {
                     }
                 }
             }
-
         } catch (err) {
             console.error(`${err}`);
         }
