@@ -10,6 +10,7 @@ export interface MusicPlayer {
     musicQueue: queueEntry[];
     currentSong: ytdl.videoInfo | null;
     playingMusic: boolean;
+    autoplay: boolean;
     message: Message;
 }
 
