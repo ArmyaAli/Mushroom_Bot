@@ -37,7 +37,7 @@ const command: Command = {
                             player.playingMusic = true;
                             dispatcher?.on("finish", () => onSongFinish(player))
                                 .on('start', () => {
-                                    message.channel.send(`Playing \`${player.currentSong?.videoDetails.title}\` - \`${TimeFormat(parseInt(player.currentSong?.videoDetails.lengthSeconds ?? "0"))}\n\`Requested by: ${user ?? 'unknown'}`);
+                                    message.channel.send(`Playing \`${player.currentSong?.videoDetails.title}\` - \`${TimeFormat(parseInt(player.currentSong?.videoDetails.lengthSeconds ?? "0"))}\n\`Requested by: ${next.requestedBy ?? 'unknown'}`);
                                 })
                         }
                     }
