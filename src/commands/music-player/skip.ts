@@ -1,7 +1,7 @@
-import { Client, Guild, GuildMember, Message, MessageEmbed, User } from "discord.js";
+import { Client, Message } from "discord.js";
 import ytdl from "ytdl-core";
 import { Command } from "../../command";
-import { assignQueue, autoplay, checkVoiceStatus, onSongFinish, TimeFormat } from "./playerAPI";
+import { autoplay, checkVoiceStatus, onSongFinish, TimeFormat } from "./playerAPI";
 import { Player } from "./playerState";
 
 const command: Command = {
@@ -16,7 +16,7 @@ const command: Command = {
                 const player = Player.GuildQueues.get(guildId);
                 if (player) {
                     if (player.musicQueue.length === 0) {
-                        if(args.join(' ') === 'auto') {
+                        if (args.join(' ') === 'auto') {
                             autoplay(player);
                             message.channel.send("Skipping to the next related song recommended by YouTube!");
                         }
