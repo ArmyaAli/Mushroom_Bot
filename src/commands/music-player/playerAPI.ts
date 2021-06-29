@@ -101,7 +101,5 @@ export const autoplay = async (player: MusicPlayer) => {
                 player.message.channel.send(
                     `Playing \`${player.currentSong?.videoDetails.title}\` - \`${TimeFormat(parseInt(player.currentSong?.videoDetails.lengthSeconds ?? "0"))}\`Requested by: ${player.message.author ?? 'unknown'}`)
             })
-        console.log(next)
-
     }
 }
