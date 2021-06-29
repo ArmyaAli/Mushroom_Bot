@@ -1,3 +1,4 @@
+import { error } from "console";
 import { Client, Guild, GuildMember, Message, MessageEmbed, User } from "discord.js";
 import ytdl from "ytdl-core";
 import { Command } from "../../command";
@@ -37,7 +38,7 @@ const command: Command = {
                                         message.channel.send(
                                             `Playing \`${song.title}\` - \`${TimeFormat(parseInt(player.currentSong?.videoDetails.lengthSeconds ?? "0"))}\n\`Requested by: ${user ?? 'unknown'}`
                                         )
-                                    })
+                                    }).on('error', () => console.log)
                             }
                         }
 
