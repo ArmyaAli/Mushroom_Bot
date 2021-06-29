@@ -22,7 +22,7 @@ const command: Command = {
                     }
 
                     for (let i = 0; i < player.musicQueue.length && i < 10; ++i) {
-                        qStr += `${i} - \`${player.musicQueue[i]?.title} ~ ${player.musicQueue[i].requestedBy.username}\`\n`;
+                        qStr += `${i+1} - \`${player.musicQueue[i]?.title} ~ ${player.musicQueue[i].requestedBy.username}\`\n`;
                     }
                     message.channel.send(qStr);
                 }
