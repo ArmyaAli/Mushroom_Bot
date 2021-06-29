@@ -1,7 +1,6 @@
 import { Client, Message } from "discord.js";
-import ytdl from "ytdl-core";
 import { Command } from "../../command";
-import { assignQueue, checkVoiceStatus, getFirstThreeSearchResults, onSongFinish, TimeFormat } from "./playerAPI";
+import { checkVoiceStatus } from "./playerAPI";
 import { Player } from "./playerState";
 
 const command: Command = {
