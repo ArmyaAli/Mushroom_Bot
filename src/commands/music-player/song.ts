@@ -1,30 +1,35 @@
-import { Client, Message, } from "discord.js";
+import { Client, Guild, GuildMember, Message, MessageEmbed, User } from "discord.js";
 import { Command } from "../../command";
-import MusicManager from "../../util/music-player-util/musicManager";
-import { checkVoiceStatus } from "./common";
+import { checkVoiceStatus } from "./playerAPI";
+import { Player } from "./playerState";
 
 const command: Command = {
     name: "song",
-    description: "displays the currently playing song",
+    description: "currently playing song",
     requiredPermissions: [],
     async execute(client: Client, message: Message, args: string[]) {
+        if (!checkVoiceStatus(client, message)) return;
+        const guildId = message.guild?.id;
         try {
-            if (!checkVoiceStatus(client, message)) return;
-            const GUILD_ID = message.guild?.id;
-            if (GUILD_ID) {
-                const player = MusicManager.musicQueue.get(GUILD_ID);
+            if (guildId) {
+                const player = Player.GuildQueues.get(guildId);
                 if (player) {
-                  if(player.Instance.isPlaying(message))
-                    message.channel.send(`Currently playing song: \`${player.currentSong?.name}\``);
-                  return
+                    if (!player.playingMusic) {
+                        message.channel.send("There are no songs playing!");
+                        return;
+                    }
+                    message.channel.send(`Currently playing: \`${player.currentSong?.videoDetails.title}\``);
                 }
-                message.channel.send("There are currently no songs being played!");
             }
-        } catch (error) {
-            console.log(error);
+        } catch (err) {
+            console.error(`${err}`);
         }
-    },
+
+    }
 };
 
 export default command;
+
+
+
 
