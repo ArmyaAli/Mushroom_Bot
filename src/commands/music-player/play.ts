@@ -23,7 +23,7 @@ const command: Command = {
                         if (results) {
                             const user = message.author;
                             if (player.playingMusic) {
-                                player.musicQueue.push({ url: results[0].url, requestedBy: user ?? 'unknown' });
+                                player.musicQueue.push({ title: results[0].title, url: results[0].url, requestedBy: user ?? 'unknown' });
                                 message.channel.send(`Added \`${results[0].title}\` - To the Queue\nRequested by: ${user ?? 'unknown'}`);
                             } else {
                                 const song = results[0]
@@ -32,11 +32,14 @@ const command: Command = {
                                 const dispatcher = connection.play(video); // first one 
                                 player.playingMusic = true;
                                 dispatcher?.on("finish", () => onSongFinish(player))
-                                    .on('start', () => {
-                                        message.channel.send(
-                                            `Playing \`${song.title}\` - \`${TimeFormat(parseInt(player.currentSong?.videoDetails.lengthSeconds ?? "0"))}\n\`Requested by: ${user ?? 'unknown'}`
-                                        )
-                                    }).on('error', () => console.log)
+                                await message.channel.send(
+                                    `Playing \`${song.title}\` - \`${TimeFormat(parseInt(player.currentSong?.videoDetails.lengthSeconds ?? "0"))}\n\`Requested by: ${user ?? 'unknown'}`
+                                )
+                                // .on('start', async () => {
+                                //     await message.channel.send(
+                                //         `Playing \`${song.title}\` - \`${TimeFormat(parseInt(player.currentSong?.videoDetails.lengthSeconds ?? "0"))}\n\`Requested by: ${user ?? 'unknown'}`
+                                //     )
+                                // })
                             }
                         }
 
