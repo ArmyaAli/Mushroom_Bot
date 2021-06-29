@@ -19,6 +19,7 @@ const command: Command = {
                         if (args.join(' ') === 'auto') {
                             autoplay(player);
                             message.channel.send("Skipping to the next related song recommended by YouTube!");
+                            return;
                         }
                         message.channel.send("There are no songs queued up! If you would like to skip to a related song...do !skip auto");
                         return;
