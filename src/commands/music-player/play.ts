@@ -27,19 +27,16 @@ const command: Command = {
                                 message.channel.send(`Added \`${results[0].title}\` - To the Queue\nRequested by: ${user ?? 'unknown'}`);
                             } else {
                                 const song = results[0]
-                                const video = await ytdl(song.url, { filter: 'audioonly', dlChunkSize: 0 });
+                                const video = await ytdl(song.url, { filter: 'audioonly' });
                                 player.currentSong = await ytdl.getInfo(song.url);
                                 const dispatcher = connection.play(video); // first one 
                                 player.playingMusic = true;
                                 dispatcher?.on("finish", () => onSongFinish(player))
+                                .on('debug', (debug) => console.log(debug))
+                                .on('error', (error) => console.log(`error callback` + error))
                                 await message.channel.send(
                                     `Playing \`${song.title}\` - \`${TimeFormat(parseInt(player.currentSong?.videoDetails.lengthSeconds ?? "0"))}\n\`Requested by: ${user ?? 'unknown'}`
                                 )
-                                // .on('start', async () => {
-                                //     await message.channel.send(
-                                //         `Playing \`${song.title}\` - \`${TimeFormat(parseInt(player.currentSong?.videoDetails.lengthSeconds ?? "0"))}\n\`Requested by: ${user ?? 'unknown'}`
-                                //     )
-                                // })
                             }
                         }
 
