@@ -31,7 +31,7 @@ const command: Command = {
                         const next = musicQueue.shift();
 
                         if (next) {
-                            const video = await ytdl(next.url, { filter: 'audioonly', dlChunkSize: 0 });
+                            const video = await ytdl(next.url, { filter: 'audioonly'});
                             player.currentSong = await ytdl.getInfo(next.url);
                             const dispatcher = connection.play(video); // first one 
                             player.playingMusic = true;

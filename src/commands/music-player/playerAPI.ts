@@ -65,17 +65,14 @@ export const onSongFinish = async (player: MusicPlayer) => {
             const next = player.musicQueue.shift();
             if (next) {
                 const connection = await player.message.member?.voice.channel?.join();
-                const video = await ytdl(next.url, { filter: 'audioonly'});
+                const video = await ytdl(next.url, { filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25 });
                 player.currentSong = await ytdl.getInfo(next.url);
                 const volatileDispatcher = connection?.play(video);
-                console.log('playing next')
                 volatileDispatcher?.on('finish', () => onSongFinish(player))
+                    .on('debug', (debug) => console.log(debug))
+                    .on('error', (error) => console.log(`error callback` + error))
                 player.message.channel.send(
                     `Playing \`${player.currentSong?.videoDetails.title}\` - \`${TimeFormat(parseInt(player.currentSong?.videoDetails.lengthSeconds ?? "0"))}\`Requested by: ${next.requestedBy ?? 'unknown'}`)
-                    // .on('start', async () => {
-                    //     await player.message.channel.send(
-                    //         `Playing \`${player.currentSong?.videoDetails.title}\` - \`${TimeFormat(parseInt(player.currentSong?.videoDetails.lengthSeconds ?? "0"))}\`Requested by: ${next.requestedBy ?? 'unknown'}`)
-                    // })
             }
         } else {
             if (player.autoplay) {
@@ -97,13 +94,19 @@ export const TimeFormat = (seconds: number) => {
 export const autoplay = async (player: MusicPlayer) => {
     const related = player.currentSong?.related_videos;
     if (related) {
-        const next = "https://www.youtube.com/watch?v=" + related[0].id;
-        const connection = await player.message.member?.voice.channel?.join();
-        const video = await ytdl(next, { filter: 'audioonly'});
-        player.currentSong = await ytdl.getInfo(next);
-        const volatileDispatcher = connection?.play(video);
-        volatileDispatcher?.on('finish', () => onSongFinish(player))
-        await player.message.channel.send(
+        try {
+            const next = "https://www.youtube.com/watch?v=" + related[0].id;
+            const connection = await player.message.member?.voice.channel?.join();
+            const video = await ytdl(next, { filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25 });
+            player.currentSong = await ytdl.getInfo(next);
+            const volatileDispatcher = connection?.play(video);
+            volatileDispatcher?.on('finish', () => onSongFinish(player))
+                .on('debug', (debug) => console.log(debug))
+                .on('error', (error) => console.log(`error callback` + error))
+            await player.message.channel.send(
                 `Playing \`${player.currentSong?.videoDetails.title}\` - \`${TimeFormat(parseInt(player.currentSong?.videoDetails.lengthSeconds ?? "0"))}\`Requested by: ${player.message.author ?? 'unknown'}`)
+        } catch(err) {
+            console.error(`Procedure [autoplay] error ${err}`)
+        }
     }
 }
