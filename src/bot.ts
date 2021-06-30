@@ -2,6 +2,7 @@ import Discord, { Message, TextChannel, VoiceState } from "discord.js";
 import path from "path";
 import config, { readCommandsRecursive } from "./botconfig";
 import { Command } from "./command";
+import { Player } from "./commands/music-player/playerState";
 
 const client: Discord.Client = new Discord.Client();
 const commands: Discord.Collection<string, Command> = new Discord.Collection();
@@ -18,7 +19,7 @@ client.once("ready", async () => {
             if (command.default) {
                 commands.set(command.default.name, command.default);
             }
-            
+
         }
     } catch (err) {
         console.log(`Event Proc [client.once("ready")] threw error: ${err}`)
@@ -47,7 +48,22 @@ client.once("ready", async () => {
         console.log(`Event Proc [client.on("message")] threw error: ${err}`)
     }
 
-});
+}).on('voiceStateUpdate', (oldState: VoiceState, newState: VoiceState) => {
+    if (oldState.channel) {
+        if (!(oldState.channel.members.size - 1)) {
+            const player = Player.GuildQueues.get(newState.guild.id);
+            player?.message.channel.send('Empty channel~ Leaving in 30 seconds!')
+            setTimeout(() => { // if 1 (you), wait five minutes
+                if (oldState.channel) {
+                    if (!(oldState.channel.members.size - 1)) {
+                        Player.GuildQueues.delete(newState.guild.id);
+                        oldState.channel.leave(); // leave
+                    }
+                }
+            }, 30000); // (5 min in ms)
+        }
+    }
+})
 
 client.login(config.token).catch(error => {
     console.log(`Error occured during login: ${error}`);
