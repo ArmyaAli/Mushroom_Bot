@@ -89,8 +89,8 @@ export const play = async (player: MusicPlayer, results: { title: string, url: s
     } else {
         const song = results[0]
         const video = await ytdl(song.url, { filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25 });
-        player.currentSong = await ytdl.getInfo(song.url);
         const dispatcher = connection.play(video); // first one 
+        player.currentSong = await ytdl.getInfo(song.url);
         player.playingMusic = true;
         dispatcher?.on("finish", () => onSongFinish(player))
             .on('debug', (debug) => console.log(debug))
@@ -109,8 +109,8 @@ export const onSongFinish = async (player: MusicPlayer) => {
             if (next) {
                 const connection = await player.message.member?.voice.channel?.join();
                 const video = await ytdl(next.url, { filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25 });
-                player.currentSong = await ytdl.getInfo(next.url);
                 const volatileDispatcher = connection?.play(video);
+                player.currentSong = await ytdl.getInfo(next.url);
                 volatileDispatcher?.on('finish', () => onSongFinish(player))
                     .on('debug', (debug) => console.log(debug))
                     .on('error', (error) => console.log(`error callback` + error))
@@ -143,8 +143,8 @@ export const autoplay = async (player: MusicPlayer) => {
             const next = "https://www.youtube.com/watch?v=" + related[0].id;
             const connection = await player.message.member?.voice.channel?.join();
             const video = await ytdl(next, { filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25 });
-            player.currentSong = await ytdl.getInfo(next);
             const volatileDispatcher = connection?.play(video);
+            player.currentSong = await ytdl.getInfo(next);
             volatileDispatcher?.on('finish', () => onSongFinish(player))
                 .on('debug', (debug) => console.log(debug))
                 .on('error', (error) => console.log(`error callback` + error))
