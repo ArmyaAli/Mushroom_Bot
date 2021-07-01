@@ -27,7 +27,7 @@
     "node-fetch": "^2.6.1",
     "yt-search": "^2.9.0",
     "ytdl-core": "^4.8.2",
-    "ytpl": "^2.1.0"
+    "ytpl": "^2.2.1"
   },
   "devDependencies": {
     "@types/glob": "^7.1.3",
