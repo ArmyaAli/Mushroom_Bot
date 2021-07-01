@@ -35,11 +35,6 @@ const command: Command = {
                                 await message.channel.send(
                                     `Playing \`${song.title}\` - \`${TimeFormat(parseInt(player.currentSong?.videoDetails.lengthSeconds ?? "0"))}\n\`Requested by: ${user ?? 'unknown'}`
                                 )
-                                // .on('start', async () => {
-                                //     await message.channel.send(
-                                //         `Playing \`${song.title}\` - \`${TimeFormat(parseInt(player.currentSong?.videoDetails.lengthSeconds ?? "0"))}\n\`Requested by: ${user ?? 'unknown'}`
-                                //     )
-                                // })
                             }
                         }
 
