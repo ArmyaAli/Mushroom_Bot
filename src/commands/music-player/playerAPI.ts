@@ -1,4 +1,4 @@
-import { Client, Message } from "discord.js";
+import { Client, Message, User, VoiceConnection } from "discord.js";
 import yts from "yt-search";
 import ytdl from "ytdl-core";
 import { MusicPlayer, Player } from "./playerState";
@@ -59,6 +59,40 @@ export const getFirstThreeSearchResults = async (query: string) => {
     }
 }
 
+export const mapSongTitlesToYoutube = async (player: MusicPlayer, songs: string[], requestedBy: User) => {
+    try {
+        for (const song of songs) {
+            const results = await yts(song);
+            const first = results.videos[0];
+            player.musicQueue.push({ title: first.title, url: first.url, requestedBy: requestedBy });
+        }
+
+        player.message.channel.send(`Finished queuing up the spotify playlist, requested by ${requestedBy}`);
+    } catch (err) {
+        console.error(`Procedure [getFirstSearchResult] error: ${err}`);
+    }
+}
+
+export const play = async (player: MusicPlayer, results: { title: string, url: string }[], connection: VoiceConnection, user: User) => {
+    if (player.playingMusic) {
+        player.musicQueue.push({ title: results[0].title, url: results[0].url, requestedBy: user ?? 'unknown' });
+        player.message.channel.send(`Added \`${results[0].title}\` - To the Queue\nRequested by: ${user ?? 'unknown'}`);
+    } else {
+        const song = results[0]
+        const video = await ytdl(song.url, { filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25 });
+        player.currentSong = await ytdl.getInfo(song.url);
+        const dispatcher = connection.play(video); // first one 
+        player.playingMusic = true;
+        dispatcher?.on("finish", () => onSongFinish(player))
+            .on('debug', (debug) => console.log(debug))
+            .on('error', (error) => console.log(error))
+        player.message.channel.send(
+            `Playing \`${song.title}\` - \`${TimeFormat(parseInt(player.currentSong?.videoDetails.lengthSeconds ?? "0"))}\n\`Requested by: ${user ?? 'unknown'}`
+        )
+    }
+}
+
+
 export const onSongFinish = async (player: MusicPlayer) => {
     try {
         if (player.musicQueue.length > 0) {
@@ -86,6 +120,8 @@ export const onSongFinish = async (player: MusicPlayer) => {
         console.error(`Procedure [onSongFinish] error: ${err}`);
     }
 }
+
+
 
 export const TimeFormat = (seconds: number) => {
     return new Date(seconds * 1000).toISOString().substr(11, 8)

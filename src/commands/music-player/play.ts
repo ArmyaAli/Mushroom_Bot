@@ -1,7 +1,8 @@
 import { Client, Message } from "discord.js";
 import ytdl from "ytdl-core";
 import { Command } from "../../command";
-import { assignQueue, checkVoiceStatus, getFirstThreeSearchResults, onSongFinish, TimeFormat } from "./playerAPI";
+import { grabAllSongsFromPlaylist } from "./music-player-util/spotify-API-service";
+import { assignQueue, checkVoiceStatus, getFirstThreeSearchResults, mapSongTitlesToYoutube, onSongFinish, play, TimeFormat } from "./playerAPI";
 import { Player } from "./playerState";
 
 const command: Command = {
@@ -18,28 +19,34 @@ const command: Command = {
                 const player = Player.GuildQueues.get(guildId);
                 if (player) {
                     const connection = await message.member?.voice.channel?.join();
+                    const user = message.author;
+
                     if (connection) {
-                        const results = await getFirstThreeSearchResults(query);
-                        if (results) {
-                            const user = message.author;
-                            if (player.playingMusic) {
-                                player.musicQueue.push({ title: results[0].title, url: results[0].url, requestedBy: user ?? 'unknown' });
-                                message.channel.send(`Added \`${results[0].title}\` - To the Queue\nRequested by: ${user ?? 'unknown'}`);
-                            } else {
-                                const song = results[0]
-                                const video = await ytdl(song.url, { filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25});
-                                player.currentSong = await ytdl.getInfo(song.url);
-                                const dispatcher = connection.play(video); // first one 
-                                player.playingMusic = true;
-                                dispatcher?.on("finish", () => onSongFinish(player))
-                                    .on('debug', (debug) => console.log(debug))
-                                    .on('error', (error) => console.log(error))
-                                await message.channel.send(
-                                    `Playing \`${song.title}\` - \`${TimeFormat(parseInt(player.currentSong?.videoDetails.lengthSeconds ?? "0"))}\n\`Requested by: ${user ?? 'unknown'}`
-                                )
+                        if (query.startsWith('https://open.spotify.com/playlist/')) {
+                            const playlistId = query.substr(query.lastIndexOf('/') + 1);
+                            const spotifySongs = await grabAllSongsFromPlaylist(playlistId);
+                            if (spotifySongs) {
+                                const first = spotifySongs.shift();
+                                if (first) {
+                                    const results = await getFirstThreeSearchResults(first);
+                                    if (results) {
+                                        play(player, results, connection, user);
+                                        mapSongTitlesToYoutube(player, spotifySongs, user)
+                                    }
+                                }
+                            } else message.channel.send(`Failed to retrieve playlist data from spotify. Try a different playlist.`)
+                            return;
+
+                        } else if (query.startsWith('https://www.youtube.com/playlist?list=')) {
+                            message.channel.send(`Youtube Playlists are not currently supported!`)
+                            return;
+
+                        } else {
+                            const results = await getFirstThreeSearchResults(query);
+                            if (results) {
+                                play(player, results, connection, user);
                             }
                         }
-
                     }
                 }
             }
