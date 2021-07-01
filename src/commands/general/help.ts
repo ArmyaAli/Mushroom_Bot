@@ -7,9 +7,9 @@ const helpTemplate = `
   - !random -> grabs a random image off of flickr
   - !random *search_token* -> grabs a random image off of flickr related to the search_token
 - Music Player 
-  - !play *songname* -> Plays a song! This also supports queuing up a spotify playlist! (WORKING)
-  - !queue -> returns the next 10 sonds in the music queue
-  - !resume/pause -> plays/resumes the currently playing song
+  - !play *songname* -> Plays a song! This also supports queuing up a spotify playlist or youtube playlist (must not be private)
+  - !auto -> toggles autoplay on and off
+  - !queue -> returns the next 10 songs in the music queue
   - !skip -> skips the current song in the queue 
   - !stop -> Stops playing the song and exits the voice channel 
   - !clearq -> clears the music queue however keeps the current song playing
