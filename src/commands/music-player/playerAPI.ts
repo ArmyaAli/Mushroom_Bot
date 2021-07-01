@@ -41,6 +41,7 @@ export const assignQueue = async (message: Message) => {
                         currentSong: null,
                         autoplay: true,
                         message: message,
+                        playlistRoutinesCount: 0
                     });
             }
         }
@@ -61,13 +62,21 @@ export const getFirstThreeSearchResults = async (query: string) => {
 
 export const mapSongTitlesToYoutube = async (player: MusicPlayer, songs: string[], requestedBy: User) => {
     try {
+        player.playlistRoutinesCount++;
         for (const song of songs) {
+            // poll for clearq flag
+            if(!player.playlistRoutinesCount) {
+                player.message.channel.send(`Adding songs for playlist requested by ${requestedBy} has stopped.`);
+                player.musicQueue = [];
+                return
+            }
             const results = await yts(song);
             const first = results.videos[0];
             player.musicQueue.push({ title: first.title, url: first.url, requestedBy: requestedBy });
         }
 
         player.message.channel.send(`Finished queuing up the playlist, requested by ${requestedBy}`);
+        player.playlistRoutinesCount--;
     } catch (err) {
         console.error(`Procedure [getFirstSearchResult] error: ${err}`);
     }
