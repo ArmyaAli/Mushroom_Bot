@@ -67,7 +67,7 @@ export const mapSongTitlesToYoutube = async (player: MusicPlayer, songs: string[
             player.musicQueue.push({ title: first.title, url: first.url, requestedBy: requestedBy });
         }
 
-        player.message.channel.send(`Finished queuing up the spotify playlist, requested by ${requestedBy}`);
+        player.message.channel.send(`Finished queuing up the playlist, requested by ${requestedBy}`);
     } catch (err) {
         console.error(`Procedure [getFirstSearchResult] error: ${err}`);
     }
