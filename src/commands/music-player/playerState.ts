@@ -13,6 +13,7 @@ export interface MusicPlayer {
     playingMusic: boolean;
     autoplay: boolean;
     message: Message;
+    playlistRoutinesCount: number;
 }
 
 export const Player = {
