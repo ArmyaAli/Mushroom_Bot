@@ -22,8 +22,9 @@ const command: Command = {
                     }
 
                     for (let i = 0; i < player.musicQueue.length && i < 10; ++i) {
-                        qStr += `${i} - \`${player.musicQueue[i]?.title}\`\n`;
+                        qStr += `${i+1} - \`${player.musicQueue[i]?.title}\`\n`;
                     }
+                    qStr += `There are a total of \`${player.musicQueue.length}\` Queued up!`;
                     message.channel.send(qStr);
                 }
             }
