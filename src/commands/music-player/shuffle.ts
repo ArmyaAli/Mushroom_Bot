@@ -14,6 +14,10 @@ const command: Command = {
             if (guildId) {
                 const player = Player.GuildQueues.get(guildId);
                 if (player) {
+                   if(player.musicQueue.length === 0) {
+                       message.channel.send('Queue is empty.')
+                       return;
+                   }
                    player.musicQueue = shuffle(player.musicQueue);
                    message.channel.send('Re-arranging the music queue!~ Shuffling')
                 }
