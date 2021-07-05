@@ -1,7 +1,7 @@
 import { Client, Message, User, VoiceConnection } from "discord.js";
 import yts from "yt-search";
 import ytdl from "ytdl-core";
-import { MusicPlayer, Player } from "./playerState";
+import { MusicPlayer, Player, queueEntry } from "./playerState";
 
 export const checkVoiceStatus = (client: Client, message: Message) => {
     let inVoice = true;
@@ -155,3 +155,15 @@ export const autoplay = async (player: MusicPlayer) => {
         }
     }
 }
+
+export const shuffle = (array: queueEntry[]) => {
+    let currentIndex = array.length,  randomIndex;
+    while (0 !== currentIndex) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+    return array;
+  }
+
